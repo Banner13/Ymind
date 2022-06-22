@@ -1,3 +1,18 @@
+###注释
+	注释作用在预处理阶段前，所以不会在宏定义中起作用
+	注释段会被 一个空格 代替
+____
+###宏定义注意
+	#define function(x,y)		atomic_store (p, (struct S){ a, b })
+	会被解释为 function(p,(struct S){ a)  造成错误,请使用括号保护
+	
+	#define showlist(...)  function(#__VA_ARGS__)		# 字符串化参数
+	
+	#define S ss
+	#define showlist(...)  function(S##__VA_ARGS__)		## “连接”或“记号粘贴”
+___
+
+
 关键词
 
 标识符 变量名/常量名
@@ -74,4 +89,4 @@ API
 	 操作数的存储大小由操作数的类型决定。
 	
 	
-	s
+	

@@ -43,6 +43,11 @@
     export PATH=xxx/xxx/xxx:$PATH
     alias ll='ls -l -h'
 	
+###3.VMware Tools 不生效问题
+	// sudo apt-get autoremove open-vm-tools
+	// sudo apt-get install open-vm-tools
+	sudo apt-get install open-vm-tools-desktop 单步生效
+	重启
 
 ###使用问题
 	修改目录下所有文件权限
