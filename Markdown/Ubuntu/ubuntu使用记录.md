@@ -49,6 +49,10 @@
 	sudo apt-get install open-vm-tools-desktop 单步生效
 	重启
 
+___
+###apt-get
+	dot to graphviz
+	sudo apt-get install graphviz
 ###使用问题
 	修改目录下所有文件权限
 	chmod -R 777 xxx/

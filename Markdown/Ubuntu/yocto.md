@@ -27,10 +27,32 @@
 
 ###初始化仓库
     #repo init -u https://source.codeaurora.cn/external/imx/imx-manifest -b imx-linux-zeus -m imx-5.4.47-2.2.0.xml
-
     repo sync -jx
+___
+###yocto custom
+######Image 　　就是由recipes烘烤完成的packeages
+######recipe　　是一些构建packages的指令集
+			从哪获取源代码以及加载哪些patch
+			依赖关系（库和其他recipe）
+			配置/编译选项
+######layer  是代表core的recipes的逻辑集合、一个BSP或者一个应用栈
 
 
+######层级
+#######The Yocto Project and Poky
+	User configuration
+	Metadata (.bb + patches)
+	Machine (BSP) configuration
+	Policy configuration
+
+#######Layers
+	Develper-Specific Layer
+	Commercial Layer (from OSV)
+	UI-Specific Layer
+	Hardware-Specific BSP
+	Yocto-Specific Layer Metadata (meta-yocto)
+	OpenEmbedded Core Metadata (oe-core)
+___
 ###使用中遇到的问题：
 	问题
 		Can't find default configuration "arch/arm64/configs/imx_v8_defconfig"!
