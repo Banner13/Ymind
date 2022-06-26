@@ -63,7 +63,9 @@ ___
 		例如 gcc version 8.1.0 (x86_64-posix-sjlj-rev0, Built by MinGW-W64 project)
 
 软件配置：
+	VS Code 使用到的插件 Cortex-Debug 、 Cortex-Debug: Device Support Pack - STM32F1 、 Arm Assembly
 
+ 
 
 
 

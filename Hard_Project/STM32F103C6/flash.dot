@@ -1,0 +1,34 @@
+
+digraph G {
+    splines="FALSE";
+
+    /* Entities */
+    Main_memory [label="Main_memory\n(Page_size 1Kb or 2Kb)", shape="square"]
+    Information_block [label="Information\nblock", shape="square"]
+    Flash_memory_interface_registers [label="Flash\nmemory\ninterface\nregisters", shape="square"]
+    
+    Page_1 [label="Page_1", shape="square"]
+    Page_2 [label="Page_2", shape="square"]
+    Page_xxx [label="...", shape="square"]
+    Page_Max [label="Page_xxx", shape="square"]
+
+    System_memory [label="System\nmemory\n(2Kb)", shape="square"]
+    Option_Bytes [label="Option\nBytes\n(16 bytes)", shape="square"]
+
+    /* Relationships */
+    Flash -> Main_memory
+
+    Main_memory -> Page_1
+    Main_memory -> Page_2
+    Main_memory -> Page_xxx
+    Main_memory -> Page_Max
+
+
+    Flash -> Information_block
+    Information_block -> System_memory
+    Information_block -> Option_Bytes 
+
+
+	Flash -> Flash_memory_interface_registers
+
+}
