@@ -1,17 +1,17 @@
 ###yocto构建：
 
-	所需安装包
-    #sudo apt-get install gawk wget git-core diffstat unzip texinfo gcc-multilib \
+	所需安装包(两个都进行安装  有的重复，但没关系)
+    $ sudo apt-get install gawk wget git-core diffstat unzip texinfo gcc-multilib \
     build-essential  chrpath socat libsdl1.2-dev libsdl1.2-dev xterm sed cvs subversion \
     coreutils texi2html  docbook-utils python-pysqlite2 help2man make gcc g++ desktop-file-utils \
     libgl1-mesa-dev libglu1-mesa-dev mercurial autoconf automake groff curl lzop asciidoc \
-    u-boot-tools python3-pip
+    u-boot-tools python3-pip samba gitk -y
 
     yocto所需安装包
     $ sudo apt-get install gawk wget git-core diffstat unzip texinfo gcc-multilib \
     build-essential chrpath socat cpio python python3 python3-pip python3-pexpect \
     xz-utils debianutils iputils-ping python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev \
-    pylint3 xterm
+    pylint3 xterm  -y
 
 ###下载repo
     #mkdir ~/bin

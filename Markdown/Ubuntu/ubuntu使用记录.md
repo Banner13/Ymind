@@ -50,6 +50,9 @@
 	重启
 
 ___
+#####代理查看
+	curl cip.cc
+	
 ###apt-get
 	dot to graphviz
 	sudo apt-get install graphviz
