@@ -20,5 +20,8 @@ msys2
 	add /mingw64/bin/wish.exe to env
 	run gitk
 
+#####msys2 使用 windows 环境变量PATH
+	新建变量 MSYS2_PATH_TYPE    值为 inherit
+
 #####注解：
 	1. windows下的软硬件配置信息，相当于管理整个计算机的数据库
