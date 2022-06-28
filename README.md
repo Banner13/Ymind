@@ -1,2 +1,2 @@
 # BannerHome
-It's Banner's Home, Welcome to the world!
+It's Banner's home, welcome to the world!

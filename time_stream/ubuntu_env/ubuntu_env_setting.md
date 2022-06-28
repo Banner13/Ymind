@@ -28,9 +28,9 @@
 
 ***
 
-###2.软件安装
+###2.常用软件安装
 
-    2.1 sudo apt-get install samba net-tools gitk -y
+    2.1 sudo apt-get install samba net-tools gitk graphviz -y
     2.2 配置samba
     2.2.1 sudo smbpasswd -a 'username'  // 添加samba用户(用户需要是ubuntu已存在的用户，密码可以为空)
     2.3 选择需要共享的文件，右键开启共享
@@ -42,25 +42,38 @@
     vi ~/.bashrc
     export PATH=xxx/xxx/xxx:$PATH
     alias ll='ls -l -h'
-	
-###3.VMware Tools 不生效问题
-	// sudo apt-get autoremove open-vm-tools
-	// sudo apt-get install open-vm-tools
-	sudo apt-get install open-vm-tools-desktop 单步生效
-	重启
 ___
 ###代理设置
+
+	参考 https://zhuanlan.zhihu.com/p/102316528
+		sudo apt-get install privoxy
+		vim /etc/privoxy/config
+		在最前面添加:
+			listen-address 0.0.0.0:8118
+			forward-socks5 / localhost:1080 .
+		sudo /usr/sbin/privoxy /etc/privoxy/config
+	
 	function proxy_off(){
 			unset http_proxy
 			unset https_proxy
 			unset ftp_proxy
 			unset rsync_proxy
+			unset HTTP_PROXY
+			unset HTTPS_PROXY
+			unset FTP_PROXY
+			unset RSYNC_PROXY
+			unset all_proxy
+			unset ALL_PROXY
+			git config --global http.proxy ""
+			git config --global https.proxy ""
+			echo -e "已关闭代理"
+			curl cip.cc
 			echo -e "已关闭代理"
 	}
 
 	function proxy_on() {
 			export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
-			export http_proxy="http://127.0.0.1:1087"#注意，根据自己的配置设置有可能会是1080或1086
+			export http_proxy="http://127.0.0.1:1087" #注意，根据自己的配置设置有可能会是1080或1086
 			export https_proxy=$http_proxy
 			export ftp_proxy=$http_proxy
 			export rsync_proxy=$http_proxy
@@ -75,5 +88,11 @@ ___
 	修改目录下所有文件权限
 	chmod -R 777 xxx/
 ___
-###千兆网卡
+####虚拟机使用
+######VMware Tools 不生效问题
+	// sudo apt-get autoremove open-vm-tools
+	// sudo apt-get install open-vm-tools
+	sudo apt-get install open-vm-tools-desktop 单步生效
+	重启
+######千兆网卡
 	ethernet0.virtualDev= "e1000"
