@@ -37,6 +37,7 @@ ___
 			配置/编译选项
 ######layer  是代表core的recipes的逻辑集合、一个BSP或者一个应用栈
 
+<<<<<<< HEAD:Markdown/Ubuntu/yocto.md
 
 ######层级
 #######The Yocto Project and Poky
@@ -53,6 +54,9 @@ ___
 	Yocto-Specific Layer Metadata (meta-yocto)
 	OpenEmbedded Core Metadata (oe-core)
 ___
+=======
+imx6ull14x14evk
+>>>>>>> 7dd99ac (ubuntu set 1000M net):Markdown/yocto.md
 ###使用中遇到的问题：
 	问题
 		Can't find default configuration "arch/arm64/configs/imx_v8_defconfig"!
