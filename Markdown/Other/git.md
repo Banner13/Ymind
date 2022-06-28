@@ -12,3 +12,9 @@
 
 	cmd环境下：
 	set LESSCHARSET=utf-8
+	
+#####删除新增文件
+	git clean -xdf
+	git clean -xdff
+	
+	git reset commit_id
