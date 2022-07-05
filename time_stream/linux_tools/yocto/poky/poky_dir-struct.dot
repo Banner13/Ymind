@@ -1,0 +1,33 @@
+
+digraph poky_struct{
+    tmp[label="tmp"];
+    tmp_work[label="work"];
+    tmp -> tmp_work;
+
+    work_dir1[label="${PACKAGE_ARCH}-poky-${TARGET_OS}"];
+    work_dir2[label="${MACHINE}-poky-${TARGET_OS}"];
+    tmp_work ->   work_dir1,
+                work_dir2;
+
+    dir1_PackageName[label="${PN}"];
+
+    # The location where the OpenEmbedded build system builds a recipe 
+    PackageName_PackageVersion[label="${PV}-${PR}"];    
+
+    # Contains the unpacked source files for a given recipe
+    PackageVersion_BuildPackageName[label="${BPN}-${PV}"];
+
+
+    work_dir1 -> dir1_PackageName;
+    dir1_PackageName -> PackageName_PackageVersion;
+    PackageName_PackageVersion -> PackageVersion_BuildPackageName;
+
+    # Packaging occurs later using files from this holding directory.
+    PackageVersion_Image[label="image"];
+    PackageVersion_RecipeSysroot[label="recipe-sysroot"];
+    PackageVersion_RecipeSysrootNative[label="recipe-sysroot-native"];
+
+    PackageName_PackageVersion -> PackageVersion_Image;
+    PackageName_PackageVersion -> PackageVersion_RecipeSysroot;
+    PackageName_PackageVersion -> PackageVersion_RecipeSysrootNative;
+}

@@ -1,0 +1,7 @@
+#inherit from
+digraph Toolchain{
+    "meta-toolchain.bb" -> "populate_sdk.bbclass"[label="inherit from"];
+
+    "populate_sdk.bbclass" -> "populate_sdk_base.bbclass"[label="inherit from"];
+    
+}
