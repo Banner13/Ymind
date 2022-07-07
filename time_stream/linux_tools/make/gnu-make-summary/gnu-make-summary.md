@@ -95,7 +95,7 @@ ___
 	根据头文件分组来使用隐藏规则。
 
 ####2.7 Rules for Cleaning the Directory
-	使用 .PHONY 来确保 target clean 与 文件 clean 不会发送冲突。
+	使用 .PHONY: 来确保 target clean 与 文件 clean 不会发送冲突。
 
 ___
 ___

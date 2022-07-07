@@ -18,6 +18,10 @@
 	git clean -xdff
 	
 	git reset commit_id
+
+#####子模块
+	git submodule init
+	git submodule update
 	
 #####题外话
 	git运行的大致原理

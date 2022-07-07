@@ -5,7 +5,7 @@
 		
 ###build step
 	1. The first stages of building a recipe are to fetch and unpack the source code
-		获取源代码
+		获取源代码、解压
 	
 	2. Once source code is fetched and unpacked, BitBake locates patch files and applies them to the source files
 		打patch
