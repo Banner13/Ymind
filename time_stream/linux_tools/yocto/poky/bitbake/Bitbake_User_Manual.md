@@ -124,70 +124,109 @@
 		
 		1.5.1 用法和语法
 			以下是 BitBake 的用法和语法：
-	$ bitbake -h
-	用法：bitbake [options] [recipename/target recipe:do_task ...]
+		$ bitbake -h
+		用法：bitbake [options] [recipename/target recipe:do_task ...]
 
-	为给定的一组目标配方（.bb 文件）执行指定的任务（默认为“构建”）。
-	假设在 cwd 或 BBPATH 中有一个 conf/bblayers.conf 可用，它将提供层、BBFILES 和其他配置信息。
+		为给定的一组目标配方（.bb 文件）执行指定的任务（默认为“构建”）。
+		假设在 cwd 或 BBPATH 中有一个 conf/bblayers.conf 可用，它将提供层、BBFILES 和其他配置信息。
 
-	选项：
-	  --version 显示程序的版本号并退出
-	  -h, --help 显示此帮助信息并退出
-	  -b BUILDFILE, --buildfile=BUILDFILE
-			直接从特定的 .bb 配方执行任务。
-			警告：不会处理来自其他配方的任何依赖项。
-	-k, --continue 出错后尽可能继续。
-			虽然失败的目标和任何依赖它的东西都不能被建造，尽可能在建造之前停止。
-	-f, --force 强制指定的目标/任务运行（使任何现有的文件戳无效）。
-	-c CMD, --cmd=CMD 指定要执行的任务。 可用的确切选项取决于元数据。
-			一些示例可能是 'compile' 或 'populate_sysroot' 或 'listtasks' 可能会给出可用任务的列表。
-	-C INVALIDATE_STAMP，--clear-stamp=INVALIDATE_STAMP
-			指定例如'compile'任务的标记无效， 然后运行目标的默认任务。
-	-r PREFILE, --read=PREFILE
-			在 bitbake.conf 之前读取指定文件。
-	-R POSTFILE，--postread=POSTFILE
-			在 bitbake.conf 之后读取指定的文件。
-	-v, --verbose 启用 shell 任务跟踪（使用“set -x”）。
-			同时将 bb.note(...) 消息打印到标准输出（此外，将它们写入 ${T}/log.do_<task>)。
-	-D, --debug 提高调试级别。
-			您可以多次指定它。
-			-D 将调试级别设置为 1，其中仅将 bb.debug(1, ...) 消息打印到标准输出；
-			-DD 将调试级别设置为 2，其中同时打印 bb.debug(1, ...) 和 bb.debug(2, ...) 消息，以此类推。
-			如果没有 -D，则不会打印任何调试消息。
-			请注意，-D 仅影响到标准输出的输出。无论调试级别如何，所有调试消息都写入 ${T}/log.do_taskname。
-	-q, --quiet 向终端输出较少的日志消息数据。你可以多次指定。
-	-n, --dry-run 不执行，只做动作。
-	-S SIGNATURE_HANDLER, --dump-signatures=SIGNATURE_HANDLER
-			转出签名构造信息，不执行任何任务。
-			SIGNATURE_HANDLER 参数传递给处理程序。
-			两个常用值是 none 和 printdiff，但处理程序可以定义更多/更少。
-			none 意味着只转储签名，printdiff 意味着将转储的签名与缓存的签名进行比较。
-	-p, --parse-only 解析 BB 配方后退出。
-	-s, --show-versions 显示所有配方的当前和首选版本。
-	-e, --environment 显示全局或每个配方环境以及有关变量设置/更改位置的信息。
-	-g, --graphviz 以dot语法保存指定目标的依赖关系树信息。
-	-I EXTRA_ASSUME_PROVIDED，--ignore-deps=EXTRA_ASSUME_PROVIDED
-			假设这些依赖项不存在并且已经提供（相当于 ASSUME_PROVIDED）。 有助于使依赖图更具吸引力。
-	-l DEBUG_DOMAINS, --log-domains=DEBUG_DOMAINS
-			显示指定日志记录域的调试日志记录
-	-P, --profile 配置命令并保存报告。
-	-u UI, --ui=UI 要使用的用户界面（knotty、ncurses、taskexp 或 teamcity - 默认为 knotty）。
-	--token=XMLRPCTOKEN 指定连接到远程服务器时要使用的连接令牌。
-	--revisions-changed 根据上游浮动修订是否已更改设置退出代码。
-	--server-only 在没有 UI 的情况下运行 bitbake，仅启动服务器（cooker）进程。
-	-B BIND, --bind=BIND 要绑定到的 bitbake xmlrpc 服务器的名称/地址
-	-T SERVER_TIMEOUT, --idle-timeout=SERVER_TIMEOUT
-			由于不活动而设置超时以卸载bitbake服务器，设置为-1表示不卸载，默认值：环境变量BB_SERVER_TIMEOUT。
-	--no-setscene 不要运行任何场景任务。 sstate 将被忽略并构建所需的一切。
-	--skip-setscene 如果它们将被执行，则跳过 setscene 任务。
-			与 --no-setscene 不同，之前从 sstate 恢复的任务将被保留
-	--setscene-only 只运行 setscene 任务，不运行任何实际任务。
-	--remote-server=REMOTE_SERVER 连接到指定的服务器。
-	-m, --kill-server 终止任何正在运行的 bitbake 服务器。
-	--observe-only 作为仅观察客户端连接到服务器。
-	--status-only 检查远程 bitbake 服务器的状态。
-	-w WRITEEVENTLOG，--write-log=WRITEEVENTLOG
-			将构建的事件日志写入 bitbake 事件 json 文件。 使用 ''（空字符串）自动分配名称。
-	--runall=RUNALL 为指定目标的任务图中的任何配方运行指定的任务（即使它不会运行）。
-	--runonly=RUNONLY 仅运行指定目标的任务图中的指定任务（以及这些任务可能具有的任何任务依赖项）。
+			选项：
+			--version 显示程序的版本号并退出
+			-h, --help 显示此帮助信息并退出
+			-b BUILDFILE, --buildfile=BUILDFILE
+				直接从特定的 .bb 配方执行任务。
+				警告：不会处理来自其他配方的任何依赖项。
+			-k, --continue 出错后尽可能继续。
+					虽然失败的目标和任何依赖它的东西都不能被建造，尽可能在建造之前停止。
+			-f, --force 强制指定的目标/任务运行（使任何现有的文件戳无效）。
+			-c CMD, --cmd=CMD 指定要执行的任务。 可用的确切选项取决于元数据。
+					一些示例可能是 'compile' 或 'populate_sysroot' 或 'listtasks' 可能会给出可用任务的列表。
+			-C INVALIDATE_STAMP，--clear-stamp=INVALIDATE_STAMP
+					指定例如'compile'任务的标记无效， 然后运行目标的默认任务。
+			-r PREFILE, --read=PREFILE
+					在 bitbake.conf 之前读取指定文件。
+			-R POSTFILE，--postread=POSTFILE
+					在 bitbake.conf 之后读取指定的文件。
+			-v, --verbose 启用 shell 任务跟踪（使用“set -x”）。
+					同时将 bb.note(...) 消息打印到标准输出（此外，将它们写入 ${T}/log.do_<task>)。
+			-D, --debug 提高调试级别。
+					您可以多次指定它。
+					-D 将调试级别设置为 1，其中仅将 bb.debug(1, ...) 消息打印到标准输出；
+					-DD 将调试级别设置为 2，其中同时打印 bb.debug(1, ...) 和 bb.debug(2, ...) 消息，以此类推。
+					如果没有 -D，则不会打印任何调试消息。
+					请注意，-D 仅影响到标准输出的输出。无论调试级别如何，所有调试消息都写入 ${T}/log.do_taskname。
+			-q, --quiet 向终端输出较少的日志消息数据。你可以多次指定。
+			-n, --dry-run 不执行，只做动作。
+			-S SIGNATURE_HANDLER, --dump-signatures=SIGNATURE_HANDLER
+					转出签名构造信息，不执行任何任务。
+					SIGNATURE_HANDLER 参数传递给处理程序。
+					两个常用值是 none 和 printdiff，但处理程序可以定义更多/更少。
+					none 意味着只转储签名，printdiff 意味着将转储的签名与缓存的签名进行比较。
+			-p, --parse-only 解析 BB 配方后退出。
+			-s, --show-versions 显示所有配方的当前和首选版本。
+			-e, --environment 显示全局或每个配方环境以及有关变量设置/更改位置的信息。
+			-g, --graphviz 以dot语法保存指定目标的依赖关系树信息。
+			-I EXTRA_ASSUME_PROVIDED，--ignore-deps=EXTRA_ASSUME_PROVIDED
+					假设这些依赖项不存在并且已经提供（相当于 ASSUME_PROVIDED）。 有助于使依赖图更具吸引力。
+			-l DEBUG_DOMAINS, --log-domains=DEBUG_DOMAINS
+					显示指定日志记录域的调试日志记录
+			-P, --profile 配置命令并保存报告。
+			-u UI, --ui=UI 要使用的用户界面（knotty、ncurses、taskexp 或 teamcity - 默认为 knotty）。
+			--token=XMLRPCTOKEN 指定连接到远程服务器时要使用的连接令牌。
+			--revisions-changed 根据上游浮动修订是否已更改设置退出代码。
+			--server-only 在没有 UI 的情况下运行 bitbake，仅启动服务器（cooker）进程。
+			-B BIND, --bind=BIND 要绑定到的 bitbake xmlrpc 服务器的名称/地址
+			-T SERVER_TIMEOUT, --idle-timeout=SERVER_TIMEOUT
+					由于不活动而设置超时以卸载bitbake服务器，设置为-1表示不卸载，默认值：环境变量BB_SERVER_TIMEOUT。
+			--no-setscene 不要运行任何场景任务。 sstate 将被忽略并构建所需的一切。
+			--skip-setscene 如果它们将被执行，则跳过 setscene 任务。
+					与 --no-setscene 不同，之前从 sstate 恢复的任务将被保留
+			--setscene-only 只运行 setscene 任务，不运行任何实际任务。
+			--remote-server=REMOTE_SERVER 连接到指定的服务器。
+			-m, --kill-server 终止任何正在运行的 bitbake 服务器。
+			--observe-only 作为仅观察客户端连接到服务器。
+			--status-only 检查远程 bitbake 服务器的状态。
+			-w WRITEEVENTLOG，--write-log=WRITEEVENTLOG
+					将构建的事件日志写入 bitbake 事件 json 文件。 使用 ''（空字符串）自动分配名称。
+			--runall=RUNALL 为指定目标的任务图中的任何配方运行指定的任务（即使它不会运行）。
+			--runonly=RUNONLY 仅运行指定目标的任务图中的指定任务（以及这些任务可能具有的任何任务依赖项）。
 				
+	1.5.2 示例
+		
+		本节提供一些示例，展示如何使用 BitBake。
+		
+		1.5.2.1 针对单个配方执行任务
+			为单个配方文件执行任务相对简单。您指定有问题的文件，BitBake 会解析它并执行指定的任务。如果您不指定任务，BitBake 会执行默认任务，即“ build ”。 BitBake 这样做时遵循任务间依赖关系。
+			以下命令在 foo_1.0.bb 配方文件上运行构建任务，这是默认任务：
+				$ bitbake -b foo_1.0.bb
+			以下命令对 foo.bb 配方文件运行 clean 任务：
+				$ bitbake -b foo.bb -c clean
+			// 注
+			“-b”选项不会处理配方依赖关系。除了出于调试目的之外，建议您使用下一节中介绍的语法。
+			// 注尾
+			
+		1.5.2.2 针对一组配方文件执行任务
+			当想要管理多个 .bb 文件时，会引入许多额外的复杂性。显然，需要有一种方法来告诉 BitBake 哪些文件可用，以及哪些文件是您想要执行的。每个配方还需要有一种方法来表达其依赖关系，包括构建时和运行时。当多个配方提供相同的功能时，或者当一个配方有多个版本时，您必须有一种方法来表达配方偏好。
+			bitbake 命令在不使用“–buildfile”或“-b”时只接受“PROVIDES”。你不能提供其他任何东西。默认情况下，配方文件通常“PROVIDES”其“packagename”，如下例所示：
+				$ bitbake foo
+			下一个示例“PROVIDES”包名称并使用“-c”选项告诉 BitBake 只执行 do_clean 任务：
+				$ bitbake -c clean foo
+				
+				
+				
+				
+				
+				
+				
+				
+＿＿＿
+＿＿＿
+＿＿＿
+＿＿＿
+＿＿＿
+＿＿＿
+＿＿＿
+
+＿＿＿
+
+＿＿＿
