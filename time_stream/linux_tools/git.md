@@ -23,6 +23,8 @@
 	git submodule init
 	git submodule update
 	
+#####删除远程branch
+	git push origin --delete oring_brance
 #####题外话
 	git运行的大致原理
 	每个文件生成一个哈希值
