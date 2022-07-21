@@ -1,0 +1,3 @@
+[submodule "all_borad/borchs/30_Day-MakeOS"]
+	path = all_borad/borchs/30_Day-MakeOS
+	url = git@github.com:Banner13/30_Day-MakeOS.git
