@@ -1,0 +1,781 @@
+#C++之旅——Bjarne Stroustrup(第二版)
+
+<pre>
+(Addison-Wesley)安迪生韦斯利出版社
+
+	制造商和销售商用来区分其产品的许多名称都被称为商标。如果这些名称出现在这本书中，并且出版商知道商标权利要求，这些名称已经以大写字母或所有大写字母印刷。
+
+	作者和出版商在本书的编写过程中都非常谨慎，但不作任何明示或暗示的保证，也不对错误或遗漏承担任何责任。对于与使用本网站所载资讯或程式有关或因使用本网站所载资讯或程式而引致的附带或后果性损害，本网站不承担任何责任。
+
+	有关大量购买本书籍的信息，或特殊销售机会(可能包括电子版本;定制的封面设计;以及与您的业务、培训目标、营销重点或品牌利益相关的内容)，请联系我们的公司销售部corpsales@pearsoned.com或(800)382-3419。
+
+	如需政府销售咨询，请联系governmentsales@pearsoned.com。
+
+	关于美国以外的销售问题，请联系intlcs@pearson.com。
+
+	访问我们的网站:informit.com/aw美国国会图书馆控制编号:2018941627版权所有©2018皮尔森教育有限公司
+
+	保留所有权利。本出版物受版权保护，在禁止复制、储存于检索系统或以任何形式或方式(电子、机械、影印、录音等)传送本出版物之前，必须获得出版者的许可。有关培生教育全球权利与权限部门的权限、请求表格和相关联系方式的信息，请访问www.pearsoned.com/permissions/。
+
+	这本书被作者在《时代》和《Helvetica》上排版。
+
+	ISBN-10: 0-13-499783- 3第三次打印，2019年3月3 19
+</pre>
+
+##目录
+<pre>
+前言.......................................................xi
+
+1 基础
+	1.1	介绍
+	1.2	
+	1.3	
+	1.4	
+	1.5	
+	1.6	
+	1.7	
+	1.8	
+	1.9	
+	1.10	
+</pre>
+___
+
+###前言
+
+    When you wish to instruct,be brief.
+                                        – Cicero
+
+        c++感觉像是一门新语言。是的，比起c++98，今天我可以更清晰、更简单、更直接地表达我的想法。此外，生成的程序得到了编译器更好的检查，也运行得更快。
+        本书概述了目前ISO c++标准c++17定义的c++，并由主要的c++发布者实现。此外，它提到了在ISO技术规范和当前使用中定义的概念和模块，但直到c++ 20才计划纳入标准。
+        像其他现代语言一样，c++很大，需要大量的库来有效地使用。这本薄薄的书旨在让有经验的程序员了解现代c++是由什么组成的。它涵盖了大多数主要的语言特性和主要的标准库组件。这本书可以在几个小时内读完，但很明显，要写出好的c++，一天的学习是远远不够的。然而，这里的目标不是精通，而是给出一个概述，给出关键的例子，并帮助程序员入门。
+        假设您以前编写过程序。如果没有，在继续之前，请考虑阅读教科书，例如《编程:使用c++的原理与实践》(第二版)[Strous-trup,2014]。即使您以前编写过程序，您使用的语言或您编写的应用程序可能与本文介绍的c++风格非常不同。
+        想象一次城市观光旅行，比如哥本哈根或纽约。在短短几个小时内，你可以快速浏览主要景点，了解一些背景故事，并就下一步该怎么做给出一些建议。这样的游览之后你就不了解这个城市了。你不了解你所看到和听到的一切。你不知道如何驾驭管理城市生活的正式和非正式规则。要想真正了解一座城市，你必须住在里面，通常要住上好几年。然而，如果运气好的话，你会对这座城市的概况有所了解，对它的特别之处有所了解，对你感兴趣的东西有所了解。游览结束后，真正的探索就可以开始了。
+        本文介绍了c++语言的主要特性，因为它们支持编程风格，比如面向对象和泛型编程。它不试图提供详细的、参考手册式的、逐项查看该语言的视图。按照最好的教科书传统，我在使用一个特性之前会先解释它，但这并不总是可能的，也不是每个人都严格按照顺序阅读文本。
+        因此，建议读者使用交叉引用和索引。
+        类似地，本文将以示例的形式介绍标准库，而不是详尽地介绍。它没有描述ISO标准之外的库。读者可以根据需要查找辅助材料。[Stroustrup,2013]和[Stroustrup,2014]是这样的材料的例子，但在网络上有大量的材料(质量不一)，例如[Cppreference]。例如，当我提到一个标准库函数或类时，可以很容易地查找它的定义，通过检查它的文档，可以找到许多相关的工具。
+        本文将把c++作为一个完整的整体来介绍，而不是一层一层的蛋糕。因此，它不能识别C中存在的语言特性，c++ 98的一部分，或c++ 11、c++ 14或c++ 17中的新特性。这些信息可以在第十六章(历史和兼容性)中找到。我专注于基本原理，尽量简短，但我没有完全抵制住过度表现新颖特征的诱惑。这似乎也满足了许多读者的好奇心，他们已经知道一些较早版本的c++。
+        编程语言参考手册或标准只是简单地说明可以做什么，但程序员通常更感兴趣的是学习如何更好地使用语言。这方面的内容部分在所涉及主题的选择中，部分在文本中，特别是在建议部分中。关于如何构成优秀的现代c++的更多建议可以在c++核心指南[Stroustrup,2015]中找到。本书的核心指导方针可以成为进一步探讨本书所提出思想的一个很好的来源。你可能会注意到，《核心指南》和本书在建议的制定乃至建议的编号方面有显著的相似性。一个原因是第一版的《c++之旅》是最初核心指南的主要来源。
+
+    鸣谢
+    	这里介绍的一些材料是从TC++PL4 [Stroustrup,2013]中借来的，所以感谢所有帮助完成这本书的人。
+    	感谢所有帮助完成和纠正第一版“c++之旅”的人。“感谢摩根士丹利(Morgan Stanley)给我时间写这本书的第二版。感谢哥伦比亚大学2018年春季“使用c++设计”类在这本书的早期草稿中发现了许多错别字和bug，并提出了许多建设性的建议。
+    	感谢Paul Anderson、Chuck Allison、Peter Gottschling、William Mon、Charles Wilson和Sergey Zubkov对该书的评论和许多改进建议。
+    	曼哈顿,纽约
+        																	Bjarne Stroustrup
+___
+
+###1 基础
+<pre>
+The first thing we do, let’skill all the language lawyers.
+                                                        – Henry VI, Part II
+•	介绍
+•	程序
+        Hello, World!
+•	函数
+•	类型、变量和运算
+        算术;初始化
+•	作用域和生存期
+•	常量
+•	指针、数组和引用
+        空指针
+•	测试
+•	映射到硬件
+        赋值;初始化
+•	建议
+</pre>
+
+####1.1 介绍
+		本章非正式地介绍了c++的符号，c++的内存和计算模型，以及将代码构建为程序的基本机制。这些语言工具支持C语言中最常见的风格，有时也被称为过程式编程(面向过程编程)^1^。
+	^1^ 译注
+
+####1.2 程序
+		C++ 是一种编译语言。一个程序的运行，首先它的源文本(source text)需要被编译器(compiler)处理，生成目标(object)文件，然后通过链接器(linker)将它们合并到一起，产生一个可执行程序。一个c++程序通常由许多源代码文件(通常简称为源文件)组成。
+    	可执行程序是为特定的硬件/系统组合而创建的;它不能从Mac电脑移植到Windows电脑上。当我们谈论c++程序的可移植性时，我们通常指的是源代码的可移植性;也就是说，源代码可以成功地编译并在各种系统上运行。
+    	ISO c++标准定义了两种实体:
+        • 核心语言特性，如内置类型(如char和int)和循环(如for声明和while声明)。
+        • 标准库组件，如容器(如vector和map)和I/O操作(如<<和getline())。
+        标准库组件是由每个c++实现提供的非常普通的c++代码。也就是说，c++标准库可以用c++本身实现，而且确实是这样的(在线程上下文切换等事情上只需要很少的机器代码)。这意味着c++对于最苛刻的系统编程任务具有足够的表现力和效率。
+        c++是一种静态类型语言。也就是说，编译器在使用每个实体(例如，对象、值、名称和表达式)时必须知道它的类型。对象的类型决定了适用于该对象的操作集。
+
+##### 1.2.1 Hello,World!
+		最小的c++程序是
+        	int main() { } // the minimal C++ program
+            这定义了一个名为main的函数，它不接受参数，也不执行任何操作。
+            花括号，{}，在c++中表示分组。在这里，它们表示函数体的开始和结束。
+            双斜杠，//，注释开始一直延伸到行尾的。注释是写给人类读者的;编译器会忽略注释。
+        每个c++程序必须只有一个名为main()的全局函数。程序从执行该函数开始。main()返回的int整型值(如果有的话)是程序返回给“系统”的值。如果没有返回值，系统将接收到一个指示成功完成的值。main()中的非零值表示失败。并不是每个操作系统和执行环境都使用这个返回值:基于Linux/ unix的环境会这样做，但基于windows的环境很少这样做。
+       	通常，程序会产生一些输出。这里有一个写 Hello, World! 的程序：
+---
+            #include <iostream>
+            int main()
+            {
+                std::cout << "Hello, World!\n";
+            }
+---
+		#include <iostream> 这一行告诉编译器需要编译的内容还包含 iostream 文件。没有这些声明，表达式：
+    	std::cout << "Hello, World!\n"
+    	没有任何意义。	// 译注：该文件为标准库中的文件，存放在编译器目录下，提供标准I/O流的功能。
+    操作符<< (" put to ")将其第二个参数写入其第一个参数。在本例中，字符串字面量“Hello, World!”\n”被写入标准输出流std::cout。字符串字面量是由双引号包围的字符序列。在字符串字面量中，反斜杠字符\后跟另一个字符表示单个“特殊字符”。在本例中，\n是换行字符，因此写入的字符是Hello, World!后跟换行符。
+    	std::指定名称cout在标准库命名空间中找到(§3.4)。在讨论标准特性时，我通常会省略std::;§3.4展示了如何在没有显式限定的情况下使名称空间中的名称可见。
+        实际上，所有可执行代码都放在函数中，并直接或间接地从main()调用。例如:
+---
+        #include <iostream> // include (‘‘impor t’’) the declarations for the I/O stream librar y
+        using namespace std; // make names from std visible without std:: (§3.4)
+        double square(double x) // square a double precision floating-point number
+        {
+         return x∗x;
+        }
+        void print_square(double x)
+        {
+         cout << "the square of " << x << " is " << square(x) << "\n";
+        }
+        int main()
+        {
+         print_square(1.234); // pr int: the square of 1.234 is 1.52276
+        }
+---
+		“返回类型”void表示函数不返回值。
+
+####1.3 函数
+	// 译注：Function 大多数时候翻译为"函数"，也可翻译为"功能"。
+    // 对于计算机的初衷(一种计算工具)来说，Function的目的就是一组数据通过这个Function而得到一组输出，就像数学中的 Y = f(x)， 这个f() 就等是y对于x的函数表达式，所以称为函数。
+    // 然后往上抽象，对于软件开发人员来说，我们实现的简称为功能，所以只是叫法不同。
+
+    	在c++程序中完成某件事的主要方法是调用函数。定义函数就是指定如何执行操作的方式。除非事先声明过，否则不能调用函数。
+        函数声明给出了函数的名称、返回值的类型(如果有的话)以及调用中必须提供的参数的数量和类型。例如:
+            Elem∗ next_elem(); // 无参数; 返回Elem类型的指针 (an Elem*)
+            void exit(int); // int类型参数; 无返回
+            double sqrt(double); // double类型参数; 返回double类型
+        在函数声明中，返回类型在函数名之前，参数类型在函数名之后的括号中。
+        参数传递的语义与初始化的语义相同(§3.6.1)。也就是说，检查实参类型，必要时进行隐式实参类型转换(§1.4)。例如:
+        	double s2 = sqrt(2); // 使用double类型的2，调用sqrt()函数
+			double s3 = sqrt("three"); // 错误 : sqrt() 需要 double 类型的参数
+        这种编译时检查和类型转换的价值不应低估。
+        函数声明可以包含参数名。这对程序的读者是有帮助的，但是除非声明也是一个函数定义，否则编译器会简单地忽略这些名称。例如:
+        	double sqrt(double d); // 返回d的平方根
+			double square(double); // 返回参数的平方
+        函数的类型由它的返回类型和参数类型的序列组成。例如:
+        	double get(const vector<double>& vec, int index); //类型: double(const vector<double>&,int)
+        函数可以是类的成员(§2.3，§4.2.1)。对于这样的成员函数，其类名也是函数类型的一部分。例如:
+        	char& String::operator[](int index); //类型: char& String::(int)
+        我们希望我们的代码是可理解的，因为这是实现可维护性的第一步。可理解性的第一步是将计算任务分解成有意义的块(以函数和类的形式表示)并命名它们。然后，这些函数提供基本的计算词汇，就像类型(内置的和用户定义的)提供基本的数据词汇一样。c++标准算法(如find、sort和iota)提供了一个良好的开端(第12章)。接下来，我们可以将表示普通或专门任务的函数组合成更大的计算。
+        代码中的错误数量与代码的数量和代码的复杂性密切相关。这两个问题都可以通过使用更多更短的函数来解决。使用函数来完成特定的任务通常可以避免我们在其他代码中编写特定的代码片段;使它成为一个函数将迫使我们命名活动并记录其依赖关系。
+        如果两个函数定义为同名，但实参类型不同，编译器将为每次调用选择最合适的函数来调用。例如:
+        	void print(int); // 接受一个int参数
+            void print(double); // 接受一个double参数
+            void print(string); // 接受一个string参数
+            void user()
+            {
+                print(42); // 调用 print(int)
+                print(9.65); // 调用 print(double)
+                print("Barcelona"); // 调用 print(str ing)
+            }
+        如果可以调用两个可选函数，但两者都可以使用，则该调用被认为是二义性的，编译器会给出错误。例如:
+			void print(int,double);
+            void print(double ,int);
+            void user2()
+            {
+             print(0,0); // error : ambiguous
+            }
+        定义多个同名函数被称为函数重载，这是泛型编程的基本部分之一(§7.2)。当一个函数被重载时，每个相同名称的函数应该实现相同的语义。print()函数就是这样一个例子;每个print()都会打印它的参数。
+
+####1.4 类型、变量和运算
+		每个名称和每个表达式都有一个类型，该类型决定了可能对其执行的操作。例如，声明
+    		int inch;
+    	指定inch为int类型;也就是说，inch是一个整数变量。
+    	声明是将实体引入程序的语句。它指定了实体的类型:
+        	• 类型定义了一组可能的值和一组操作(对于对象)。
+            • 对象是存储某种类型值的内存。
+            • 值是根据类型解释的位的集合。
+            • 变量是一个命名对象。
+        c++提供了一个基本类型的小型动物园，但由于我不是动物学家，我就不一一列出了。你可以在参考资料中找到它们，比如[Stroustrup,2013]或[Cppreference]。例子有:
+            bool // Boolean, possible values are true and false
+            char // character, for example, 'a', 'z', and '9'
+            int // integer, for example, -273, 42, and 1066
+            double // double-precision floating-point number, for example, -273.15, 3.14, and 6.626e-34
+            unsigned // non-negative integer, for example, 0, 1, and 999 (use for bitwise logical operations)
+        每一种基本类型都直接对应于硬件设施，并具有固定的大小，决定了可以存储在其中的值的范围:
+		一个char变量具有在给定机器上保存一个字符的自然大小(通常是8位字节)，而其他类型的变量的大小是一个char大小的倍数。类型的大小是由实现定义的(即，它可以在不同的机器上变化)，可以通过sizeeof操作符获得;例如，sizeof(char)等于1，而sizeof(int)通常是4。
+        数字可以是浮点数或整数。
+        • 浮点数可由小数点(如3.14)或指数(如3e−2)识别。
+		• 整数字面值默认为十进制(例如，42表示42)。
+        	0b前缀表示二进制(基数2)整数字面值(例如0b10101010)。
+            0x前缀表示十六进制(以16为基数)整数字面值(例如0xBAD1234)。
+            0前缀表示八进制(以8为基数)整数字面值(例如，0334)。
+        为了使长文字更便于人类阅读，我们可以使用单引号(')作为数字分隔符。例如，π约为3.14159'26535'89793'23846'26433'83279'50288，或者你更喜欢十六进制的0x3.243F'6A88'85A3'08D3。
+
+#####1.41 运算
+		算术运算符可用于基本类型的适当组合:
+            x+y // plus
+            +x // unar y plus
+            x−y // minus
+            −x // unar y minus
+            x∗y / / multiply
+            x/y // divide
+            x%y // remainder (modulus) for integers
+        比较操作符也可以:
+            x==y // equal
+            x!=y // not equal
+            x<y // less than
+            x>y // greater than
+            x<=y // less than or equal
+            x>=y // greater than or equal
+        此外，还提供了逻辑操作符:
+            x&y // bitwise and
+            x|y // bitwise or
+            xˆy // bitwise exclusive or
+            ˜x // bitwise complement
+            x&&y // logical and
+            x||y // logical or
+            !x // logical not (negation)
+        按位逻辑运算符产生对每个位执行操作的操作数类型的结果。逻辑操作符&&和||根据其操作数的值返回true或false。
+		在赋值和算术运算中，c++执行基本类型之间所有有意义的转换，以便它们可以自由混合:
+            void some_function() // function that doesn’t return a value
+            {
+                double d = 2.2; // initialize floating-point number
+                int i = 7; // initialize integer
+                d = d+i; // assign sum to d
+                i = d∗i; // assign product to i; beware: truncating the double d*i to an int
+            }
+		表达式中使用的转换称为通常的算术转换，目的是确保以其操作数的最高精度计算表达式。例如，double类型和int类型的加法运算使用双精度浮点运算。
+		注意=是赋值操作符，而==测试是否相等。
+		除了传统的算术和逻辑运算符外，c++还提供了更具体的修改变量的操作:
+            x+=y // x = x+y
+            ++x // increment: x = x+1
+            x−=y // x = x-y
+            −−x // decrement: x = x-1
+            x∗=y // scaling: x = x*y
+            x/=y // scaling: x = x/y
+            x%=y // x = x%y
+        这些操作符简洁、方便、使用频率很高。
+		表达式的求值顺序是从左到右，但赋值是从右到左的。不幸的是，函数参数的求值顺序没有指定。
+
+#####1.42 初始化
+		在使用一个对象之前，必须给它一个值。c++提供了表示初始化的各种表示法，例如上面使用的=，以及基于带花括号限制的初始化列表的通用形式:
+            double d1 = 2.3; // initialize d1 to 2.3
+            double d2 {2.3}; // initialize d2 to 2.3
+            double d3 = {2.3}; // initialize d3 to 2.3 (the = is optional with { ... })
+            complex<double> z = 1; // a complex number with double-precision floating-point scalars
+            complex<double> z2 {d1,d2};
+            complex<double> z3 = {d1,d2}; // the = is optional with { ... }
+            vector<int> v {1,2,3,4,5,6}; // a vector of ints
+        =形式是传统的，可以追溯到C语言，但如果有疑问，可以使用通用的{}-list形式。除此之外，它还可以避免在转换过程中丢失信息:
+            int i1 = 7.8; // i1 becomes 7 (surpr ise?)
+            int i2 {7.8}; // error : floating-point to integer conversion
+        不幸的是，当您使用=时，允许并隐式应用丢失信息的转换，例如double到int和int到char的收缩转换(但当您使用{}时则不允许)。隐式收缩转换带来的问题是C兼容性所付出的代价(§16.3)。
+        常量(§1.6)不能不初始化，变量只有在极其罕见的情况下才应该不初始化。在有合适的值之前不要引入名称。用户定义的类型(如string、vector、Matrix、Motor_controller和Orc_warrior)可以被定义为隐式初始化(§4.2.1)。
+        当定义一个变量时，当它可以从初始化式推导出来时，你不需要显式地声明它的类型:
+            auto b = true; // a bool
+            auto ch = 'x'; // a char
+            auto i = 123; // an int
+            auto d = 1.2; // a double
+            auto z = sqrt(y); // z has the type of whatever sqr t(y) retur ns
+            auto bb {true}; // bb is a bool
+        对于auto，我们倾向于使用=，因为不涉及潜在的麻烦的类型转换，但如果您喜欢始终使用{}初始化，您可以这样做。
+        在没有特定原因需要显式提及类型时，我们使用auto。“特殊原因”包括:
+        • 定义在一个很大的范围内，我们想让类型对代码的读者清晰可见。
+        • 我们想要明确变量的范围或精度(例如，double而不是float)。
+        使用auto，可以避免冗余和编写长类型名。这在泛型编程中尤其重要，因为程序员很难知道对象的确切类型，而且类型名称可能很长(§12.2)。
+
+####1.5 作用域和生存周期
+		声明将其名称引入作用域:
+            •局部作用域:在函数(§1.3)或lambda(§6.3.2)中声明的名称称为局部名称。
+            它的范围从声明点扩展到发生声明的块的末尾。块由{}对分隔。函数参数名被认为是局部名称。
+            •类作用域:定义在类(§2.2，§2.3,Chapter 4)、函数(§1.3)、lambda(§6.3.2)或enum类(§2.5)之外的名称称为成员名(或类成员名)。它的范围从其附随声明的开头一直延伸到该声明的结尾。
+            •命名空间作用域:如果一个名字定义在任何函数、lambda(§6.3.2)、class(§2.2、§2.3、Chapter 4)或enum类(§2.5)之外的命名空间(§3.4)，这个名字就被称为命名空间成员名。它的作用域从声明点扩展到命名空间的末尾。
+		没有在任何其他构造中声明的名称称为全局名称，并被称为在全局命名空间中。
+        此外，我们还可以使用没有名称的对象，例如temporary和new创建的对象(§4.2.2)。例如:
+            vector<int> vec; // vec is global (a global vector of integers)
+            struct Record {
+            string name; // name is a member or Record (a string member)
+            // ...
+            };
+            void fct(int arg) // fct is global (a global function)
+            // arg is local (an integer argument)
+            {
+                string motto {"Who dares wins"}; // motto is local
+                auto p = new Record{"Hume"}; // p points to an unnamed Record (created by new)
+                // ...
+            }
+        对象必须在使用之前被构造(初始化)，并在其作用域结束时被销毁。对于命名空间对象，销毁点是程序的结尾。对于成员，销毁点由其所属对象的销毁点决定。由new “lives” 创建的对象直到被delete(§4.2.2)销毁为止。
+
+####1.6 常量
+        c++支持两种不可变的概念:
+            • const:大致意思是“我保证不改变这个值。这主要用于指定接口，以便使用指针和引用将数据传递给函数，而不用担心数据被修改。编译器强制执行const所做的承诺。const的值可以在运行时计算。
+            • constexpr:大致意思是“在编译时进行评估”。这主要用于指定常量，允许将数据放置在只读内存中(在那里数据不太可能被损坏)，以及提高性能。编译器必须计算constexpr的值。
+        例如:
+            constexpr int dmv = 17; // dmv is a named constant
+            int var = 17; // var is not a constant
+            const double sqv = sqrt(var); // sqv is a named constant, possibly computed at run time
+            double sum(const vector<double>&); // sum will not modify its argument (§1.7)
+            vector<double> v {1.2, 3.4, 4.5}; // v is not a constant
+            const double s1 = sum(v); // OK: sum(v) is evaluated at run time
+            constexpr double s2 = sum(v); // error : sum(v) is not a constant expression
+        要使函数在常量表达式中可用，也就是说，在将被编译器求值的表达式中，它必须被定义为constexpr。例如:
+            constexpr double square(double x) { return x∗x; }
+            constexpr double max1 = 1.4∗square(17); // OK 1.4*square(17) is a constant expression
+            constexpr double max2 = 1.4∗square(var); // error : var is not a constant expression
+            const double max3 = 1.4∗square(var); // OK, may be evaluated at run time
+        constexpr函数可以用于非常量参数，但当这样做时，结果不是常量表达式。我们允许在不需要常量表达式的上下文中使用非常量表达式参数调用constexpr函数。这样，我们就不必定义两次本质上相同的函数:一次用于常量表达式，一次用于变量。
+        要成为constexpr，函数必须相当简单，不能有副作用，只能使用传递给它的信息作为参数。特别地，它不能修改非局部变量，但它可以有循环并使用自己的局部变量。例如:
+            constexpr double nth(double x, int n) // assume 0<=n
+            {
+                double res = 1;
+                int i = 0;
+                while (i<n)
+                { // while-loop: do while the condition is true (§1.7.1)
+                    res∗=x;
+                    ++i;
+                }
+                return res;
+            }
+        在一些地方，语言规则需要常量表达式(例如，数组边界(§1.7)、case标签(§1.8)、模板值参数(§6.2)和使用constexpr声明的常量)。在其他情况下，编译时评估对性能很重要。与性能问题无关，不变性(状态不变的对象)的概念是一个重要的设计问题。
+
+####1.7 指针、数组和引用
+		最基本的数据集合是连续分配的相同类型的元素序列，称为数组。这基本上就是硬件所提供的。char类型的元素数组可以这样声明:
+        	char v[6]; // array of 6 characters
+        类似地，指针可以这样声明:
+        	char∗ p; // pointer to character
+        在声明中，[]表示“的数组”，而∗表示“指向的指针”。所有数组的下界都是0，所以v有6个元素，从v[0]到v[5]。数组的大小必须是常量表达式(§1.6)。
+		指针变量可以保存适当类型的对象的地址:
+            char∗ p = &v[3]; // p points to v’s four th element
+            char x = ∗p; // *p is the object that p points to
+        在表达式中，前缀unary∗表示“的内容”，前缀unary &表示“的地址”。
+        考虑将10个元素从一个数组复制到另一个数组:
+            void copy_fct()
+            {
+                int v1[10] = {0,1,2,3,4,5,6,7,8,9};
+                int v2[10]; // to become a copy of v1
+                for (auto i=0; i!=10; ++i) // copy elements
+                v2[i]=v1[i];
+                // ...
+            }
+        这个for语句可以读作“设i为零;当i不是10时，复制第i个元素并使i递增。”当应用于整数或浮点变量时，自增操作符++只增加1。
+		c++还提供了一种更简单的for-statement，称为range-for-statement，用于以最简单的方式遍历序列:
+            void print()
+            {
+                int v[] = {0,1,2,3,4,5,6,7,8,9};
+                for (auto x : v) // for each x in v
+                	cout << x << '\n';
+                for (auto x : {10,21,32,43,54,65})
+                	cout << x << '\n';
+                // ...
+            }
+        第一个range-for语句可以读作“对于v中的每个元素，从第一个到最后一个，在x中放置一个副本并打印出来”。注意，当我们用列表初始化它时，不需要指定数组绑定。range-for语句可用于任何元素序列(§12.1)。
+		如果我们不想将v中的值复制到变量x中，而只是让x指向一个元素，我们可以这样写:
+            void increment()
+            {
+                int v[] = {0,1,2,3,4,5,6,7,8,9};
+                for (auto& x : v) // add 1 to each x in v
+                	++x;
+                // ...
+            }
+        在声明中，一元后缀&表示“引用”。引用类似于指针，只是不需要使用前缀∗来访问引用引用的值。另外，不能在初始化后引用另一个对象。
+		引用在指定函数参数时特别有用。例如:
+        	void sort(vector<double>& v); // sor t v (v is a vector of doubles)
+        通过使用引用，我们确保对于调用或t(my_vec)，我们没有复制my_vec，并且排序的是my_vec，而不是它的副本。
+        当我们不想修改实参，但又不想花费复制的代价时，我们使用const引用(§1.6)。例如:
+        	double sum(const vector<double>&)
+        接受const引用的函数非常常见。
+        当在声明中使用时，操作符(比如&、∗和[])被称为声明符:
+            T a[n] // T[n]: a is an array of n Ts
+            T∗ p / / T*: p is a pointer to T
+            T& r // T&: r is a reference to T
+            T f(A) // T(A): f is a function taking an argument of type A returning a result of type T
+
+#####1.7.1 空指针
+		我们试图确保指针始终指向对象，以便对其解除引用是有效的。如果没有对象可指向，或者需要表示“无对象可用”的概念(例如，列表的末尾)，则为指针赋值nullptr(“空指针”)。所有指针类型只共享一个nullptr:
+        	double∗ pd = nullptr;
+            Link<Record>∗ lst = nullptr; // pointer to a Link to a Record
+            int x = nullptr; // error : nullptr is a pointer not an integer
+        检查指针参数是否确实指向某些东西通常是明智的:
+            int count_x(const char∗ p, char x)
+            // count the number of occurrences of x in p[]
+            // p is assumed to point to a zero-ter minated array of char (or to nothing)
+            {
+                if (p==nullptr)
+                	return 0;
+                int count = 0;
+                for (; ∗p!=0; ++p)
+                	if (∗p==x)
+                		++count;
+                return count;
+            }
+        注意，我们可以使用++将指针推进到数组的下一个元素，如果不需要，可以在for语句中省略初始化式。
+		count_x()的定义假设∗这个字符是一个c风格的字符串，也就是说，这个指针指向一个以零结尾的字符数组。字符串字面值中的字符是不可变的，因此为了处理count_x("Hello!")，我声明count_x()为一个const char *实参。
+		在旧代码中，通常使用0或NULL来代替nullptr。然而，使用nullptr消除了整数(如0或NULL)和指针(如nullptr)之间的潜在混淆。
+		在count_x()示例中，我们没有使用for语句的初始化器部分，因此可以使用更简单的while语句:
+            int count_x(const char∗ p, char x)
+            // count the number of occurrences of x in p[]
+            // p is assumed to point to a zero-ter minated array of char (or to nothing)
+            {
+                if (p==nullptr)
+                	return 0;
+                int count = 0;
+                while (∗p) {
+                    if (∗p==x)
+                    	++count;
+                    ++p;
+                }
+                return count;
+            }
+        while语句一直执行，直到它的条件变为false。
+		数值的测试(例如，count_x()中的while(∗p)等价于将该值与0进行比较(例如，while(∗p!=0))。对指针值的测试(例如，if (p))等价于将该值与nullptr比较(例如，if (p!=nullptr))。
+		没有“空引用”。引用必须指向一个有效的对象(实现假定它是有效的)。我们可以通过一些模糊而巧妙的方式去违反这一规则;不要这样做。
+
+####1.8 测试
+		c++提供了一组常规的语句来表示选择和循环，比如if语句、switch语句、while-loops和for-loops。例如，下面是一个简单的函数，它提示用户并返回一个指示响应的布尔值:
+            bool accept()
+            {
+                cout << "Do you want to proceed (y or n)?\n"; // wr ite question
+                char answer = 0; // initialize to a value that will not appear on input
+                cin >> answer; // read answer
+                if (answer == 'y')
+                    return true;
+                return false;
+            }
+        为了匹配<<输出操作符(" put To ")，使用>>操作符(" get from ")作为输入;cin是标准输入流(第10章)。>>的右操作数的类型决定了接受什么输入，它的右操作数是输入操作的目标。输出字符串末尾的\n字符表示换行符(§1.2.1)。
+		注意，answer的定义出现在需要它的地方(而不是之前)。声明可以出现在语句可以出现的任何地方。
+        这个例子可以通过考虑n(表示“no”)来改进:
+            bool accept2()
+            {
+                cout << "Do you want to proceed (y or n)?\n"; // wr ite question
+                char answer = 0; // initialize to a value that will not appear on input
+                cin >> answer; // read answer
+
+                switch (answer)
+                {
+                    case 'y':
+                    	return true;
+                    case 'n':
+                    	return false;
+                    default:
+                    	cout << "I'll take that for a no.\n";
+
+                    return false;
+                }
+            }
+        switch语句针对一组常量测试一个值。这些称为case-labels的常量必须是不同的，如果所测试的值与它们中的任何一个都不匹配，则选择默认值。如果值不匹配任何大小写标签，并且没有提供缺省值，则不采取任何操作。
+        我们不需要通过从包含switch语句的函数返回来退出case。
+		通常，我们只是想用switch语句后面的语句继续执行。我们可以使用break语句来实现这一点。举个例子来说吧，在一款简单的命令电子游戏中使用一个非常聪明但却非常原始的解析器:
+            void action()
+            {
+                while (true)
+                {
+                    cout << "enter action:\n"; // request action
+                    string act;
+                    cin >> act; // read characters into a string
+                    Point delta {0,0}; // Point holds an {x,y} pair
+                    for (char ch : act)
+                    {
+                        switch (ch)
+                        {
+                            case 'u': // up
+                            case 'n': // nor th
+                            	++delta.y;
+                            	break;
+                            case 'r': // right
+                            case 'e': // east
+                            	++delta.x;
+                            	break;
+                            // ... more actions ...
+                            default:
+                            	cout << "I freeze!\n";
+                        }
+                        move(current+delta∗scale);
+                        update_display();
+                    }
+                }
+            }
+        与for语句(§1.7)类似，if语句也可以引入一个变量并对其进行测试。例如:
+        	void do_something(vector<int>& v)
+            {
+                if (auto n = v.size(); n!=0)
+                {
+                    // ... we get here if n!=0 ...
+                }
+                // ...
+            }
+        在这里，整数n被定义在if语句中使用，用v.size()初始化，并立即由n!=0条件后的分号。在条件中声明的名称在if-语句的两个分支上都有作用域。
+        与for语句一样，在if语句的条件中声明名称的目的是限制变量的作用域，以提高可读性和最小化错误。
+		最常见的情况是针对0(或nullptr)测试变量。要做到这一点，只需省略对条件的显式提及。例如:
+            void do_something(vector<int>& v)
+            {
+                if (auto n = v.size())
+                {
+                    // ... we get here if n!=0 ...
+                }
+                // ...
+            }
+        如果可以的话，更喜欢使用这种简洁和简单的形式。
+
+####1.9 硬件对应关系
+		c++提供了到硬件的直接映射。当您使用一种基本操作时，实现是由硬件提供的，通常是单个机器操作。例如，两个整数相加，x+y执行一个整数相加机指令。
+        c++的实现将机器的内存视为一个内存位置序列，它可以将(类型化的)对象放入其中，并使用指针寻址它们:
+        指针在内存中表示为机器地址。“基本语言构造到硬件的简单映射对于原始的低级性能至关重要，而这正是C和c++几十年来闻名的地方。C和c++的基本机器模型是基于计算机硬件，而不是某种形式的数学。
+
+#####1.9.1 赋值
+		内置类型的赋值是一个简单的机器复制操作。考虑:
+            int x = 2;
+            int y = 3;
+            x = y ; / / x becomes 3
+            // Note: x==y
+        注意，这两个对象是独立的。我们可以改变y的值而不影响x的值。例如，x=99不会改变y的值。与Java、c#和其他语言不同，但与C一样，这对所有类型都适用，而不仅仅是int。
+        如果我们想要不同的对象引用相同(共享)的值，就必须这么说。我们可以使用指针:
+            int x = 2;
+            int y = 3;
+            int∗ p = &x;
+            int∗ q = &y; // now p!=q and *p!=*q
+            p = q ; / / p becomes &y; now p==q, so (obviously)*p == *q
+        也就是说，p=q得到p==q。在p=q之后，两个指针都指向y。
+        引用和指针都引用/指向对象，并且都在内存中表示为机器地址。但是，使用它们的语言规则不同。对引用赋值不会改变引用的对象，而是赋值给被引用的对象:
+        	int x = 2;
+            int y = 3;
+            int& r = x; // r refers to x
+            int& r2 = y; // now r2 refers to y
+            r = r2; // read through r2, write through r: x becomes 3
+        要访问指针指向的值，可以使用∗;这将自动(隐式)为引用执行。
+		在x=y之后，对于每一种内置类型和设计良好的用户定义类型(第2章)，我们都有 x==y，它提供了=(赋值)和==(相等比较)。
+
+#####1.9.2 初始化
+		初始化不同于赋值。一般来说，要使赋值正确工作，赋值对象必须有一个值。另一方面，初始化的任务是将未初始化的内存块变成有效的对象。对于几乎所有类型，读写未初始化变量的效果都是未定义的。对于内置类型，这在引用中最明显:
+            int x = 7;
+            int& r {x}; // bind r to x (r refers to x)
+            r = 7 ; / / assign to whatever r refers to
+            int& r2; // error : uninitialized reference
+            r2 = 99; // assign to whatever r2 refers to
+        幸运的是，我们不能有未初始化的引用;如果可以，那么r2=99将把99分配给某个未指定的内存位置;这样的结果最终会导致糟糕的结果或崩溃。
+		你可以使用=来初始化引用，但请不要让它迷惑你。例如:
+        	int& r = x; // bind r to x (r refers to x)
+        这仍然是初始化，并将r绑定到x，而不是任何形式的值复制。
+		初始化和赋值之间的区别对于许多用户定义的类型也至关重要，例如string和vector，赋值对象拥有最终需要释放的资源(§5.3)。
+		参数传递和函数值返回的基本语义是初始化(§3.6)。例如，这就是我们如何获得引用传递。
+
+####1.10 建议
+		这里的建议是c++核心指南的一个子集[Stroustrup,2015]。参考指南是这样的[CG: ES.23]，意思是表达式和陈述部分的第23条规则。
+	一般来说，核心指南提供了进一步的原理和示例。
+        [1]不要恐慌!假以时日，一切都会变得清晰;§1.1;[CG: In.0]。
+        [2]不要单独或单独使用内置功能。相反，基本的(内置的)特性通常最好通过库来间接使用，比如ISO c++标准库(第8-15章);[CG: P .10]。
+        [3]你不必知道c++的每一个细节才能写出好的程序。
+        [4]关注编程技术，而不是语言特性。
+        [5]关于语言定义问题的最终答案，请参阅ISO c++标准;§16.1.3;(CG: P。2)。
+        [6]“打包”有意义的操作作为精心命名的函数;§1.3;[CG: F.1]。
+        [7]函数应该执行单个逻辑操作;§1.3 [CG: F.2]。
+        [8]保持函数简短;§1.3;[CG: F.3]。
+        [9]当函数在不同类型上执行概念上相同的任务时，使用重载;§1.3。
+        [10]如果一个函数需要在编译时求值，请将它声明为constexpr;§1.6;(CG:无)。
+        [11]理解语言原语如何映射到硬件;§1.4、§1.7、§1.9、§2.3、§4.2.2、§4.4。
+        [12]使用数字分隔符使大的文字可读;§1.4;[CG: NL.11]。
+        [13]避免复杂表达式;[CG: ES.40]。
+        [14]避免收缩转换;§1.4.2;[CG: ES.46]。
+        [15]最小化变量的作用域;§1.5。
+        [16]避免“魔法常量”;使用符号常量;§1.6;[CG: ES.45]。
+        [17]首选不可变数据;§1.6;[CG: P .10]。
+        [18]每个声明只声明一个名称;[CG: ES.10]。
+        [19]保持普通名称和本地名称较短，保持不常用名称和非本地名称较长;[CG: ES.7]。
+        [20]避免相似的名字;[CG: ES.8]。
+        [21]避免ALL_CAPS名称;[CG: ES.9]。
+        [22]使用命名类型声明的{}初始化器语法;§1.4;[CG: ES.23]。
+        [23]使用auto来避免重复类型名;§1.4.2;[CG: ES.11]。
+        [24]避免未初始化的变量;§1.4;[CG: ES.20]。
+        [25]保持范围小;§1.5;[CG: ES.5]。
+        [26]在if语句的条件中声明变量时，首选对0进行隐式测试的版本;§1.8。
+        [27]仅对位操作使用unsigned;§1.4;[cg: .101] [cg: .106]
+        [28]保持指针的使用简单明了;§1.7;[CG: ES.42]。
+        [29]使用nullptr而不是0或NULL;§1.7;[CG: ES.47]。
+        [30]在你有初始化变量的值之前不要声明变量;§1.7,§1.8;[CG: ES.21]。
+        [31]不要在注释中说代码中可以清楚表述的内容;[CG: NL.1]。
+        [32]注释中的状态意图;[CG: NL.2]。
+        [33]保持一致的缩进风格;[CG: NL.4]。
+
+###2 用户定义类型
+	Don’t Panic!	– Douglas Adams
+    • 介绍
+    • 结构体
+    • 类
+    • 联合体
+    • 枚举
+    • 建议
+
+####2.1 介绍
+	我们将可由基本类型(§1.4)、const修饰符(§1.6)和声明符操作符(§1.7)构建的类型称为内置类型。c++的内置类型和操作集很丰富，但故意放在底层。它们直接而有效地反映了传统计算机硬件的能力。但是，它们没有为程序员提供高级的工具来方便地编写高级应用程序。相反，c++通过一组复杂的抽象机制来扩展内置的类型和操作，程序员可以利用这些抽象机制来构建这样的高级工具。
+		c++抽象机制主要是为了让程序员设计和实现他们自己的类型，使用合适的表示和操作，并让程序员简单而优雅地使用这些类型。使用c++的抽象机制从其他类型构建的类型称为用户定义类型。它们被称为类和枚举。用户定义的类型可以基于内置类型和其他用户定义的类型构建。本书主要介绍用户定义类型的设计、实现和使用。用户定义类型通常比内置类型更受欢迎，因为它们更容易使用、更不容易出错，而且通常与直接使用内置类型相比效率更高，甚至更快。
+        本章的其余部分将介绍定义和使用类型的最简单和最基本的工具。第4-7章更完整地描述了抽象机制及其支持的编程风格。第8-15章介绍了标准库的概况，由于标准库主要由用户定义的类型组成，它们提供了可以使用第1-7章中介绍的语言工具和编程技术构建的示例。
+
+####2.2 结构体
+	构建新类型的第一步通常是将它需要的元素组织成一个数据结构，即结构:
+    	struct Vector {
+        int sz; // number of elements
+        double∗ elem; // pointer to elements
+        };
+    这个Vector的第一个版本由一个int和一个double∗组成。
+    	Vector类型的变量可以这样定义:
+        	Vector v;
+    然而，它本身并没有多大用处，因为v的elem指针并没有指向任何东西。为了使它有用，我们必须给v一些指向的元素。例如，我们可以像这样构造一个Vector:
+    	void vector_init(Vector& v, int s)
+        {
+            v.elem = new double[s]; // allocate an array of s doubles
+            v.sz = s;
+        }
+    也就是说，v的elem成员获得一个由new操作符产生的指针，而v的sz成员获得元素的数量。Vector&中的&表示通过非const引用传递v(§1.7);这样，vector_init()就可以修改传递给它的向量。
+		new操作符从一个称为自由存储(也称为动态内存和堆)的区域分配内存。在自由存储区中分配的对象是独立于创建它们的作用域的，并且在使用delete操作符销毁它们之前是“活动”的(§4.2.2)。
+        double read_and_sum(int s)
+        // read s integers from cin and return their sum; s is assumed to be positive
+        {
+            Vector v;
+            vector_init(v,s); // allocate s elements for v
+            for (int i=0; i!=s; ++i)
+            	cin>>v.elem[i]; // read into elements
+            double sum = 0;
+            for (int i=0; i!=s; ++i)
+            	sum+=v.elem[i]; // compute the sum of the elements
+            return sum;
+        }
+    在我们的Vector变得像标准库Vector一样优雅和灵活之前，还有很长的路要走。
+	特别是，Vector的用户必须知道Vector表示的每个细节。本章的其余部分以及接下来的两章将逐步改进Vector作为语言特性和技术的示例。第11章介绍了标准库vector，它包含许多不错的改进。
+    	我使用vector和其他标准库组件作为示例
+        • 来说明语言特性和设计技术，并且
+        • 帮助您学习和使用标准库组件。
+    不要重新创建标准库组件，比如vector和string;使用它们。
+	我们使用.(dot)通过名称(和引用)访问struct成员，而−>通过指针访问struct成员。例如
+    	void f(Vector v, Vector& rv, Vector∗ pv)
+        {
+            int i1 = v.sz; // access through name
+            int i2 = rv.sz; // access through reference
+            int i3 = pv−>sz; // access through pointer
+        }
+
+####2.3 类
+	将数据与对其进行的操作分开指定具有一些好处，比如可以以任意方式使用数据。但是，用户定义的类型需要在表示和操作之间建立更紧密的连接，以拥有“真实类型”所需的所有属性。“特别地，我们经常希望保持用户无法访问的表示，以方便使用，保证数据的一致使用，并允许我们以后改进表示。要做到这一点，我们必须区分类型的接口(供所有人使用)和它的实现(可以访问无法访问的数据)。这种语言机制称为类。类有一组成员，可以是数据成员、函数成员或类型成员。接口由类的public成员定义，而private成员只能通过该接口访问。
+	例如:
+    	class Vector {
+        public:
+            Vector(int s) :elem{new double[s]}, sz{s} { } // constr uct a Vector
+            double& operator[](int i) { return elem[i]; } // element access: subscripting
+            int size() { return sz; }
+        private:
+            double∗ elem; // pointer to the elements
+            int sz; // the number of elements
+        };
+    因此，我们可以定义一个新类型Vector的变量:
+    	Vector v(6); // a Vector with 6 elements
+	基本上，Vector对象是一个“句柄”，包含指向元素(elem)和元素数量(sz)的指针。Vector对象和Vector对象的元素数量(例子中是6)是不同的，一个Vector对象在不同的时间可以有不同数量的元素(§4.2.3)。然而，Vector对象本身总是相同的大小。这是在c++中处理不同数量信息的基本技术:一个固定大小的句柄，引用“别处”的可变数量的数据(例如，在new;§4.2.2)。如何设计和使用这些对象是第四章的主要主题。
+    	这里，Vector(成员elem和sz)的表示只能通过公共成员提供的接口访问:Vector()、operator[]()和siz e()。§2.2中的read_and_sum()例子简化为:
+        	double read_and_sum(int s)
+            {
+                Vector v(s); // make a vector of s elements
+                for (int i=0; i!=v.siz e(); ++i)
+                	cin>>v[i]; // read into elements
+                double sum = 0;
+                for (int i=0; i!=v.siz e(); ++i)
+                	sum+=v[i]; // take the sum of the elements
+                return sum;
+            }
+    与类同名的成员“函数”称为构造函数，即用于构造类对象的函数。因此，构造函数Vector()替换了§2.2中的vector_init()。
+	与普通函数不同，构造函数保证用于初始化其类的对象。
+	因此，定义构造函数消除了类未初始化变量的问题。
+    	Vector(int)定义了Vector类型对象的构造方式。特别地，它说它需要一个整数来完成这一点。该整数用作元素的个数。构造函数使用成员初始化列表初始化Vector成员:
+    		:elem{new double[s]}, sz{s}
+    也就是说，首先用指向从自由存储区获得的s个double类型元素的指针初始化elem。然后，我们将sz初始化为s。
+    	对元素的访问由一个下标函数operator[]提供。它返回对适当元素的引用(double&允许读取和写入)。
+        提供size()函数是为了给用户提供元素的数量。
+		显然，错误处理是完全没有的，但我们将在§3.5中回到这一点。类似地，我们没有提供一种机制来“返回”new获取的双精度数组;§4.2.2展示了如何使用析构函数来优雅地实现这一点。
+		结构和类之间没有根本的区别;struct只是一个默认成员为public的类。例如，可以为结构定义构造函数和其他成员函数。
+
+####2.4 联合体
+	联合是一种结构体，其中所有成员都分配在相同的地址，以便联合只占用与其最大成员相同的空间。当然，联合一次只能保存一个成员的值。例如，考虑一个包含名称和值的符号表条目。它的值可以是Node *或int:
+		enum Type { ptr, num }; // a T ype can hold values ptr and num (§2.5)
+        struct Entry {
+            string name; // str ing is a standard-librar y type
+            Type t;
+            Node∗ p; // use p if t==ptr
+            int i; // use i if t==num
+        };
+        void f(Entry∗ pe)
+        {
+            if (pe−>t == num)
+            	cout << pe−>i;
+            // ...
+        }
+    成员p和i永远不会同时使用，因此浪费了空间。通过指定两者都应该是一个联盟的成员，可以很容易地恢复它，像这样:
+    	union Value {
+            Node∗ p;
+            int i;
+        };
+    语言不会跟踪union所保存的值的类型，因此程序员必须这样做:
+    	struct Entry {
+            string name;
+            Type t;
+            Value v; // use v.p if t==ptr; use v.i if t==num
+        };
+        void f(Entry∗ pe)
+        {
+            if (pe−>t == num)
+                cout << pe−>v.i;
+            // ...
+        }
+    维护类型字段(这里是t)与联合中保存的类型之间的对应关系容易出错。为了避免错误，我们可以通过将联合和type字段封装在类中并仅通过正确使用联合的成员函数提供访问来强制这种通信。
+	在应用程序级别，依赖于这种带标记的联合的抽象是常见且有用的。“直率的”联合体的使用最好尽量减少。
+    	标准库类型 variant 可用于消除对联合的最直接使用。 variant 存储一组可选类型之一的值(§13.5.1)。例如， variant<Node∗,int>可以包含Node∗或int。
+        使用 variant，Entry的例子可以写成:
+        struct Entry {
+        	string name;
+        	variant<Node∗,int> v;
+        };
+        void f(Entry∗ pe)
+        {
+        	if (holds_alternative<int>(pe−>v)) // does *pe hold an int? (see §13.5.1)
+        		cout << get<int>(pe−>v); // get the int
+        	// ...
+        }
+    在许多情况下，variant 比 union 更简单、更安全。
+####2.5 枚举
+	除了类之外，c++还支持一种简单的用户定义类型，我们可以枚举其值:
+    	enum class Color { red, blue , green };
+        enum class Traffic_light { green, yellow, red };
+        Color col = Color::red;
+        Traffic_light light = Traffic_light::red;
+	请注意，枚举器(例如，red)在它们的枚举类的作用域内，因此它们可以在不同的枚举类中重复使用，而不会造成混淆。例如，Color::red是Color的红色，与Traffic_light::red不同。
+    	枚举用于表示整数值的小集合。与不使用符号(和助记)枚举器名称相比，它们使代码更具可读性，更不容易出错。
+        枚举后的类指定枚举是强类型的，并且其枚举数是作用域的。作为独立的类型，enum类有助于防止意外误用常量。特别地，我们不能混合Traffic_light和Color的值:
+        	Color x = red; // error : which red?
+            Color y = Traffic_light::red; // error : that red is not a Color
+            Color z = Color::red; // OK
+    类似地，我们不能隐式地混合Color和整型值:
+        int i = Color::red; // error : Color ::red is not an int
+		Color c = 2; // initialization error: 2 is not a Color
+    捕获对enum的尝试转换是一种很好的防御错误的方法，但通常我们希望用其底层类型的值初始化enum(默认为int)，所以这是允许的，从底层类型的显式转换也是允许的:
+		Color x = Color{5}; // OK, but verbose
+        Color y {6}; // also OK
+    默认情况下，enum类只有赋值、初始化和比较(例如==和<;§1.4)定义的。但是，枚举是用户定义的类型，因此可以为其定义操作符:
+    	Traffic_light& operator++(Traffic_light& t) // prefix increment: ++
+        {
+            switch (t)
+            {
+                case Traffic_light::green: 		return t=Traffic_light::yellow;
+                case Traffic_light::yellow: 	   return t=Traffic_light::red;
+                case Traffic_light::red: 		  return t=Traffic_light::green;
+            }
+        }
+        Traffic_light next = ++light; // next becomes T raffic_light::green
+    如果您不想显式限定枚举器名称，并希望枚举器值为整数(不需要显式转换)，您可以从enum类中移除类以获得一个“普通”enum。来自“普通”enum的枚举器与它们的enum名称进入相同的作用域，并隐式转换为它们的整数值。例如:
+    	enum Color { red, green, blue };
+    	int col = green;
+    这里，col的值为1。默认情况下，枚举数的整数值从0开始，每增加一个枚举数就加1。“普通”枚举从最早的时候就出现在c++(和C)中了，所以尽管它们的表现不太好，但它们在当前代码中很常见。
+
+####2.6 建议
+	[1]当内置类型太低时，首选定义良好的用户定义类型而不是内置类型;§2.1。
+    [2]将相关数据组织成结构(结构或类);§2.2;[CG: C.1]。
+    [3]表示接口和使用类的实现之间的区别;§2.3;[CG: C.3]。
+    [4]struct只是一个默认成员为public的类;§2.3。
+    [5]定义构造函数来保证和简化类的初始化;§2.3;[CG: C.2]。
+    [6]避免“直接”联合体;用类型字段将它们封装在一个类中;§2.4;[CG: C.181]。
+    [7]使用枚举来表示命名常量集;§2.5;[CG: Enum.2]。
+    [8]首选类枚举而不是“普通”枚举，以减少意外;§2.5;[CG: Enum.3]。
+    [9]为枚举定义操作，安全且简单;§2.5;[CG: Enum.4]。
+。
+。
+。
+。
+。
+。
