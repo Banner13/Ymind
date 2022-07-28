@@ -1733,6 +1733,1119 @@ ___
     [23] 当无法找到所需的类被认为是有效的替代时，使用dynamic_cast到指针类型;§4.5.2;[CG: C.148]。
     [24] 使用unique_ptr或shared_ptr来避免忘记删除使用new创建的对象;§4.5.3;[CG: C.149]。
 
+___
+###5 基本操作
+	When someone says I want a programming language in which I need only say what I wish done, give him a lollipop.	– Alan Perlis
+    • 介绍
+        基本操作;转换;成员初始化
+    • 复制和移动
+        复制容器;移动的容器
+    • 资源管理
+    • 传统操作
+        比较;容器操作;输入输出操作符;用户定义的文字;swap(); hash<>
+    • 建议
+
+####5.1 介绍
+	一些操作，如初始化、赋值、复制和移动，是基本的，因为语言规则对它们进行了假设。其他操作，如==和<<，具有传统意义，忽略它们是危险的。
+
+#####5.1.1 基本操作
+	对象的构造在许多设计中起着关键作用。这种广泛的用途反映在支持初始化的语言特性的范围和灵活性上。
+		类型的构造函数、析构函数以及复制和移动操作在逻辑上不是独立的。
+	我们必须将它们定义为匹配的集合，否则就会出现逻辑或性能问题。如果类X有一个析构函数来执行一些重要的任务，比如释放自由存储空间或释放锁，则类可能需要完整的函数补充:
+		class X {
+        public:
+            X(Sometype); // ‘‘ordinar y constr uctor’’: create an object
+            X(); // default constructor
+            X(const X&); // copy constr uctor
+            X(X&&); // move constr uctor
+            X& operator=(const X&); // copy assignment: clean up target and copy
+            X& operator=(X&&); // move assignment: clean up target and move
+            ˜X(); // destr uctor: clean up
+            // ...
+        };
+    对象可以复制或移动的情况有五种:
+    	• 作为赋值源
+        • 作为对象初始化器
+        • 作为函数参数
+        • 作为函数返回值
+        • 作为异常
+	赋值操作使用复制或移动赋值操作符。原则上，其他情况使用复制或移动构造函数。然而，复制或移动构造函数调用通常通过在目标对象中构造用于初始化的对象而被优化掉。例如:
+    	X make(Sometype);
+		X x = make(value);
+    在这里，编译器通常会直接在X中从make()构造X;从而消除(“省略”)副本。
+		除了初始化命名对象和自由存储区中的对象外，构造函数还用于初始化临时对象和实现显式类型转换。
+		除了“普通构造函数”之外，这些特殊的成员函数将由编译器根据需要生成。如果你想显式地生成默认实现，你可以:
+		class Y {
+        public:
+            Y(Sometype);
+            Y(const Y&) = default; // I really do want the default copy constr uctor
+            Y(Y&&) = default; // and the default move constr uctor
+            // ...
+        };
+    如果显式指定了一些默认值，则不会生成其他默认值定义。
+    	当类有指针成员时，显式地执行复制和移动操作通常是一个好主意。原因是指针可能指向类需要删除的内容，在这种情况下，默认的成员复制将是错误的。或者，它可能指向类不能删除的内容。无论哪种情况，代码的读者都想知道。如§5.2.1所示。
+        一个好的经验法则(有时称为零规则)是要么定义所有的基本操作，要么不定义(使用默认的all)。例如:
+        struct Z {
+            Vector v;
+            string s;
+        };
+        Z z1; // default initialize z1.v and z1.s
+        Z z2 = z1; // default copy z1.v and z1.s
+    在这里，编译器将根据需要合成具有正确语义的成员默认构造、复制、移动和析构函数。
+	当补全=default时，我们用 =delete表示不生成该操作。类层次结构中的基类是不允许成员复制的典型例子。例如:
+    	class Shape {
+        public:
+            Shape(const Shape&) =delete; // no copy operations
+            Shape& operator=(const Shape&) =delete;
+            // ...
+        };
+        void copy(Shape& s1, const Shape& s2)
+        {
+        	s1 = s2; // error : Shape copy is deleted
+        }
+    =delete将导致试图使用已删除函数的编译时错误;=delete可用于抑制任何函数，而不仅仅是基本成员函数。
+
+#####5.1.2 转换
+	接受单个参数的构造函数定义了与其参数类型的转换。例如，complex(§4.2.1)提供了一个double类型的构造函数:
+    	complex z1 = 3.14; // z1 becomes {3.14,0.0}
+		complex z2 = z1∗2; // z2 becomes z1*{2.0,0} == {6.28,0.0}
+	这种隐式转换有时是理想的，但并不总是如此。例如，Vector(§4.2.2)提供了一个int类型的构造函数:
+    	Vector v1 = 7; // OK: v1 has 7 elements
+    这通常被认为是不幸的，而且标准库的vector不允许这种整型到vector的“转换”。
+    	避免这个问题的方法是只允许显式的“转换”;也就是说，我们可以这样定义构造函数:
+		class Vector {
+        public:
+            explicit Vector(int s); // no implicit conversion from int to Vector
+            // ...
+        };
+	这给我们:
+    	Vector v1(7); // OK: v1 has 7 elements
+		Vector v2 = 7; // error : no implicit conversion from int to Vector
+    当涉及到转换时，像Vector这样的类型比像复杂的显式构造函数(接受单个参数)的类型更多，除非有很好的理由不接受单个参数。
+
+#####5.1.3 成员初始化
+    定义类的数据成员时，可以提供一个默认初始化式，称为默认成员初始化式。考虑对complex修改(§4.2.1):
+    	class complex {
+            double re = 0;
+            double im = 0; // representation: two doubles with default value 0.0
+        public:
+            complex(double r, double i) :re{r}, im{i} {} // constr uct complex from two scalars: {r,i}
+            complex(double r) :re{r} {} // constr uct complex from one scalar: {r,0}
+            complex() {} // default complex: {0,0}
+            // ...
+        }
+    当构造函数没有提供值时使用默认值。这简化了代码，并帮助我们避免意外地留下未初始化的成员。
+
+
+####5.2 复制和转换
+	默认情况下，可以复制对象。对于用户定义类型的对象和内置类型都是如此。copy的默认含义是memberwise copy:复制每个成员。例如，使用§4.2.1中的complex:
+        void test(complex z1)
+        {
+            complex z2 {z1}; // copy initialization
+            complex z3;
+            z3 = z2; // copy assignment
+            // ...
+        }
+    现在，z1、z2和z3具有相同的值，因为赋值和初始化都复制了两个成员。
+    	在设计类时，必须始终考虑是否复制对象以及如何复制对象。对于简单的具体类型，成员复制通常是正确的语义。对于一些复杂的具体类型，如Vector，成员复制并不是Copy的正确语义;对于抽象类型，它几乎从来都不是。
+
+#####5.2.1 复制容器
+	当类是资源句柄时——也就是说，当类负责通过指针访问对象时——默认的成员复制通常是一个灾难。成员式复制会违反资源句柄的不变量(§3.5.2)。例如，默认的副本会留下一个Vector对象的副本，该副本引用的元素与原Vector对象相同:
+	void bad_copy(Vector v1)
+    {
+        Vector v2 = v1; // copy v1’s representation into v2
+        v1[0] = 2; // v2[0] is now also 2!
+        v2[1] = 3; // v1[1] is now also 3!
+	}
+	幸运的是，Vector有析构函数这一事实强烈暗示默认的(memberwise)复制语义是错误的，编译器至少应该对这个示例发出警告。我们需要定义更好的复制语义。
+	类对象的复制由两个成员定义:复制构造函数和复制赋值:
+        class Vector {
+        private:
+            double∗ elem; // elem points to an array of sz doubles
+            int sz;
+        public:
+            Vector(int s); // constr uctor: establish invariant, acquire resources
+            ˜Vector() { delete[] elem; } // destr uctor: release resources
+            Vector(const Vector& a); // copy constr uctor
+            Vector& operator=(const Vector& a); // copy assignment
+            double& operator[](int i);
+            const double& operator[](int i) const;
+            int size() const;
+        };
+	Vector的复制构造函数的适当定义是，为基本操作元素分配空间，然后将所有元素复制到Vector中，这样，每次复制之后，Vector都有自己的元素副本:
+        Vector::Vector(const Vector& a) // copy constr uctor
+        :elem{new double[a.sz]}, // allocate space for elements
+        sz{a.sz}
+        {
+            for (int i=0; i!=sz; ++i) // copy elements
+            	elem[i] = a.elem[i];
+        }
+    当然，除了复制构造函数，我们还需要一个复制赋值:
+        Vector& Vector::operator=(const Vector& a) // copy assignment
+        {
+            double∗ p = new double[a.sz];
+            for (int i=0; i!=a.sz; ++i)
+            	p[i] = a.elem[i];
+            delete[] elem; // delete old elements
+            elem = p;
+            sz = a.sz;
+            return ∗this;
+        }
+    this是在成员函数中预定义的名称，指向调用成员函数的对象。
+
+#####5.2.2移动容器
+	我们可以通过定义复制构造函数和复制赋值来控制复制，但是对于大型容器来说，复制的成本很高。通过使用引用将对象传递给函数时，可以避免复制的成本，但不能返回对局部对象的引用作为结果(在调用者有机会查看它时，局部对象将被销毁)。考虑:
+        Vector operator+(const Vector& a, const Vector& b)
+        {
+            if (a.size()!=b.siz e())
+            	throw Vector_siz e_mismatch{};
+            Vector res(a.size());
+            for (int i=0; i!=a.size(); ++i)
+            	res[i]=a[i]+b[i];
+            return res;
+        }
+    从a +返回需要将结果从局部变量res复制到调用者可以访问的地方。我们可以像这样使用+:
+        void f(const Vector& x, const Vector& y, const Vector& z)
+        {
+            Vector r;
+            // ...
+            r = x+y+z;
+            // ...
+        }
+	这将至少复制Vector两次(每次使用+操作符都复制一次)。如果向量很大，比如10000倍，那就很尴尬了。最令人尴尬的部分是，操作符+()中的res在复制后永远不会再使用。我们并不是真的想要副本;我们只是想从函数中得到结果:我们想移动一个Vector，而不是复制它。幸运的是，我们可以声明这个意图:
+        class Vector {
+            // ...
+            Vector(const Vector& a); // copy constr uctor
+            Vector& operator=(const Vector& a); // copy assignment
+            Vector(Vector&& a); // move constr uctor
+            Vector& operator=(Vector&& a); // move assignment
+        };
+	给定该定义，编译器将选择move构造函数来实现将返回值传递出函数。这意味着r=x+y+z将不涉及向量的复制。
+	相反，向量只是移动。
+    	通常情况下，Vector的move构造函数定义起来很简单:
+        Vector::Vector(Vector&& a)
+        :elem{a.elem}, // "grab the elements" from a
+        sz{a.sz}
+        {
+            a.elem = nullptr; // now a has no elements
+            a.sz = 0;
+        }
+    &&表示“右值引用”，是一个可以绑定右值的引用。“右值”这个词是用来补充“左值”的，“左值”大致的意思是“可以出现在赋值的左边的东西”。因此，右值是一个你不能赋值的值，比如函数调用返回的整数。因此，右值引用是对其他人不能赋值的对象的引用，所以我们可以安全地“窃取”它的值。vector的operator+()中的res局部变量就是一个例子。
+		move构造函数不接受const参数:毕竟，move构造函数应该从其参数中移除该值。move赋值的定义类似。
+		当将右值引用用作初始化式或赋值操作的右侧时，将应用移动操作。
+		在移动之后，move-from对象应该处于允许运行析构函数的状态。通常，我们还允许对从move-from对象赋值。标准库算法(第12章)假设。我们的向量就是这样。
+		当程序员知道某个值不会再被使用，但又不能指望编译器足够聪明来找出这个值时，程序员可以指定:
+            Vector f()
+            {
+                Vector x(1000);
+                Vector y(2000);
+                Vector z(3000);
+                z = x ; / / we get a copy (x might be used later in f())
+                y = std::move(x); // we get a move (move assignment)
+                // ... better not use x here ...
+                return z; // we get a move
+            }
+    标准库函数move()实际上并不移动任何东西。相反，它返回一个指向可移动的实参的引用——一个右值引用;这是一种cast(§4.2.3)。
+	在返回之前，我们有:
+	当我们从f()返回时，z的元素被返回函数移出f()后，z就被销毁了。
+	但是，y的析构函数会删除[]的元素。
+		编译器(根据c++标准)必须消除与初始化相关的大多数副本，因此move构造函数的调用并不像您想象的那么频繁。这种复制省略甚至可以消除移动中非常小的开销。另一方面，通常不可能隐式地从赋值中消除复制或移动操作，因此移动赋值对性能至关重要。
+
+####5.3 资源管理
+	通过定义构造函数、复制操作、移动操作和析构函数，程序员可以提供对所包含资源(如容器的元素)生命周期的完全控制。此外，move构造函数允许对象简单而廉价地从一个作用域移动到另一个作用域。这样一来，我们不能或不想复制出范围的对象就可以简单而廉价地移出。考虑一个表示并发活动(§15.2)的标准库线程和一个100万倍的Vector。我们不能复制前者，也不想复制后者。
+        std::vector<thread> my_threads;
+        Vector init(int n)
+        {
+            thread t {heartbeat}; // run hear tbeat concurrently (in a separate thread)
+            my_threads.push_back(std::move(t)); // move t into my_threads (§13.2.2)
+            // ... more initialization ...
+            Vector vec(n);
+            for (int i=0; i!=vec.size(); ++i)
+            	vec[i] = 777;
+            return vec; // move vec out of init()
+        }
+        auto v = init(1'000'000); // start heartbeat and initialize v
+	在许多情况下，Vector和thread等资源句柄是直接使用内置指针的较好的替代方法。事实上，标准库中的“智能指针”，比如unique_ptr，本身就是资源句柄(§13.2.1)。
+    	我使用标准库vector来保存线程，因为在§6.2之前，我们还没有使用元素类型参数化简单vector。
+		就像new和delete从应用程序代码中消失一样，我们可以让指针消失在资源句柄中。在这两种情况下，结果都是更简单和更可维护的代码，没有额外的开销。特别是我们可以实现强大的资源安全;也就是说，我们可以消除资源的一般概念的资源泄漏。例如，向量持有内存，线程持有系统线程，fstreams持有文件句柄。
+    	在许多语言中，资源管理主要委托给垃圾收集器。c++还提供了一个垃圾收集接口，以便您可以插入垃圾收集器。然而，我认为垃圾收集是在资源管理的更清洁、更通用、更好的本地化替代方案用尽之后的最后选择。我的理想是不制造任何垃圾，这样就不需要垃圾收集器:不要乱扔垃圾!垃圾收集基本上是一种全局内存管理方案。聪明的实现可以弥补这一点，但是随着系统变得更加分布式(比如缓存、多核和集群)，局部性比以往任何时候都更加重要。
+		此外，内存并不是唯一的资源。资源是在使用后必须被获取和(显式或隐式)释放的任何东西。例如内存、锁、套接字、文件句柄和线程句柄。不出所料，不只是内存的资源被称为非内存资源。一个好的资源管理系统可以处理各种资源。在任何长时间运行的系统中都必须避免泄漏，但是过多的资源保留几乎与泄漏一样糟糕。例如，如果系统占用内存、锁、文件等的时间是原来的两倍，那么就需要为系统提供两倍的资源。
+    	在进行垃圾收集之前，系统地使用资源句柄:让每个资源在某个范围内拥有一个所有者，并在默认情况下在其所有者范围结束时释放资源。在c++ 中，这被称为RAII(资源获取即初始化)，并以异常的形式与错误处理集成在一起。资源可以使用移动语义或“智能指针”从一个作用域移动到另一个作用域，共享所有权可以用“共享指针”来表示(§13.2.1)。
+        在c++标准库中，RAII无处不在:例如内存(字符串、向量、map、unordered_map等)、文件(ifstream、ofstream等)、线程(thread)、锁(lock_guard、unique_lock等)和一般对象(通过unique_ptr和shared_ptr)。其结果是隐式的资源管理，在通常的使用中是不可见的，并导致较低的资源保留时间。
+
+####5.4 常规操作
+	在为类型定义时，有些操作具有常规含义。程序员和库(尤其是标准库)通常会假定这些传统意义，因此在设计操作适用的新类型时，遵循这些传统意义是明智的。
+    • 比较:==，!=，<，<=，>，和>=(§5.4.1)
+    • 容器操作:size()， begin()， end()(§5.4.2)
+    • 输入和输出操作:>>和<<(§5.4.3)
+    • 用户定义的字面量(§5.4.4)
+    • swap() (§5.4.5)
+    • Hash函数:Hash <>(§5.4.6)
+
+#####5.4.1 比较
+	相等比较(==和!=)的意义与复制密切相关。在一个副本之后，两个副本的比较应该相等:
+        X a = something;
+        X b = a ;
+        asser t(a==b); // if a!=b here, something is very odd (§3.5.4).
+    在定义==时，还要定义!=，并确保a!= b意味着! (= = b)。
+		类似地，如果你定义<，也定义<=，>，>=，并确保通常的等价保持:
+            • a<=b means (a<b)||(a==b) and !(b<a).
+            • a>b means b<a.
+            • a>=b means (a>b)||(a==b) and !(a<b).
+        要对二元操作符(如==)的两个操作数进行相同的处理，最好将其定义为类命名空间中的独立函数。。例如:
+        namespace NX
+        {
+            class X
+            {
+            	// ...
+            };
+            bool operator==(const X&, const X&);
+            // ...
+        };
+
+#####5.4.2 容器操作
+	除非有很好的理由，否则就按照标准库容器的风格来设计容器(第11章)。特别是，通过将容器资源实现为一个句柄，并进行适当的基本操作(§5.1.1，§5.2)，来保证容器资源的安全。
+		标准库容器都知道它们的元素数量，可以通过调用size()来获取。例如:
+		for (size _ t i = 0 ; i<c.size(); ++i) // size_t is the name of the type returned by a standard-library size()
+			c[i] = 0;
+	然而，标准算法(第12章)并没有使用从0到size()的索引遍历容器，而是使用了由一对迭代器分隔的序列的概念:
+		for (auto p = c.begin(); p!=c.end(); ++p)
+			∗p = 0 ;
+	在这里，c.begin()是指向c的第一个元素的迭代器，c.end()指向c后面的一个元素。与指针一样，迭代器支持++移动到下一个元素，并支持∗访问所指向元素的值。这种迭代器模型(§12.3)具有极大的通用性和效率。迭代器用于将序列传递给标准库算法。例如:
+    	sort(v.begin(),v.end());
+    要了解更多容器操作的详细信息，请参见第11章和第12章。
+		另一种隐式使用元素数量的方法是range-for循环:
+        for (auto& x : c)
+			x = 0 ;
+    这隐式地使用了c.begin()和c.end()，大致相当于更显式的循环。
+
+#####5.4.3 输入和输出操作
+	对于整数对，<<表示左移，>表示右移。然而，对于iostream，它们分别是输出操作符和输入操作符(§1.8，第10章)。更多I/O操作请参见第10章。
+
+#####5.4.4 用户定义的文字
+	类的一个目的是使程序员能够设计和实现接近内置类型的类型。构造函数提供的初始化等同于或超过内置类型初始化的灵活性和效率，但对于内置类型，我们有文字:
+        • 123 is an int.
+        • 0xFF00u is an unsigned int.
+        • 123.456 is a double.
+        • "Surprise!" is a const char[10].
+	为用户定义的类型提供这样的文字也会很有用。这是通过为字面定义合适的后缀的含义来实现的，因此我们可以得到
+		• "Surprise!"s is a std::string.
+        • 123s is seconds.
+        • 12.7i is imaginary so that 12.7i+47 is a complex number (i.e., {47,12.7}).
+	特别地，我们可以通过使用合适的头文件和名称空间从标准库中获得这些示例:
+		Standard-Library Suffixes for Literals
+        <chrono> 		std::literals::chrono_literals 	h, min, s, ms, us, ns
+        <string> 		std::literals::string_literals 	s
+        <string_view> 	std::literals::string_literals 	sv
+        <complex> 		std::literals::complex_literals 	i, il, if
+	不出意外，带有用户定义后缀的字面量称为用户定义字面量或udl。这些文字是使用文字操作符定义的。文字操作符将参数类型的文字后跟下标转换为返回类型。例如，i表示虚线y后缀，可以这样实现:
+        constexpr complex<double> operator""i(long double arg) // imaginar y literal
+        {
+        	return {0,arg};
+        }
+	Here
+        • 操作符""表示定义的是文字操作符。
+        • “文字指示符” ""后面的i是操作符赋予意义的后缀。
+        • 参数类型为long double，表示为浮点字面值定义了后缀(i)。
+        • 返回类型complex指定了结果文字的类型。
+	有了这个，我们可以写
+		complex<double> z = 2.7182818+6.283185i;
+
+#####5.4.5 swap()
+	许多算法，最著名的是sort()，使用swap()函数交换两个对象的值。这种算法通常假定swap()非常快，并且不会抛出异常。
+	标准库提供了一个std::swap(a,b)，实现为三个移动操作:(tmp=a, a=b, b=tmp)。如果您设计的类型复制成本很高，而且可能被交换(例如，通过排序函数)，那么给它一个move操作或一个swap()或两者兼有。请注意，标准库中的容器(第11章)和字符串(§9.2.1)都有快速move操作。
+
+#####5.4.6 hash<>
+	标准库unordered_map是一个哈希表，K是键类型，V是值类型(§11.5)。要使用类型X作为键，必须定义hash。标准库为常见类型(如std::string)做了这些。
+
+####5.5 建议
+    [1] 控制对象的构造、复制、移动和销毁;§5.1.1;[CG: R.1]。
+    [2] 将构造函数、赋值函数和析构函数设计为匹配的操作集;§5.1.1;[CG: C.22]。
+    [3] 定义所有基本操作或无;§5.1.1;[CG: C.21]。
+    [4] 如果默认构造函数、赋值函数或析构函数合适，让编译器生成它(不要自己重写);§5.1.1;[CG: C.20]。
+    [5] 如果类有指针成员，考虑它是否需要用户定义的或删除的析构函数，复制和移动;§5.1.1;[cg: c.32] [cg: c.33]
+    [6] 如果一个类有用户定义的析构函数，它可能需要用户定义或删除的复制和移动;§5.2.1。
+    [7] 默认情况下，将单参数构造函数声明为explicit;§5.1.1;[CG: C.46]。
+    [8] 如果类成员有一个合理的默认值，将其作为数据成员初始化器提供;§5.1.3;[CG: C.48]。
+    [9] 如果默认值不适合某个类型，则重新定义或禁止复制;§5.2.1,§4.6.5;[CG: C.61]。
+    [10] 按值返回容器(依靠移动来提高效率);§5.2.2;[CG: F.20]。
+    [11] 对于大操作数，使用const引用实参类型;§5.2.2;[CG: F.16]。
+    [12] 提供强大的资源安全性;也就是说，永远不要泄露任何你认为是资源的东西;§5.3;[CG: R.1]。
+    [13] 如果类是资源句柄，它需要用户定义的构造函数、析构函数和非默认的复制操作;§5.3;[CG: R.1]。
+    [14] 模拟常规用法的过载操作;§5.4;[CG: C.160]。
+    [15] 遵循标准库容器设计;§5.4.2;[CG: C.100]。
+
+___
+###6 模板
+	Your quote here.	– B. Stroustrup
+    • 介绍
+    • 参数化类型
+        约束模板参数;值模板参数;模板参数推导
+    • 参数化操作
+        函数模板;函数对象;Lambda表达式
+    • 模板机制
+        可变模板;别名;编译时if
+    • 建议
+
+####6.1 介绍
+	使用向量的人不可能总是想要一个双精度的向量。向量是一个通用的概念，独立于浮点数的概念。因此，向量的元素类型应该独立表示。模板是用一组类型或值参数化的类或函数。我们使用模板来表示最容易理解的概念，通过指定实参可以生成特定的类型和函数，例如vector的元素类型double。
+
+####6.2 参数化类型
+	我们可以将双精度向量类型推广为任意向量类型，方法是将其作为模板，并用类型形参替换特定的双精度向量类型。例如:
+        template<typename T>
+        class Vector
+        {
+        private:
+            T∗ elem; // elem points to an array of sz elements of type T
+            int sz;
+        public:
+            explicit Vector(int s); // constr uctor: establish invariant, acquire resources
+            ˜Vector() { delete[] elem; } // destr uctor: release resources
+            // ... copy and move operations ...
+            T& operator[](int i); // for non-const Vectors
+            const T& operator[](int i) const; // for const Vectors (§4.2.1)
+            int size() const { return sz; }
+        };
+	template<typename T> 前缀使T成为其前缀声明(typename)的参数。它是c++版本的数学“适用于所有T”，或者更准确地说，“适用于所有类型T”。如果你想要数学上的“对于所有的T，如P(T)”，你需要概念(§6.2.1，§7.2)。使用class引入类型形参等价于使用typename，在旧代码中，我们经常看到template<class T>作为前缀。
+		成员函数可以类似地定义:
+            template<typename T>
+            Vector<T>::Vector(int s)
+            {
+                if (s<0)
+                    throw Negative_size{};
+                elem = new T[s];
+                sz = s;
+            }
+            template<typename T>
+            const T& Vector<T>::operator[](int i) const
+            {
+                if (i<0 || size()<=i)
+                    throw out_of_range{"Vector::operator[]"};
+                return elem[i];
+            }
+	有了这些定义，我们可以这样定义vector:
+        Vector<char> vc(200); // vector of 200 characters
+        Vector<string> vs(17); // vector of 17 strings
+        Vector<list<int>> vli(45); // vector of 45 lists of integers
+	Vector<list<int>> 中的>>终止了嵌套模板参数。它不是一个错位的输入操作符。
+		我们可以这样使用向量:
+        void write(const Vector<string>& vs) // Vector of some strings
+        {
+            for (int i = 0; i!=vs.size(); ++i)
+            	cout << vs[i] << '\n';
+        }
+	为了支持Vector对象的range-for循环，必须定义合适的begin()和end()函数:
+        template<typename T>
+        T∗ begin(Vector<T>& x)
+        {
+        	return x.size() ? &x[0] : nullptr; // pointer to first element or nullptr
+        }
+        template<typename T>
+        T∗ end(Vector<T>& x)
+        {
+        	return x.size() ? &x[0]+x.size() : nullptr; // pointer to one-past-last element
+        }
+	有了这些，我们可以这样写:
+		void f2(Vector<string>& vs) // Vector of some strings
+        {
+            for (auto& s : vs)
+            	cout << s << '\n';
+        }
+	类似地，我们可以将列表、向量、映射(即关联数组)、无序映射(即哈希表)等定义为模板(第11章)。
+		模板是一种编译时机制，因此与手工编写的代码相比，使用模板不会产生运行时开销。事实上，为Vector<double>生成的代码与第4章中Vector版本生成的代码完全相同。而且，为标准库vector生成的代码可能更好(因为在它的实现中做了更多的工作)。
+		模板加上一组模板参数称为实例化或特化。在编译过程的后期，在实例化时，程序中使用的每个实例化都会生成代码(§7.5)。生成的代码是类型检查的，因此生成的代码与手写代码一样是类型安全的。不幸的是，这种类型检查通常发生在编译过程的后期，也就是实例化时。
+
+#####6.2.1 受约束的模板参数(c++ 20)
+	通常，模板只对满足特定条件的模板参数有意义。例如，Vector通常提供复制操作，如果它提供复制操作，它必须要求其元素必须是可复制的。也就是说，我们必须要求Vector的模板实参不只是typename，而是Element，其中" Element "指定了可以是元素的类型的要求:
+        template<Element T>
+        class Vector {
+        private:
+            T∗ elem; // elem points to an array of sz elements of type T
+            int sz;
+            // ...
+        }
+	这个 template<Element T>前缀是c++版本的数学“对于所有这样的T Element(T)”;也就是说，Element是一个检查T是否具有Vector所要求的所有属性的谓词。
+	这样的谓词称为概念(§7.2)。为其指定概念的模板参数称为受约束参数，为其指定受约束参数的模板称为受约束模板。
+		如果试图用不符合要求的类型实例化模板，则会出现编译时错误。例如:
+		Vector<int> v1; // OK: we can copy an int
+		Vector<thread> v2; // error : we can’t copy a standard thread (§15.2)
+	由于c++在c++ 20之前还没有正式支持概念，所以旧的代码使用不受约束的模板参数，并将需求留给文档。
+
+#####6.2.2 值模板参数
+	除了类型参数外，模板还可以接受值参数。例如:
+        template<typename T, int N>
+        struct Buffer {
+            using value_type = T;
+            constexpr int size() { return N; }
+            T[N];
+            // ...
+        };
+	提供了别名(value_type)和constexpr函数，以允许用户(只读)访问模板参数。
+    	值参数在很多情况下都很有用。例如，Buffer允许我们创建任意大小的缓冲区，而不使用自由存储区(动态内存):
+        Buffer<char,1024> glob; // global buffer of characters (statically allocated)
+        void fct()
+        {
+            Buffer<int,10> buf; // local buffer of integers (on the stack)
+            // ...
+        }
+	模板值参数必须是常量表达式。
+
+#####6.2.3 模板参数推导
+	考虑使用标准库模板 pair:
+		pair<int,double> p = {1,5.2};
+	许多人认为指定模板实参类型很繁琐，因此标准库提供了一个函数make_pair()，它从函数实参返回的一对模板实参中推导出它们:
+		auto p = make_pair(1,5.2); // p is a pair<int,double>
+	这就引出了一个明显的问题:“为什么我们不能从构造函数参数中推导模板参数呢?”所以，在c++ 17中，我们可以。那就是:
+		pair p = {1,5.2}; // p is a pair<int,double>
+	这不仅仅是pair的问题;Make_函数非常常见。考虑一个简单的例子:
+        template<typename T>
+        class Vector {
+        public:
+            Vector(int);
+            Vector(initializ er_list<T>); // initializer-list constructor
+            // ...
+        };
+        Vector v1 {1,2,3}; // deduce v1’s element type from the initializer element type
+        Vector v2 = v1; // deduce v2’s element type from v1’s element type
+        auto p = new Vector{1,2,3}; // p points to a Vector<int>
+        Vector<int> v3(1); // here we need to be explicit about the element type (no element type is mentioned)
+	显然，这简化了表示法，并可以消除由于错误输入冗余模板参数类型而引起的麻烦。然而，它并不是万灵药。演绎可能会带来意外(对于make_函数和构造函数)。考虑:
+        Vector<string> vs1 {"Hello", "World"}; // Vector<string>
+        Vector vs {"Hello", "World"}; // deduces to Vector<const char*> (Surprise?)
+        Vector vs2 {"Hello"s, "World"s}; // deduces to Vector<string>
+        Vector vs3 {"Hello"s, "World"}; // error : the initializer list is not homogenous
+	c风格字符串字面量的类型是const char *(§1.7.1)。如果不是这样，使用s后缀使其成为一个合适的字符串(§9.2)。如果初始化列表的元素有不同的类型，则无法推导出唯一的元素类型，因此会得到错误。
+		当无法从构造函数实参推导出模板实参时，我们可以通过提供演绎指南来提供帮助。考虑:
+            template<typename T>
+            class Vector2 {
+            public:
+                using value_type = T;
+                // ...
+                Vector2(initializ er_list<T>); // initializer-list constructor
+                template<typename Iter>
+                Vector2(Iter b, Iter e); // [b:e) range constructor
+                // ...
+            };
+            Vector2 v1 {1,2,3,4,5}; // element type is int
+            Vector2 v2(v1.begin(),v1.begin()+2);
+	显然，v2应该是Vector2，但是如果没有帮助，编译器无法推断出这一点。该代码只声明同一类型的一对值有一个构造函数。如果没有对概念的语言支持(§7.2)，编译器就无法对该类型做出任何假设。为了允许演绎，我们可以在Vector2声明后添加演绎指南:
+        template<typename Iter>
+        Vector2(Iter,Iter) −> Vector2<typename Iter::value_type>;
+	也就是说，如果看到一对迭代器初始化的Vector2，就应该推断Vector2::value_type是迭代器的值类型。
+		演绎指南的效果通常是微妙的，所以最好设计类模板，这样就不需要演绎指南了。然而，标准库中有很多类(还)没有使用概念(§7.2)，并且有这样的歧义，所以它使用了相当多的演绎指南。
+
+####6.3 参数化操作
+	模板的用途远不止简单地用元素类型参数化容器。特别地，它们在标准库中被广泛地用于类型和算法的参数化(§11.6，§12.6)。
+		有三种方式来表示通过类型或值参数化的操作:
+            • 函数模板
+            • 函数对象:可以携带数据并像函数一样调用的对象
+            • lambda表达式:函数对象的速记符号
+
+#####6.3.1 函数模板
+	我们可以编写一个函数，计算rangefor可以遍历的任意序列(例如容器)元素值的和，如下所示:
+        template<typename Sequence, typename Value>
+        Value sum(const Sequence& s, Value v)
+        {
+            for (auto x : s)
+            	v+=x;
+            return v;
+        }
+	Value模板参数和函数参数v的存在是为了允许调用者指定累加器的类型和初始值(累加器是用来累加和的变量):
+        void user(Vector<int>& vi, list<double>& ld, vector<complex<double>>& vc)
+        {
+            int x = sum(vi,0); // the sum of a vector of ints (add ints)
+            double d = sum(vi,0.0); // the sum of a vector of ints (add doubles)
+            double dd = sum(ld,0.0); // the sum of a list of doubles
+            auto z = sum(vc,complex{0.0,0.0}); // the sum of a vector of complex<double>s
+        }
+	在double中添加整型数的目的是优雅地处理比最大整型数更大的数字。注意sum的模板实参类型是如何从函数实参推导出来的。幸运的是，我们不需要显式地指定这些类型。
+		这个sum()是标准库accumulate()的简化版本(§14.3)。
+		函数模板可以是成员函数，但不能是虚成员。编译器不会知道程序中这样一个模板的所有实例化，所以它不能生成vtbl(§4.4)。
+
+#####6.3.2 函数对象
+	一种特别有用的模板是函数对象(有时称为函子)，它用于定义可以像函数一样调用的对象。例如:
+        template<typename T>
+        class Less_than {
+        	const T val; // value to compare against
+        public:
+            Less_than(const T& v) :val{v} { }
+            bool operator()(const T& x) const { return x<val; } // call operator
+        };
+	名为operator()的函数实现了“函数调用”、“调用”或“应用程序”操作符()。
+		我们可以为某些参数类型定义Less_than类型的命名变量:
+        Less_than lti {42}; // lti(i) will compare i to 42 using < (i<42)
+        Less_than lts {"Backus"s}; // lts(s) will compare s to "Backus" using < (s<"Backus")
+        Less_than<string> lts2 {"Naur"}; // "Naur" is a C-style string, so we need <string> to get the right <
+	我们可以调用这样的对象，就像调用函数一样:
+        void fct(int n, const string& s)
+        {
+            bool b1 = lti(n); // tr ue if n<42
+            bool b2 = lts(s); // tr ue if s<"Backus"
+            // ...
+        }
+	这样的函数对象被广泛用作算法的参数。例如，我们可以计算谓词返回true的值的出现次数:
+        template<typename C, typename P>
+        // requires Sequence<C> && Callable<P ,Value_type<P>>
+        int count(const C& c, P pred)
+        {
+            int cnt = 0;
+            for (const auto& x : c)
+            	if (pred(x))
+            		++cnt;
+            return cnt;
+        }
+	我们可以调用谓词来返回true或false。例如:
+        void f(const Vector<int>& vec, const list<string>& lst, int x, const string& s)
+        {
+            cout << "number of values less than " << x << ": " << count(vec,Less_than{x}) << '\n';
+            cout << "number of values less than " << s << ": " << count(lst,Less_than{s}) << '\n';
+        }
+	这里，Less_than{x}构造了一个Less_than类型的对象，调用操作符将其与名为x的int进行比较;Less_than{s}构造了一个与名为s的字符串进行比较的对象。这些函数对象的美妙之处在于它们携带了要与之进行比较的值。我们不需要为每个值(和每个类型)编写单独的函数，也不需要引入讨厌的全局变量来保存值。而且，对于像Less_than这样的简单函数对象，内联也很简单，因此调用Less_than比间接调用要高效得多。携带数据的能力加上它们的效率使得函数对象作为算法的参数特别有用。
+		用于指定通用算法关键操作含义的函数对象(例如用于count()的Less_than)通常被称为策略对象。
+
+#####6.3.3 Lambda表达式
+	在§6.3.2中，我们将Less_than与它的使用分开定义。这很不方便。因此，有一种隐式生成函数对象的符号:
+        void f(const Vector<int>& vec, const list<string>& lst, int x, const string& s)
+        {
+            cout << "number of values less than " << x
+            	<< ": " << count(vec,[&](int a){ return a<x; })
+            	<< '\n';
+            cout << "number of values less than " << s
+            	<< ": " << count(lst,[&](const string& a){ return a<s; })
+            	<< '\n';
+        }
+	符号[&](int a){return a{x}完全相同的函数对象。[&]是一个捕获列表，指定lambda体中使用的所有本地名称(如x)将通过引用访问。如果我们只想“捕获”x，我们可以这样说:[&x]。如果我们想给生成的对象一个x的副本，我们可以这样说:[=x]。Capture nothing为[]，Capture all local names by reference为[&]，Capture all local names by value为[=]。
+		使用lambdas既方便又简洁，但也有些晦涩。对于重要的操作(比如，不只是一个简单的表达式)，我更喜欢给操作命名，以便更清楚地说明它的目的，并使它可以在程序中的多个地方使用。
+		在§4.5.3中，我们注意到必须编写许多函数来对指针和unique_ptrs的vector元素进行操作，例如draw_all()和rotate_all()。函数对象(特别是lambdas)可以通过允许我们将容器的遍历与对每个元素执行的操作的说明分开来提供帮助。
+		首先，我们需要一个对指针容器元素所指向的每个对象应用操作的函数:
+        template<typename C, typename Oper>
+        void for_all(C& c, Oper op) // assume that C is a container of pointers
+        // requires Sequence<C> && Callable<Oper,Value_type<C>> (see §7.2.1)
+        {
+            for (auto& x : c)
+            	op(x); // pass op() a reference to each element pointed to
+        }
+	现在，我们可以编写§4.5版本的user()，而不用编写一组_all函数:
+        void user2()
+        {
+            vector<unique_ptr<Shape>> v;
+            while (cin)
+            	v.push_back(read_shape(cin));
+            for_all(v,[](unique_ptr<Shape>& ps){ ps−>draw(); }); // draw_all()
+            for_all(v,[](unique_ptr<Shape>& ps){ ps−>rotate(45); }); // rotate_all(45)
+        }
+	我将unique_ptr&传递给lambda，以便for_all()不必关心对象到底是如何存储的。特别是，那些for_all()调用不会影响传递的Shapes的生命周期，lambdas的主体使用参数就像使用普通的指针一样。
+		与函数一样，lambda也可以是泛型的。例如:
+        template<class S>
+        void rotate_and_draw(vector<S>& v, int r)
+        {
+        	for_all(v,[](auto& s){ s−>rotate(r); s−>draw(); });
+        }
+	在这里，就像变量声明一样，auto意味着任何类型都被接受为初始化器(在调用中，参数被认为是初始化形参)。这使得带有自动参数的lambda成为模板，一个泛型lambda。由于标准委员会的政治原因，目前功能参数不允许使用auto。
+		我们可以用任何可以使用draw()和rotate()的对象容器来调用这个通用的rotate_and_draw()。例如:
+        void user4()
+        {
+            vector<unique_ptr<Shape>> v1;
+            vector<Shape∗> v2;
+            // ...
+            rotate_and_draw(v1,45);
+            rotate_and_draw(v2,90);
+        }
+	使用lambda，我们可以将任何语句转换为表达式。这主要用于提供作为参数值计算值的操作，但这种能力是通用的。考虑一个复杂的初始化:
+        enum class Init_mode { zero, seq, cpy, patrn }; // initializer alternatives
+        // messy code:
+        // int n, Init_mode m, vector<int>& arg, and iterators p and q are defined somewhere
+        vector<int> v;
+        switch (m)
+        {
+        case zero:
+        	v = vector<int>(n); // n elements initialized to 0
+        	break;
+        case cpy:
+        	v = arg ;
+        break;
+        };
+        // ...
+        if (m == seq)
+        	v.assign(p,q); // copy from sequence [p:q)
+        // ...
+	这是一个程式化的例子，但不幸的是并不是典型的。我们需要在初始化数据结构的一组备选方案中进行选择(这里是v)，我们需要对不同的备选方案进行不同的计算。这样的代码通常很混乱，被认为是“效率”的关键，也是bug的来源:
+        • 变量可以在得到预期值之前使用。
+        • “初始化代码”可能与其他代码混合，使其难以理解。
+        • 当“初始化代码”与其他代码混合时，很容易忘记一个案例。
+        • 这不是初始化，这是赋值。
+	相反，我们可以将其转换为用作初始化器的lambda:
+        // int n, Init_mode m, vector<int>& arg, and iterators p and q are defined somewhere
+        vector<int> v = [&] {
+        switch (m)
+        {
+        case zero:
+        	return vector<int>(n); // n elements initialized to 0
+        case seq:
+        	return vector<int>{p,q}; // copy from sequence [p:q)
+        case cpy:
+        	return arg;
+        }
+        }();
+        // ...
+	我仍然“忘记”一个案子，但现在很容易发现。
+
+####6.4 模板机制
+	为了定义好的模板，我们需要一些支持的语言工具:•依赖于type: variable模板的V值(§6.4.1)。
+        • 值依赖于一个类型:变量模板(§6.4.1)。
+		• 类型和模板的别名:别名模板(§6.4.2)。
+        • 一个编译时选择机制:if constexpr(§6.4.3)。
+        • 一种查询类型和表达式属性的编译时机制:requiresexpressions(§7.2.3)。
+	此外，constexpr函数(§1.6)和static_asser函数(§3.5.5)也经常参与模板的设计和使用。
+		这些基本机制主要是用于构建通用的、基础性的抽象的工具。
+
+#####6.4.1 变量模板
+	在使用类型时，我们通常需要该类型的常量和值。当然，当我们使用类模板时也是如此:当我们定义C时，我们通常需要类型为T的常量和变量，以及依赖于T的其他类型。下面是一个来自流体动力学模拟的例子[Garcia,2015]:
+        template <class T>
+        	constexpr T viscosity = 0.4;
+        template <class T>
+        	constexpr space_vector<T> external_acceleration = { T{}, T{−9.8}, T{} };
+        auto vis2 = 2∗viscosity<double>;
+        auto acc = external_acceleration<float>;
+	这里，space_vector是一个三维向量。
+		当然，我们可以使用合适类型的任意表达式作为初始化式。考虑:
+        template<typename T, typename T2>
+        	constexpr bool Assignable = is_assignable<T&,T2>::value; // is_assignable is a type trait (§13.9.1)
+        template<typename T>
+        void testing()
+        {
+            static_asser t(Assignable<T&,double>, "can't assign a double");
+            static_asser t(Assignable<T&,string>, "can't assign a string");
+        }
+	经过一些重大的变化后，这一观点成为概念定义的核心(§7.2)。
+
+#####6.4.2 别名
+	通常，为类型或模板引入同义词是非常有用的。例如，标准头文件包含别名size_t的定义，可能:
+		using size_t = unsigned int;
+	实际名为size_t的类型依赖于实现，因此在另一个实现中size_t可能是无符号long。别名size_t允许程序员编写可移植的代码。
+		参数化类型通常会为与其模板参数相关的类型提供别名。例如:
+        template<typename T>
+        class Vector {
+        public:
+            using value_type = T;
+            // ...
+        };
+	事实上，每个标准库容器都提供value_type作为其值类型的名称(第11章)。这允许我们编写适用于每个遵循此约定的容器的代码。
+	例如:
+        template<typename C>
+        using Value_type = typename C::value_type; // the type of C’s elements
+        template<typename Container>
+        void algo(Container& c)
+        {
+            Vector<Value_type<Container>> vec; // keep results here
+            // ...
+        }
+	通过绑定部分或全部模板参数，可以使用别名机制来定义一个新模板。例如:
+        template<typename Key, typename Value>
+        class Map
+        {
+        	// ...
+        };
+        template<typename Value>
+        using String_map = Map<string,Value>;
+        String_map<int> m; // m is a Map<str ing,int>
+
+#####6.4.3编译时if
+	考虑编写可以使用两个操作之一的操作slow_and_safe(T)或simple_and_fast(T)。这样的问题在基本代码中比比皆是，这些代码的通用性和最优性能至关重要。传统的解决方案是编写一对重载函数，并根据特征(§13.9.1)选择最合适的函数，例如标准库is_pod。如果涉及到类层次结构，基类可以提供slow_and_safe通用操作，派生类可以使用simple_and_fast实现重写。
+		在c++ 17中，我们可以使用编译时if:
+        template<typename T>
+        void update(T& target)
+        {
+            // ...
+            if constexpr(is_pod<T>::value)
+            	simple_and_fast(target); // for "plain old data"
+            else
+            	slow_and_safe(target);
+            // ...
+        }
+	is_pod是一个类型特征(§13.9.1)，它告诉我们一个类型是否可以被轻松复制。
+		只实例化if constexpr的选定分支。这种解决方案提供了最优的性能和优化的位置。
+		重要的是，if constexpr不是一种文本操作机制，不能用来打破语法、类型和范围等常规规则。例如:
+        template<typename T>
+        void bad(T arg)
+        {
+            if constexpr(Something<T>::value)
+            	try
+                { / / syntax error
+					g(arg);
+            		if constexpr(Something<T>::value)
+            	} catch(...) { /* ... */ } // syntax error
+        }
+	允许这样的文本操作可能会严重损害代码的可读性，并给依赖于现代程序表示技术的工具(如“抽象语法树”)带来问题。
+
+####6.5 建议
+    [1] 使用模板表示可应用于多种参数类型的算法;§6.1;[CG: T.2]。
+    [2] 使用模板表达容器;§6.2;[CG: T.3]。
+    [3] 使用模板提升代码的抽象级别;§6.2;[CG: T.1]。
+    [4] 模板是类型安全的，但是检查太晚了;§6.2。
+    [5] 让构造函数或函数模板推导类模板参数类型;§6.2.3。
+    [6] 使用函数对象作为算法的参数;§6.3.2; [CG: T.40]。
+    [7] 如果您只需要在一个地方放置一个简单的函数对象，则使用lambda;§6.3.2。
+    [8] 虚函数成员不能是模板成员函数;§6.3.1。
+    [9] 使用模板别名简化表示法，隐藏实现细节;§6.4.2。
+    [10] 要使用模板，请确保它的定义(不仅仅是声明)在作用域中;§7.5。
+    [11] 模板提供编译时的" duck typing ";§7.5。
+    [12] 不需要单独编译模板:#在每个使用模板的翻译单元中包含模板定义。
+
+___
+###7 概念和泛型编程
+	Programming: you have to start with interesting algorithms.	– Alex Stepanov
+    • 介绍
+    • 概念
+        使用的概念;基于概念的重载；;有效代码;概念的定义
+    • 泛型编程
+        使用的概念;抽象使用模板
+    • 可变参数模板
+        折叠表达式;传递参数
+    • 模板编译模型
+    • 建议
+
+####7.1 介绍
+	模板有什么用？ 换句话说，当您使用模板时，哪些编程技术是有效的？ 模板提供：
+        • 能够传递类型(以及值和模板)作为参数而不丢失信息。这意味着内联有很好的机会，目前的实现充分利用了内联的优势。
+        • 有机会在实例化时将来自不同上下文的信息编织在一起。这意味着优化机会。
+        • 能够传递常量值作为参数。这意味着可以进行编译时计算。
+	换句话说，模板为编译时计算和类型操作提供了强大的机制，可以生成非常紧凑和高效的代码。记住，类型(类)可以同时包含代码(§6.3.2)和值(§6.2.2)。
+		模板的第一个用途也是最常见的用途是支持泛型编程，即专注于通用算法的设计、实现和使用的编程。这里，“通用”意味着一个算法可以被设计成接受各种各样的类型，只要它们满足算法对参数的要求。连同概念，模板是c++对泛型编程的主要支持。模板提供(编译时)参数多态性。
+
+####7.2 概念(C + + 20)
+	考虑§6.3.1中的sum():
+        template<typename Seq, typename Num>
+        Num sum(Seq s, Num v)
+        {
+            for (const auto& x : s)
+            	v+=x;
+            return v;
+        }
+	任何支持begin()和end()的数据结构都可以调用它，这样range-for就可以工作了。这样的结构包括标准库的vector、list和map。此外，数据结构的元素类型仅受其用途的限制:它必须是可以添加到Value参数中的类型。例如int、double和Matrix(对于任何合理的Matrix定义)。可以说sum()算法在两个维度上是泛型的:用于存储元素的数据结构的类型(“序列”)和元素的类型。
+		所以sum()要求它的第一个模板参数是某种序列，而它的第二个模板参数是某种数字。我们将这种需求称为概念。
+		对概念的语言支持还没有ISO c++，但它是一个ISO技术规范[ConceptsTS]。实现正在使用中，所以我冒险在这里推荐它，尽管细节可能会发生变化，而且在生产代码中使用它可能需要数年时间。
+
+####7.2.1 概念的使用
+	大多数模板参数必须满足特定的要求，才能正确编译模板，生成的代码才能正常工作。也就是说，大多数模板必须是受约束的模板(§6.2.1)。类型名称导入器typename是约束最少的，只要求参数是类型。通常我们可以做得更好。再次考虑sum():
+        template<Sequence Seq, Number Num>
+        Num sum(Seq s, Num v)
+        {
+            for (const auto& x : s)
+                v+=x;
+            return v;
+        }
+	这是更清晰。一旦我们定义了Sequence和Number这两个概念的含义，编译器就可以通过只查看sum()的接口而不是查看其实现来拒绝错误的调用。这改进了错误报告。
+		然而，sum()接口的规范并不完整:我“忘了”说我们应该能够将Sequence元素添加到Number中。我们可以这样做:
+        template<Sequence Seq, Number Num>
+        	requires Arithmetic<Value_type<Seq>,Num>
+        Num sum(Seq s, Num n);
+    序列的Value_type是序列中元素的类型。 Arithmetic<X,Y>是一个概念，指定我们可以用X和Y类型的数量进行算术运算。这使我们免于意外地尝试计算 vector<string> 或 vector<int∗> 的 sum()，同时仍然接受 vector<int> 和 vector<complex<double>>。
+		在这个例子中，我们只需要+=，但是为了简单和灵活，我们不应该把模板参数约束得太紧。特别是，我们可能有一天想要用+和=而不是+=来表示sum()，然后我们会很高兴我们使用了一个普遍的概念(这里是算术)，而不是“有+=”的狭窄要求。
+		部分规范(如第一个使用概念的sum())可能非常有用。除非规范已经完成，否则直到实例化时才会发现一些错误。然而，部分规范可以提供很多帮助，表达意图，并且对于平稳的增量开发是必要的，因为我们最初并没有认识到我们需要的所有需求。有了成熟的概念库，初始的规范将接近完美。
+        不出所料， requires Arithmetic<Value_type<Seq>,Num> 被称为需求子句。 template<Sequence Seq> 表示法只是显式使用 requires Sequence<Seq> 的简写。如果我喜欢冗长，我可以等效地写
+        template<typename Seq, typename Num>
+        	requires Sequence<Seq> && Number<Num> && Arithmetic<Value_type<Seq>,Num>
+        Num sum(Seq s, Num n);
+	另一方面，我们也可以利用这两种符号之间的等价性来写:
+        template<Sequence Seq, Arithmetic<Value_type<Seq>> Num>
+        Num sum(Seq s, Num n);
+	在我们还不能使用概念的地方，我们不得不使用命名惯例和注释，例如:
+        template<typename Sequence, typename Number>
+        	// requires Arithmetic<Value_type<Sequence>,Number>
+        Numer sum(Sequence s, Number n);
+	无论我们选择什么表示法，设计一个对参数有语义意义约束的模板是很重要的(§7.2.4)。
+
+#####7.2.2 基于概念的重载
+	一旦我们正确地指定了模板及其接口，我们就可以根据它们的属性进行重载，就像对函数所做的那样。考虑一个稍微简化的标准库函数advance()，它将迭代器向前推进(§12.3):
+        template<Forward_iterator Iter>
+        void advance(Iter p, int n) // move p n elements forward
+        {
+        	while (n−−)
+        		++p; // a forward iterator has ++, but not + or +=
+        }
+        template<Random_access_iterator Iter>
+        void advance(Iter p, int n) // move p n elements forward
+        {
+        	p+=n; // a random-access iterator has +=
+        }
+	编译器将选择参数满足最强要求的模板。在这种情况下，list只提供前向迭代器，而vector提供随机访问迭代器，因此得到:
+        void user(vector<int>::iterator vip, list<string>::iterator lsp)
+        {
+            advance(vip,10); // use the fast advance()
+            advance(lsp,10); // use the slow advance()
+        }
+	与其他重载一样，这是一种编译时机制，意味着没有运行时成本，当编译器没有找到最佳选择时，它会产生歧义错误。基于概念的重载的规则比一般重载的规则要简单得多(§1.3)。首先考虑几个可选函数的单个参数:
+            • 如果论点与概念不匹配，就不能选择替代方案。
+            • 如果参数匹配的概念只有一个选项，该选项被选中。
+            • 如果两个备选项的论点都能很好地匹配一个概念，那么我们就有了歧义。
+            • 如果来自两个选项的参数匹配一个概念，并且其中一个比另一个更严格(匹配另一个或更多的所有要求)，该选项被选中。
+        对于一个选择它必须是
+            • 匹配其所有的论点，并且
+            • 至少是一个同样好的匹配所有的论点作为其他的替代品，并且
+            • 一个更好的匹配至少一个论点。
+
+#####7.2.3 有效代码
+	一组模板实参是否提供了模板对其模板形参的要求，这个问题最终归结为一些表达式是否有效。
+		使用require表达式，我们可以检查一组表达式是否有效。例如:
+        template<Forward_iterator Iter>
+        void advance(Iter p, int n) // move p n elements forward
+        {
+            while (n−−)
+                ++p; // a forward iterator has ++, but not + or +=
+        }
+        template<Forward_iterator Iter, int n>
+        requires requires(Iter p, int i) { p[i]; p+i; } // Iter has subscripting and addition
+        void advance(Iter p, int n) // move p n elements forward
+        {
+        	p+=n; // a random-access iterator has +=
+        }
+	不，这不是拼写错误。第一个require启动了requirements-子句，第二个require启动了requires−表达式
+		requires(Iter p, int i) { p[i]; p+i; }
+	A require - expression是一个谓词，如果其中的语句是有效代码，则为真，否则为假。
+		我认为需求表达式是泛型编程的汇编代码。与普通的汇编代码一样，需求表达式非常灵活，不需要任何编程规则。
+	以某种形式，它们位于最有趣的泛型代码的底部，就像汇编代码位于最有趣的普通代码的底部一样。与汇编代码一样，需求表达式不应该出现在“普通代码”中。“如果你在你的代码中看到需求，它可能是低级别的。
+		require require in advance()的使用故意显得不优雅和粗俗。注意，我“忘记”为操作指定+=和所需的返回类型。你已经被警告过了!选择名称表明其语义含义的命名概念。
+		喜欢使用正确命名的概念和明确的语义(§7.2.4)，并在这些概念的定义中使用需求表达式。
+
+#####7.2.4 概念定义
+	最终，我们希望找到有用的概念，例如库中的序列和算术，包括标准库。Ranges技术规范[RangesTS]已经提供了一套约束标准库算法的集合(§12.7)。然而，简单的概念并不难定义。
+		概念是指定如何使用一种或多种类型的编译时谓词。首先来看一个最简单的例子:
+        template<typename T>
+        concept Equality_comparable =
+            requires (T a, T b) {
+                { a = = b } − > bool; // compare Ts with ==
+                { a ! = b } − > bool; // compare Ts with !=
+            };
+	Equality_comparable是用来确保可以比较相等和不相等类型的值的概念。我们简单地说，给定该类型的两个值，它们必须使用==和!=进行比较，并且这些操作的结果必须可转换为bool类型。例如:
+        static_asser t(Equality_comparable<int>); // succeeds
+        struct S { int a; };
+        static_asser t(Equality_comparable<S>); // fails because structs don’t automatically get == and !=
+	概念Equality_comparable的定义完全等同于英文描述，不再。概念的值总是bool。
+		定义Equality_comparable来处理非齐次比较几乎同样简单:
+        template<typename T, typename T2 =T>
+        concept Equality_comparable =
+            requires (T a, T2 b) {
+                { a = = b } − > bool; // compare a T to a T2 with ==
+                { a ! = b } − > bool; // compare a T to a T2 with !=
+                { b = = a } − > bool; // compare a T2 to a T with ==
+                { b ! = a } − > bool; // compare a T2 to a T with !=
+        };
+	typename T2 =T表示，如果我们不指定第二个模板参数，T2将与T相同;T是一个默认模板参数。
+		我们可以这样测试Equality_comparable:
+		static_asser t(Equality_comparable<int,double>); // succeeds
+        static_asser t(Equality_comparable<int>); // succeeds (T2 is defaulted to int)
+        static_asser t(Equality_comparable<int,string>); // fails
+	对于一个更复杂的例子，考虑一个序列:
+        template<typename S>
+        concept Sequence = requires(S a) {
+            typename Value_type<S>; // S must have a value type.
+            typename Iterator_type<S>; // S must have an iterator type.
+            { begin(a) } −> Iterator_type<S>; // begin(a) must return an iterator
+            { end(a) } −> Iterator_type<S>; // end(a) must return an iterator
+            requires Same_type<Value_type<S>,Value_type<Iterator_type<S>>>;
+            requires Input_iterator<Iterator_type<S>>;
+        };
+	如果S类型是Sequence类型，它必须提供Value_type(其元素的类型)和Iterator_type(其迭代器的类型;看到§12.1)。它还必须确保存在返回迭代器的begin()和end()函数，这是标准库容器的惯用方法(§11.3)。最后，Iterator_type实际上必须是与S元素类型相同的input_iterator。
+		最难定义的概念是那些表示基本语言概念的概念。因此，最好使用来自已建立库的集合。关于有用的集合，见§12.7。
+
+####7.3 泛型编程
+	c++支持的泛型编程的形式是围绕着从具体的、高效的算法中抽象出来的思想，以获得可以与不同的数据表示相结合的泛型算法，从而产生各种各样的有用软件[Stepanov,2009]。表示基本操作和数据结构的抽象称为概念;它们作为模板参数的要求出现。
+
+#####7.3.1 概念的使用
+	好的、有用的概念是基本的，发现比设计更多。示例包括整数和浮点数(甚至在经典C中也有定义)、序列以及更一般的数学概念，如场和向量空间。它们代表了一个应用领域的基本概念。这就是为什么它们被称为“概念”。“识别和形式化概念到有效的泛型编程的必要程度可能是一项挑战。
+		对于基本的使用，考虑常规的概念(§12.7)。当类型表现得很像int或vector时，它就是规则类型。常规类型的对象
+        •可以默认构造。
+        •可以使用构造函数或赋值进行复制(使用通常的copy语义，产生两个独立且比较相等的对象)。
+        •可以用==和!=进行比较。
+        •不会因为过于聪明的编程技巧而出现技术问题。
+	字符串是常规类型的另一个例子。和int一样，string也是strictttotallorderdered(§12.7)。
+	也就是说，可以使用具有适当语义的<、<=、>和>=来比较两个字符串。
+		概念不仅仅是一个句法概念，它从根本上是关于语义的。例如，不要把+定义为除;这将不符合任何合理数字的要求。不幸的是，我们还没有任何语言支持来表示语义，因此我们必须依靠专家知识和常识来获得语义上有意义的概念。不要定义语义上没有意义的概念，比如可加和可减的概念。相反，要依赖领域知识来定义与应用程序领域中的基本概念相匹配的概念。
+
+#####7.3.2 使用模板抽象
+	好的抽象是从具体的例子中精心产生的。试图通过准备每一种可能的需求和技术来“抽象”并不是一个好主意;在这个方向上存在着不优雅和代码膨胀。相反，从一个——最好是更多——实际使用的具体例子开始，并尽量消除不必要的细节。考虑:
+        double sum(const vector<int>& v)
+        {
+            double res = 0;
+            for (auto x : v)
+            	res += x;
+            return res;
+        }
+	这显然是计算一串数字和的许多方法之一。
+		考虑是什么让这段代码变得不那么通用:
+        • 为什么只使用整数?
+        • 为什么是向量?
+        • 为什么要积累成double?
+        • 为什么从0开始?
+        • 为什么添加?
+	通过将具体类型放入模板参数来回答前四个问题，我们得到了标准库accumulate算法的最简单形式:
+        template<typename Iter, typename Val>
+        Val accumulate(Iter first, Iter last, Val res)
+        {
+            for (auto p = first; p!=last; ++p)
+            	res += ∗p;
+            return res;
+        }
+	在这里,我们有:
+        • 要遍历的数据结构被抽象为一对表示序列的迭代器(§12.1)。
+        • 蓄电池的类型已做成参数。
+        • 初始值现在是一个输入;累加器的类型就是这个初始值的类型。
+	一个快速的检查或者更好的测量将显示，为使用各种数据结构的调用生成的代码与您从手工编码的原始示例中得到的代码是相同的。
+	例如:
+        void use(const vector<int>& vec, const list<double>& lst)
+        {
+            auto sum = accumulate(begin(vec),end(vec),0.0); // accumulate in a double
+            auto sum2 = accumulate(begin(lst),end(lst),sum);
+            //
+        }
+	在保持性能的同时，从一段具体代码(最好是从几段代码)泛化的过程称为提升。相反，开发模板的最佳方法通常是
+        • 首先，写一个具体的版本
+        • 然后，调试、测试和测量它
+        • 最后，用模板参数替换具体类型。
+	当然，begin()和end()的重复是很乏味的，所以我们可以稍微简化一下用户界面:
+        template<Rang e R, Number Val> // a Range is something with begin() and end()
+        Val accumulate(const R& r, Val res = 0)
+        {
+            for (auto p = begin(r); p!=end(r); ++p)
+            	res += ∗p;
+            return res;
+        }
+    为了完全一般化，我们还可以抽象+=操作;看到§14.3。
+
+####7.4 可变模板
+	模板可以被定义为接受任意类型的任意数量的参数。这样的模板被称为可变参数模板。考虑这样一个简单的函数，它可以写出带有<<操作符的任何类型的值:
+        void user()
+        {
+            print("first: ", 1, 2.2, "hello\n"s); // first: 1 2.2 hello
+            print("\nsecond: ", 0.2, 'c', "yuck!"s, 0, 1, 2, '\n'); // second: 0.2 c yuck! 0 1 2
+        }
+	传统上，实现可变参数模板是将第一个参数从其他参数中分离出来，然后递归地调用可变参数模板来获取参数的尾部:
+        void print()
+        {
+        	// what we do for no arguments: nothing
+        }
+        template<typename T, typename ... Tail>
+        void print(T head, Tail... tail)
+        {
+        	// what we do for each argument, e.g.,
+        	cout << head << ' ';
+        	print(tail...);
+        }
+	typename……表示Tail是一个类型序列。尾巴……表示tail是tail中类型的值的序列。用…声明的参数。称为参数包。这里，tail是一个(函数参数)形参包，其中的元素类型与(模板参数)形参包tail中的元素类型相同。因此，print()可以接受任意类型的任意数量的参数。
+	调用print()将参数分离为头(第一个)和尾(其余)。打印头部，然后对尾部调用print()。当然，tail最终会变成空的，所以我们需要print()的无参数版本来处理它。如果我们不想允许零参数的情况，可以使用编译时语句消除print():
+        template<typename T, typename ... Tail>
+        void print(T head, Tail... tail)
+        {
+            cout << head << ' ';
+            if constexpr(siz eof...(tail)> 0)
+            	print(tail...);
+        }
+	我使用了编译时的if(§6.4.3)，而不是普通的运行时if，以避免生成从未调用的final、call print()。
+		可变参数模板(有时也被称为variadics)的优点是它们可以接受您想给它们的任何参数。缺点包括
+        • 递归实现可能很难做好。
+        • 递归实现在编译时可能会非常昂贵。
+        • 接口的类型检查可能是一个精心设计的模板程序。
+	由于其灵活性，可变参数模板在标准库中被广泛使用，有时被过度使用。
+
+#####7.4.1 折叠表达式
+	为了简化简单可变参数模板的实现，c++ 17提供了对参数包元素的有限迭代形式。例如:
+        template<Number... T>
+        int sum(T... v)
+        {
+        	return (v + ... + 0); // add all elements of v starting with 0
+        }
+	这里，sum()可以接受任意类型的任意数量的参数。假设sum()确实添加了它的参数，我们得到:
+        int x = sum(1, 2, 3, 4, 5); // x becomes 15
+        int y = sum('a', 2.4, x); // y becomes 114 (2.4 is truncated and the value of ’a’ is 97)
+	sum函数体使用了一个fold表达式:
+		return (v + ... + 0); // add all elements of v to 0
+	这里，(v+…+0)表示将v中从初始值0开始的所有元素相加。要添加的第一个元素是“最右”的元素(即索引最高的元素):(v[0]+(v[1]+(v[2]+(v[3]+(v[4]+0)))))。也就是说，从右边0的位置开始。它被称为右折。或者，我们可以使用左折:
+        template<Number... T>
+        int sum2(T... v)
+        {
+            return (0 + ... + v); // add all elements of v to 0
+        }
+	现在，要添加的第一个元素是“最左边”(索引最低的一个):(((((0+v[0])+v[1])+v[2])+v[3])+v[4])。也就是说，从0所在的左边开始。
+		Fold是一个非常强大的抽象，显然与标准库accumulate()有关，在不同的语言和社区中有各种各样的名称。在c++中，目前对fold表达式的限制是为了简化可变参数模板的实现。折叠不需要执行数值计算。举一个著名的例子:
+	template<typename ...T>
+    void print(T&&... args)
+    {
+    	(std::cout << ... << args) << '\n'; // pr int all arguments
+    }
+    print("Hello!"s,' ',"World ",2017); // (((((std::cout << "Hello!"s) << ’ ’) << "Wor ld ") << 2017) << ’\n’);
+	许多用例只涉及一组可以转换为通用类型的值。在这种情况下，简单地将实参复制到vector或所需类型通常会简化进一步的使用:
+        template<typename Res, typename... Ts>
+        vector<Res> to_vector(Ts&&... ts)
+        {
+            vector<Res> res;
+            (res.push_back(ts) ...); // no initial value needed
+            return res;
+        }
+	我们可以像这样使用to_vector:
+        auto x = to_vector<double>(1,2,4.5,'a');
+        template<typename ... Ts>
+        int fct(Ts&&... ts)
+        {
+            auto args = to_vector<string>(ts...); // args[i] is the ith argument
+            // ... use args here ...
+        }
+        int y = fct("foo", "bar", s);
+
+#####7.4.2 传递参数
+	通过接口传递不变的参数是可变参数模板的一个重要用途。考虑一个网络输入通道的概念，其中移动值的实际方法是一个参数。不同的传输机制有不同的构造函数参数集:
+        template<typename Transpor t>
+        	requires concepts::InputTranspor t<Transpor t>
+        class InputChannel {
+        public:
+            // ...
+            InputChannel(Transpor tArgs&&... transportArgs)
+            	: _transpor t(std::forward<Transpor tArgs>(transpor tArgs)...)
+            {}
+            // ...
+            Transpor t _transpor t;
+        };
+	标准库函数forward()(§13.2.2)用于将参数不变地从InputChannel构造函数移动到transport t构造函数。
+		这里的要点是，InputChannel的编写者可以构造一个transport t类型的对象，而不需要知道构造一个特定的transport t需要什么参数。InputChannel的实现者只需要知道所有transport t对象的通用用户界面。
+		转发在基础库中非常常见，这些库需要通用性和较低的运行时开销，非常通用的接口也很常见。
+
+####7.5 模板编译模型
+	假设有概念(§7.2)，模板的参数会根据它的概念进行检查。在这里发现的错误将被报告，程序员必须修复问题。在这一点上不能检查的，例如非约束模板参数的参数，被推迟到为模板和一组模板参数生成代码时:“在模板实例化时”。“对于概念之前的代码，这是所有类型检查发生的地方。在使用概念时，只有在概念验证成功后，我们才能到达这里。
+		实例化时(后期)类型检查的一个不幸的副作用是，可能在很晚的时候发现类型错误，并导致非常糟糕的错误消息，因为编译器只有在组合了程序中几个地方的信息之后才发现问题。
+		为模板提供的实例化时类型检查检查模板定义中参数的使用情况。这提供了通常被称为鸭子类型的编译时变体(“如果它像鸭子一样走路，它像鸭子一样呱呱叫，它就是鸭子”)。或者——使用更专业的术语——我们对值进行操作，操作的存在和意义完全取决于它的操作数值。这与另一种观点不同，即对象具有类型，类型决定操作的存在和意义。V在对象中赋值" live "。这就是c++中对象(例如变量)工作的方式，只有满足对象要求的值才能放入对象中。在编译时使用模板所做的大多不涉及对象，只涉及值。唯一的例外是在constexpr函数(§1.6)中作为编译器内部对象使用的局部变量。
+		要使用不受约束的模板，它的定义(不仅仅是声明)必须在使用点的作用域中。例如，标准头文件保存vector的定义。在实践中，这意味着模板定义通常在头文件中找到，而不是.cpp文件。当我们开始使用模块(§3.3)时，这种情况发生了改变。通过使用模块，源代码的组织方式与普通函数和模板函数相同。在这两种情况下，定义都不会受到文本包含问题的影响。
+
+
+####7.6 建议
+    [1] 模板为编译时编程提供了一种通用机制;§7.1。
+    [2] 在设计模板时，仔细考虑模板参数所假定的概念(需求);§7.3.2。
+    [3] 在设计模板时，使用具体版本进行初始实现、调试和测量;§7.3.2。
+    [4] 将概念作为设计工具;§7.2.1。
+    [5] 为所有模板参数指定概念;§7.2;[CG: T.10]。
+    [6] 尽可能使用标准概念(例如，Ranges概念);§7.2.4;[CG: T.11]。
+    [7] 如果您只需要在一个地方放置一个简单的函数对象，则使用lambda;§6.3.2。
+    [8] 不需要单独编译模板:#在每个使用模板的翻译单元中包含模板定义。
+    [9] 使用模板表示容器和范围;§7.3.2;[CG: T.3]。
+    [10] 避免没有意义语义的“概念”;§7.2;[CG: T.20]。
+    [11] 对一个概念要求一组完整的操作;§7.2;[CG: T.21]。
+    [12] 当你需要一个函数接受各种类型的可变数量的参数时，使用可变参数模板;§7.4。
+    [13] 不要在同构参数列表中使用可变参数模板(首选初始化器列表);§7.4。
+    [14] 要使用模板，请确保它的定义(不仅仅是声明)在作用域中;§7.5。
+    [15] 模板提供编译时的" duck typing ";§7.5。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 。
 。
 。
