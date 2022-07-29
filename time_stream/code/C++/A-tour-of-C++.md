@@ -1,4 +1,4 @@
-[TOC]
+
 #C++之旅——Bjarne Stroustrup(第二版)
 
 <pre>
@@ -24,20 +24,8 @@
 </pre>
 
 ##目录
+[TOC]
 
-	前言.......................................................xi
-
-    1 基础
-        1.1	介绍
-        1.2	
-        1.3	
-        1.4	
-        1.5	
-        1.6	
-        1.7	
-        1.8	
-        1.9	
-        1.10	
 ___
 
 ###前言
@@ -118,19 +106,19 @@ ___
     	std::指定名称cout在标准库命名空间中找到(§3.4)。在讨论标准特性时，我通常会省略std::;§3.4展示了如何在没有显式限定的情况下使名称空间中的名称可见。
         实际上，所有可执行代码都放在函数中，并直接或间接地从main()调用。例如:
 ---
-        #include <iostream> // include (‘‘impor t’’) the declarations for the I/O stream librar y
+        #include <iostream> // include (‘‘import’’) the declarations for the I/O stream librar y
         using namespace std; // make names from std visible without std:: (§3.4)
         double square(double x) // square a double precision floating-point number
         {
-         return x∗x;
+        	return x∗x;
         }
         void print_square(double x)
         {
-         cout << "the square of " << x << " is " << square(x) << "\n";
+        	cout << "the square of " << x << " is " << square(x) << "\n";
         }
         int main()
         {
-         print_square(1.234); // pr int: the square of 1.234 is 1.52276
+        	print_square(1.234); // pr int: the square of 1.234 is 1.52276
         }
 ---
 		“返回类型”void表示函数不返回值。
@@ -174,7 +162,7 @@ ___
             void print(double ,int);
             void user2()
             {
-             print(0,0); // error : ambiguous
+            	print(0,0); // error : ambiguous
             }
         定义多个同名函数被称为函数重载，这是泛型编程的基本部分之一(§7.2)。当一个函数被重载时，每个相同名称的函数应该实现相同的语义。print()函数就是这样一个例子;每个print()都会打印它的参数。
 
@@ -2833,6 +2821,904 @@ ___
     [14] 要使用模板，请确保它的定义(不仅仅是声明)在作用域中;§7.5。
     [15] 模板提供编译时的" duck typing ";§7.5。
 
+___
+###8 关于库的预览
+	Why waste time learning when ignorance is instantaneous?	– Hobbes
+    • 介绍
+    • 标准库组件
+    • 标准库头和命名空间
+    • 建议
+
+####8.1 介绍
+	没有任何重要的程序是只用一种简单的编程语言编写的。首先，开发一套库。这些构成了进一步工作的基础。大多数程序用简单的语言编写都是很乏味的，而几乎任何任务都可以通过使用好的库变得简单。
+		从第1-7章继续，第9-15章快速浏览了关键的标准库设施。我非常简要地介绍了一些有用的标准库类型，如string、ostream、variant、vector、map、path、unique_ptr、thread、regex和complex，以及使用它们的最常见方法。
+		正如第1-7章所述，强烈建议您不要因为对细节的不完全理解而分心或气馁。本章的目的是让读者对最有用的图书馆设施有一个基本的了解。
+		本书中描述的标准库设施是每一个完整的c++实现的一部分。除了标准库组件之外，大多数实现还提供“图形用户界面”系统(gui)、Web界面、数据库界面等。类似地，大多数应用程序开发环境为企业或工业“标准”开发和/或执行环境提供了“基础库”。在这里，我不描述这样的系统和库。
+		目的是提供标准定义的自包含的c++描述，并保持示例的可移植性。当然，我们鼓励程序员探索大多数系统上可用的更广泛的工具。
+
+####8.2 标准库组件
+	标准库提供的设施可以这样分类:
+        • 运行时语言支持(例如，分配和运行时类型信息)。
+        • C标准库(通过非常小的修改来最小化类型系统的冲突)。
+        • 字符串(支持国际字符集、本地化和只读子字符串视图);看到§9.2。
+        • 支持正则表达式匹配;看到§9.4。
+        • I/O流是一个可扩展的输入和输出框架，用户可以在其中添加自己的类型、流、缓冲策略、地区和字符集(第10章)。还有一个用于以可移植的方式操作文件系统的库(§10.10)。
+        • 容器框架(如vector和map)和算法(如find()、sort()和merge());参见第11章和第12章。这个框架通常被称为STL [Stepanov,1994]，是可扩展的，因此用户可以添加他们自己的容器和算法。
+        • 支持数值计算(如标准数学函数，复数，算术运算向量，随机数生成器);参见§4.2.1和第14章。
+        • 支持并发编程，包括线程和锁;看到第15章。并发支持是基础性的，因此用户可以将对新并发模型的支持添加为库。
+        • 大多数STL算法和一些数值算法(如sor t()和reduce())的并行版本;见§12.9和§14.3.1。
+        • 支持模板元编程的实用程序(例如，类型特征;§13.9)，stl风格的通用编程(例如，pair;§13.4.3)，通用规划(例如，可变和可选;§13.5.1、§13.5.2)和时钟(§13.7)。
+        • 支持高效安全的通用资源管理，外加一个可选垃圾收集器的接口(§5.3)。
+        • 用于资源管理的“智能指针”(例如，unique_ptr和shared_ptr;§13.2.1)。
+        • 特殊用途的容器，如数组(§13.4.1)、bitset(§13.4.2)和元组(§13.4.3)。
+        • 常用单位的后缀，例如ms表示毫秒，i表示虚数(§5.4.4)。
+
+	在库中包含一个类的主要标准是:
+        • 它可以帮助几乎每一个c++程序员(新手和专家)，
+        • 它可以以一种通用的形式提供，与相同设施的简单版本相比，不会增加显著的开销，并且
+        • 简单的用法应该容易学习(相对于其任务的固有复杂性)。
+
+基本上，c++标准库提供了最常见的基本数据结构以及在这些结构上使用的基本算法。
+
+####8.3 标准库头文件和命名空间
+	每个标准库设施都是通过一些标准头文件提供的。例如:
+        #include<string>
+        #include<list>
+	这使得标准字符串和列表可用。
+		标准库定义在一个名为std的命名空间(§3.4)中，要使用标准库的功能，可以使用std::前缀:
+        std::string sheep {"Four legs Good; two legs Baaad!"};
+        std::list<std::string> slogans {"War is Peace", "Freedom is Slavery", "Ignorance is Strength"};
+	为简单起见，我很少在示例中显式地使用std::前缀。我也不会总是显式地#include必要的头文件。要在这里编译和运行程序片段，必须#include包含适当的头文件，并使它们声明的名称可访问。例如:
+        #include<string> // make the standard string facilities accessible
+        using namespace std; // make std names available without std:: prefix
+		string s {"C++ is a general−purpose programming language"}; // OK: string is std::string
+	将名称空间中的每个名称都转储到全局名称空间中通常是不明智的做法。
+	然而，在这本书中，我只使用标准库，最好知道它提供了什么。
+		下面是一些标准库头文件的选择，它们都在命名空间std中提供声明:
+
+    选择的标准库头文件
+    <algorithm>       copy(), find(), sort()                        Chapter 12
+    <array>           array                                         §13.4.1
+    <chrono>          duration, time_point                          §13.7
+    <cmath>           sqrt(), pow()                                 §14.2
+    <complex>         complex, sqr t(), pow()                       §14.4
+    <filesystem>      path                                          §10.10
+    <forward_list>    forward_list                                  §11.6
+    <fstream>         fstream, ifstream, ofstream                   §10.7
+    <future>          future, promise                               §15.7
+    <ios>             hex, dec, scientific, fixed, defaultfloat     §10.6
+    <iostream>        istream, ostream, cin, cout                   Chapter 10
+    <map>             map, multimap                                 §11.5
+    <memory>          unique_ptr, shared_ptr, allocator             §13.2.1
+    <random>          default_random_engine, normal_distribution    §14.5
+    <regex>           regex, smatch                                 §9.4
+    <string>          string, basic_string                          §9.2
+    <set>             set, multiset                                 §11.6
+    <sstream>         istringstream, ostringstream                  §10.8
+	<stdexcept>       length_error, out_of_rang e, runtime_error    §3.5.1
+	<thread>          thread                                        §15.2
+	<unordered_map>   unordered_map, unordered_multimap             §11.5
+	<utility>         move(), swap(), pair                          Chapter 13
+	<variant>         variant                                       §13.5.1
+	<vector>          vector                                        §11.2
+	这个清单还远远不够。
+		C标准库中的头文件，例如提供了<stdlib.h>。对于每个这样的头文件，都有一个以c为前缀的版本，并删除了.h。这个版本，例如<cstdlib>在std 命名空间替换了它的声明。
+
+####8.4 建议
+	[1] 不要白费力气;使用库;§8.1;CG:SL.1.]。
+	[2] 如果可以选择，首选标准库而不是其他库;§8.1;[CG: SL.2]。
+	[3] 不要认为标准库是一切的理想选择;§8.1。
+	[4] 记得包含您使用的设施的头文件;§8.3。
+	[5] 记住，标准库设施是在命名空间std中定义的;§8.3;[CG: SL.3]。
+
+___
+###9 字符串和正则表达式
+	Prefer the standard to the offbeat.	– Strunk & White
+	•介绍
+	•字符串
+		字符串的实现;
+	•字符串视图
+	•正则表达式
+		搜索;正则表达式的符号;迭代器
+	•建议
+
+####9.1 介绍
+	文本操作是大多数程序的主要部分。c++标准库提供了一个字符串类型，使大多数用户不必通过指针操作C风格的字符数组。string_view类型允许我们以任意方式操作字符序列(例如，在std::string或char[]中)。此外，还提供正则表达式匹配来帮助查找文本中的模式。正则表达式的提供形式与大多数现代语言中常见的形式类似。字符串和regex对象都可以使用各种字符类型(例如Unicode)。
+
+####9.2 字符串
+	标准库提供了一个string类型来补充string字面量(§1.2.1);string是一个Regular类型(§7.2，§12.7)，用于拥有和操作各种字符类型的字符序列。string类型提供了各种有用的字符串操作，例如连接。例如:
+		string compose(const string& name, const string& domain)
+		{
+			return name + '@' + domain;
+		}
+		auto addr = compose("dmr","bell−labs.com");
+	此处addr初始化为字符序列dmr@bell−labs.com。字符串的“加法”意味着连接。你可以连接一个字符串，一个字符串字面值，一个c风格的字符串，或一个字符到一个字符串。标准字符串有一个move构造函数，因此即使按值返回较长的字符串也很有效(§5.2.2)。
+		在许多应用程序中，最常见的连接形式是在字符串末尾添加内容。这由+=操作直接支持。例如:
+		void m2(string& s1, string& s2)
+		{
+			s1 = s1 + '\n'; // append newline
+			s2 += '\n'; // append newline
+		}
+	在字符串末尾进行添加的两种方法在语义上是相同的，但我更喜欢后者，因为它更明确地说明它所做的事情，更简洁，而且可能更有效。
+		字符串是可变的。除了=和+=之外，还支持下标(使用[])和子字符串操作。例如:
+		string name = "Niels Stroustrup";
+		void m3()
+		{
+			string s = name.substr(6,10); // s = "Stroustrup"
+			name.replace(0,5,"nicholas"); // name becomes "nicholas Stroustrup"
+			name[0] = toupper(name[0]); // name becomes "Nicholas Stroustrup"
+		}
+	substr()操作返回一个字符串，该字符串是由其参数指定的子字符串的副本。
+	第一个参数是字符串的索引(位置)，第二个参数是所需子字符串的长度。由于索引从0开始，s的值为Stroustrup。
+		replace()操作将子字符串替换为值。在本例中，从0开始、长度为5的子字符串是Niels;取而代之的是nicholas。最后，我将初始字符替换为大写的等效字符。因此，name的最终值是Nicholas Stroustrup。请注意，替换字符串的大小不需要与它要替换的子字符串相同。
+		在许多有用的字符串操作中，赋值(使用=)，下标(使用[]或at();§11.2.2)、比较(使用==和!=)、字典排序(使用<、<=、>和>=)、迭代(使用迭代器作为vector;§12.2)、输入(§10.3)和流(§10.8)。
+		当然，字符串可以相互比较，与c风格的字符串§1.7.1进行比较，也可以与字符串字面量进行比较。例如:
+		string incantation;
+		void respond(const string& answer)
+		{
+			if (answer == incantation) {
+			// perform magic
+			}
+			else if (answer == "yes") {
+				// ...
+			}
+			// ...
+		}
+	如果您需要一个c风格的字符串(以零结尾的字符数组)，string提供对其包含的字符的只读访问。例如:
+		void print(const string& s)
+		{
+			printf("For people who like printf: %s\n",s.c_str()); // s.c_str() returns a pointer to s’ characters
+			cout << "For people who like streams: " << s << '\n';
+		}
+	根据定义，字符串字面值是一个const char *。要获得std::string类型的文字量，使用s后缀。例如:
+		auto s = "Cat"s; // a std::str ing
+		auto p = "Dog"; // a C-style string: a const char*
+	要使用s后缀，需要使用命名空间std::literals::string_literals(§5.4.4)。
+
+#####9.2.1字符串实现
+	实现字符串类是一个流行而有用的练习。然而，对于一般用途，我们精心设计的第一次尝试在便利性或性能方面很少与标准字符串匹配。
+	现在，字符串通常使用短字符串优化来实现。也就是说，短字符串值保存在string对象本身中，只有较长的字符串被放置在自由存储中。考虑:
+		string s1 {"Annemarie"}; // shor t string
+		string s2 {"Annemarie Stroustrup"}; // long string
+	当一个字符串的值从短字符串变为长字符串时(反之亦然)，它的表示形式会相应调整。一个“短”字符串可以有多少个字符?这是实现定义的，但“大约14个字符”是一个不错的猜测。
+		字符串的实际性能很大程度上取决于运行时环境。特别是，在多线程实现中，内存分配可能会相对昂贵。此外，当使用许多不同长度的字符串时，可能会导致内存碎片。这些都是短字符串优化变得普遍的主要原因。
+		要处理多个字符集，string实际上是一个通用模板basic_string的别名，其字符类型为char:
+		template<typename Char>
+		class basic_string {
+			// ... string of Char ...
+		};
+		using string = basic_string<char>;
+	用户可以定义任意字符类型的字符串。例如，假设我们有一个日文字符类型Jchar，我们可以这样写:
+		using Jstring = basic_string<Jchar>;
+	现在，我们可以对Jstring(一串日文字符)进行所有常见的字符串操作。
+
+####9.3 字符串视图
+	字符序列最常见的用法是将其传递给某个函数来读取。这可以通过按值传递字符串、对字符串的引用或c风格字符串来实现。在许多系统中还有其他选择，比如标准不提供的字符串类型。在所有这些情况下，当我们想要传递子字符串时，会有额外的复杂性。为了解决这个问题，标准库提供了string_view;string_view基本上是一个(指针，长度)对，表示一个字符序列:
+	string_view提供了对连续字符序列的访问。字符可以以多种方式存储，包括字符串和c风格字符串。string_view就像一个指针或引用，它不拥有它所指向的字符。在这一点上，它类似于STL的一对迭代器(§12.3)。
+		考虑一个连接两个字符串的简单函数:
+		string cat(string_view sv1, string_view sv2)
+		{
+			string res(sv1.length()+sv2.length());
+			char∗ p = &res[0];
+			for (char c : sv1) // one way to copy
+				∗p++ = c;
+			copy(sv2.begin(),sv2.end(),p); // another way
+			return res;
+		}
+	我们可以将其命名为cat():
+		string king = "Harold";
+		auto s1 = cat(king,"William"); // string and const char*
+		auto s2 = cat(king,king); // string and string
+		auto s3 = cat("Edward","Stephen"sv); // const char * and string_view
+		auto s4 = cat("Canute"sv,king);
+		auto s5 = cat({&king[0],2},"Henry"sv); // HaHenry
+		auto s6 = cat({&king[0],2},{&king[2],4}); // Harold
+	与接受const字符串和参数(§9.2)的compose()相比，cat()有三个优点:
+		•它可以用于以许多不同的方式管理字符序列。
+		•不为c风格的字符串参数创建临时字符串参数。
+		•我们可以轻松地传递子字符串。
+	注意使用了sv(“字符串视图”)后缀。我们需要利用它
+		using namespace std::literals::string_view_literals; // §5.4.4
+	何苦呢?原因是当我们传递"Edward"时，我们需要用一个* const char构造一个string_view，这需要计算字符数。对于"Stephen"sv，长度在编译时计算。
+		返回string_view时，记住它很像指针;它需要指向一些东西:
+		string_view bad()
+		{
+			string s = "Once upon a time";
+			return {&s[5],4}; // bad: returning a pointer to a local
+		}
+	返回一个指向字符串字符的指针，在使用这些字符之前，该指针将被销毁。
+		string_view的一个重要限制是它是其字符的只读视图。例如，不能使用string_view向将参数修改为小写的函数传递字符。为此，你可以考虑使用gsl::span或gsl::string_span(§13.3)。
+		string_view的越界访问行为未指定。如果你想要保证范围检查，可以使用at()，它会抛出out_of_range，也可以使用gsl::string_span(§13.3)，或者“只是要小心”。
+
+####9.4 正则表达式
+	正则表达式是文本处理的强大工具。它们提供了一种简单而简洁地用文本描述模式的方法(例如，美国邮政编码，如TX 77845，或iso风格的日期，如2009−06−07)，并有效地找到这种模式。在<regex>中，标准库以std::regex类及其支持函数的形式提供对正则表达式的支持。为了体验一下regex库的风格，让我们定义并打印一个模式:
+		regex pat {R"(\w{2}\s∗\d{5}(−\d{4})?)"}; // U.S. postal code pattern: XXddddd-dddd and variants
+	在任何语言中使用过正则表达式的人都会发现* w{2}\s∗\d{5}(−\d{4})?熟悉。它指定了一个模式，以两个字母开始，可选地后跟一些空格* *，后跟五位数\d{5}，可选地后跟一个破折号和四位数−\d{4}。如果你不熟悉正则表达式，这可能是了解它们的好时机([Stroustrup,2009]， [Maddock,2009]， [Friedl,1997])。
+		为了表示该模式，我使用了以R"(以)"开头的原始字符串字面量。这允许在字符串中直接使用反斜杠和引号。原始字符串特别适合用于正则表达式，因为它们往往包含大量反斜杠。如果我使用传统的字符串，模式定义将是:
+		regex pat {"\\w{2}\\s∗\\d{5}(−\\d{4})?"}; // U.S. postal code pattern
+	在<regex>中，标准库提供了对正则表达式的支持:
+		•regex_match():将正则表达式与字符串(已知长度)进行匹配(§9.4.2)。
+		•regex_search():在(任意长的)数据流(§9.4.1)中搜索匹配正则表达式的字符串。
+		•regex_replace():在任意长的数据流中搜索匹配正则表达式的字符串并替换它们。
+		•regex_iterator:迭代匹配和子匹配(§9.4.3)。
+		•regex_token_iterator:迭代非匹配项。
+
+#####9.4.1 搜索
+	使用模式最简单的方法是在流中搜索它:
+		int lineno = 0;
+		for (string line; getline(cin,line); ) { // read into line buffer
+			++lineno;
+			smatch matches; // matched strings go here
+			if (regex_search(line,matches,pat)) // search for pat in line
+				cout << lineno << ": " << matches[0] << '\n';
+		}
+	regex_search(line,matches,pat)在该行中搜索与存储在pat中的正则表达式匹配的任何内容，如果找到任何匹配，则将它们存储在matches中。如果没有找到匹配，regex_search(line,matches,pat)返回false。matches变量的类型为smatch。“s”代表“sub”或“string”，而smatch是字符串类型的子匹配向量。这里匹配[0]的第一个元素是完全匹配。regex_search()的结果是一个匹配的集合，通常表示为smatch:
+		void use()
+		{
+			ifstream in("file.txt"); // input file
+			if (!in) // check that the file was opened
+				cerr << "no file\n";
+			regex pat {R"(\w{2}\s∗\d{5}(−\d{4})?)"}; // U.S. postal code pattern
+			int lineno = 0;
+			for (string line; getline(in,line); ) {
+				++lineno;
+				smatch matches; // matched strings go here
+				if (regex_search(line , matches, pat)) {
+					cout << lineno << ": " << matches[0] << '\n'; // the complete match
+					if (1<matches.siz e() && matches[1].matched) // if there is a sub-pattern
+					// and if it is matched
+						cout << "\t: " << matches[1] << '\n'; // submatch
+				}
+			}
+		}
+	该功能读取查找美国邮政编码的文件，如TX77845和DC 20500−0001。smatch类型是regex结果的容器。这里，匹配[0]是整个模式，匹配[1]是可选的四位子模式。
+		换行符\n可以是模式的一部分，因此我们可以搜索多行模式。
+	显然，如果我们想这样做，就不应该一次读取一行。
+		正则表达式的语法和语义被设计成可以将正则表达式编译到状态机中以便高效执行[Cox,2007]。reg ex类型在运行时执行此编译。
+
+#####9.4.2 正则表达式表示法
+	regex库可以识别几种正则表达式表示法的变体。在这里，我使用默认表示法，这是ECMAScript(更常见的叫法是JavaScript)使用的ECMA标准的变体。
+	正则表达式的语法基于具有特殊含义的字符:
+
+	正则表达式特殊字符
+	.   Any single character (a ‘‘wildcard’’)
+	[   Begin character class
+	]   End character class
+	{   Begin count
+	}   End count
+	(   Begin grouping
+	)   End grouping
+	\   Next character has a special meaning
+	∗   Zero or more (suffix operation)
+	+   One or more (suffix operation)
+	?   Optional (zero or one) (suffix operation)
+	|   Alternative (or)
+	ˆ   Start of line; negation
+	$   End of line
+
+	例如，我们可以指定一行以零个或多个 A 开头，后跟一个或多个 B，然后是可选的 C，如下所示：
+		ˆA∗B+C?$
+	相匹配的例子:
+		AAAAAAAAAAAABBBBBBBBBC
+		BC
+		B
+	不匹配的例子:
+		AAAAA // no B
+		  AAAABC // initial space
+		AABBCC // too many Cs
+	模式的一部分被认为是子模式(可以从一个smatch中单独提取)，如果它被括在括号中。例如:
+		\d+−\d+ // no subpatterns
+		\d+(−\d+) // one subpattern
+		(\d+)(−\d+) // two subpatterns
+	通过添加后缀，模式可以是可选的，也可以是重复的(默认是重复一次):
+		Repetition
+		{ n }     Exactly n times
+		{ n , }   n or more times
+		{n,m}     At least n and at most m times
+		*         Zero or more, that is, {0,}
+		+         One or more, that is, {1,}
+		?         Optional (zero or one), that is {0,1}
+	例如:
+		A{3}B{2,4}C∗
+	相匹配的例子:
+		AAABBC
+		AAABB
+	不匹配的例子:
+		AABBC // too few As
+		AAABC // too few Bs
+		AAABBBBBCCC // too many Bs
+	一个后缀?在任何重复符号之后(?，∗，+，和{})使模式匹配器成为“惰性”或“非贪婪”。“也就是说，当寻找一个模式时，它会寻找最短的匹配而不是最长的匹配。默认情况下，模式匹配器总是寻找最长的匹配;这就是众所周知的马克思·蒙克法则。考虑:
+		ababab
+	模式(ab)+匹配所有ababab。Howev呃,(ab) + ?只匹配第一个ab。
+		最常见的字符分类有名称:
+
+		字符类
+		alnum        任何字母数字字符
+		alpha        任何字母字符
+		blank        任何非行分隔符的空白字符
+		cntrl        任何控制字符
+		d            任何一个十进制数字
+		digit        任何一个十进制数字
+		graph        任何图形字符
+		lower        任何小写字符
+		print        任何可打印的字符
+		punct        任何标点符号字符
+		s            任何空白字符
+		space        任何空白字符
+		upper        任何大写字符
+		w            任何单词字符(字母数字字符加上下划线)
+		xdigit       任何十六进制数字字符
+
+	在正则表达式中，字符类名必须用[::]括起来。例如，[:digit:]匹配十进制数字。此外，它们必须在定义字符类的[]对中使用。
+		简写表示法支持几个字符类:
+			字符类的缩写
+			\d        A decimal digit                                    [[:digit:]]
+			\s        A space (space, tab, etc.)                         [[:space:]]
+			\w        A letter (a-z) or digit (0-9) or underscore (_)    [_[:alnum:]]
+			\D        Not \d                                             [ˆ[:digit:]]
+			\S        Not \s                                             [ˆ[:space:]]
+			\W        Not \w                                             [ˆ_[:alnum:]]
+
+	此外，支持正则表达式的语言通常提供:
+		非标准(但常见)字符类缩写
+		\l        A lowercase character     [[:lower:]]
+		\u        An uppercase character    [[:upper:]]
+		\L        Not \l                    [ˆ[:lower:]]
+		\U        Not \u                    [ˆ[:upper:]]
+
+	为了获得完全的可移植性，请使用字符类名而不是这些缩写。
+		例如，考虑编写一个描述c++标识符的模式:一个下划线或一个字母，后面可能是字母、数字或下划线的空序列。为了说明其中的微妙之处，我列举了一些错误的尝试:
+		[:alpha:][:alnum:]∗ // wrong: characters from the set ":alpha" followed by ...
+		[[:alpha:]][[:alnum:]]∗ // wrong: doesn’t accept underscore ('_' is not alpha)
+		([[:alpha:]]|_)[[:alnum:]]∗ // wrong: underscore is not part of alnum either
+		([[:alpha:]]|_)([[:alnum:]]|_)∗ // OK, but clumsy
+		[[:alpha:]_][[:alnum:]_]∗ // OK: include the underscore in the character classes
+		[_[:alpha:]][_[:alnum:]]∗ // also OK
+		[_[:alpha:]]\w∗ // \w is equivalent to [_[:alnum:]]
+	最后，这里有一个函数，它使用regex_match()(§9.4.1)最简单的版本来测试一个字符串是否为标识符:
+		bool is_identifier(const string& s)
+		{
+			reg ex pat {"[_[:alpha:]]\\w∗"}; // underscore or letter
+			// followed by zero or more underscores, letters, or digits
+			return regex_match(s,pat);
+		}
+	注意反斜杠的双引号以在普通字符串字面量中包含一个反斜杠。使用原始字符串字面值来缓解特殊字符的问题。例如:
+		bool is_identifier(const string& s)
+		{
+			regex pat {R"([_[:alpha:]]\w∗)"};
+			return regex_match(s,pat);
+		}
+	下面是一些模式的例子:
+		Ax∗ // A, Ax, Axxxx
+		Ax+ // Ax, Axxx Not A
+		\d−?\d // 1-2, 12 Not 1--2
+		\w{2}−\d{4,5} // Ab-1234, XX-54321, 22-5432 Digits are in \w
+		(\d∗:)?(\d+) // 12:3, 1:23, 123, :123 Not 123:
+		(bs|BS) // bs, BS Not bS
+		[aeiouy] // a, o, u  An English vow el, not x
+		[ˆaeiouy] // x, k Not an English vow el, not e
+		[aˆeiouy] // a, ˆ, o, u  An English vow el or ˆ
+	可能由sub_match表示的组(子模式)由圆括号分隔。如果需要不应定义子模式的括号，请使用(?:而不是普通的(。例如:
+		(\s|:|,)∗(\d∗) / / optional spaces, colons, and/or commas followed by an optional number
+	假设我们对数字前的字符不感兴趣(可能是分隔符)，我们可以这样写:
+		(?:\s|:|,)∗(\d∗) / / optional spaces, colons, and/or commas followed by an optional number
+	这将使正则表达式引擎不必存储第一个字符:: variant只有一个子模式。
+
+		正则表达式分组示例
+		\d∗\s\w+             No groups (subpatterns)
+		(\d∗)\s(\w+)         Two groups
+		(\d∗)(\s(\w+))+      Two groups (groups do not nest)
+		(\s∗\w∗)+            One group; one or more subpatterns;only the last subpattern is saved as a sub_match
+		<(.∗?)>(.∗?)</\1>    Three groups; the \1 means ‘‘same as group 1’’
+
+	最后一个模式对于解析XML非常有用。它查找标记/标记结束标记。注意，我使用了一个非贪婪匹配(懒惰匹配)， .*? ，用于标记和结束标记之间的子模式。如果我使用了plain .∗，这个输入就会导致问题:
+		Always look on the <b>bright</b> side of <b>life</b>.
+	第一个子模式的贪婪匹配将第一个<与最后一个>匹配。这将是正确的行为，但不太可能是程序员想要的。
+		有关正则表达式的更详尽的介绍，请参阅[Friedl,1997]。
+
+#####9.4.3 迭代器
+	可以定义一个regex_iterator，用于遍历字符序列，查找模式的匹配项。例如，我们可以使用一个sreg ex_iterator (a regex_iterator)输出字符串中所有以空格分隔的单词:
+		void test()
+		{
+			string input = "aa as; asd ++eˆasdf asdfg";
+			reg ex pat {R"(\s+(\w+))"};
+			for (sreg ex_iterator p(input.begin(),input.end(),pat); p!=sregex_iterator{}; ++p)
+				cout << (∗p)[1] << '\n';
+		}
+	这个输出:
+		as
+		asd
+		asdfg
+	我们漏掉了第一个单词aa，因为它前面没有空格。如果我们简化为R"((\w+))"，我们得到了
+		aa
+		as
+		asd
+		e
+		asdf
+		asdfg
+	regex_iterator是一种双向迭代器，因此不能直接迭代istream (istream只提供输入迭代器)。另外，不能通过regex_iterator进行写操作，而默认的regex_iterator (regex_iterator{})是唯一可能的序列结束符。
+
+####9.5 建议
+	[1]使用std::string来拥有字符序列;§9.2;[CG: SL.str.1]。
+	[2]比起c风格的字符串函数，更喜欢字符串操作;§9.1。
+	[3]使用string来声明变量和成员，而不是作为基类;§9.2。
+	[4]根据值返回字符串(依赖于move语义);§9.2,§9.2.1。
+	[5]直接或间接使用substr()读取子字符串，使用replace()写入子字符串;§9.2。
+	[6]字符串可以根据需要增长和收缩;§9.2。
+	[7]当你需要范围检查时，使用at()而不是迭代器或[];§9.2。
+	[8]想要优化速度时，使用迭代器和[]而不是at();§9.2。
+	[9]字符串输入没有溢出;§9.2,§10.3。
+	[10]使用c_str()来生成一个c风格的字符串表示(只有在必要的时候);§9.2。
+	[11]使用stringstream或泛型值提取函数(例如to)进行字符串的数值转换;§10.8。
+	[12]basic_string可用于创建任何类型的字符串;§9.2.1。
+	[13]为标准库字符串字面值使用s后缀;§9.3 [CG: SL.str.12]。
+	[14]将string_view作为需要读取以各种方式存储的字符序列的函数的参数;§9.3 [CG: SL.str.2]。
+	[15]使用gsl::string_span作为需要以各种方式写入字符序列的函数的参数;§9.3. [CG: SL.str.2] [CG: SL.str.11]。
+	[16]把string_view想象成一种带有大小的指针;它没有自己的性格;§9.3。
+	[17]为字符串字面值使用sv后缀意味着标准库string_views;§9.3。
+	[18]在正则表达式的大多数常规用法中使用regex;§9.4。
+	[19]除了最简单的模式外，首选原始字符串字面值;§9.4。
+	[20]使用regex_match()来匹配一个完整的输入;§9.4, §9.4.2。
+	[21]使用regex_search()在输入流中搜索模式;§9.4.1。
+	[22]正则表达式表示法可以调整以匹配各种标准;§9.4.2。
+	[23]默认的正则表达式表示法是ECMAScript;§9.4.2。
+	[24]被抑制;正则表达式可以很容易地成为一种只写的语言;§9.4.2。
+	[25]注意\i允许你用前面的子模式来表示子模式;§9.4.2。
+	[26]使用?使图案“懒”;§9.4.2。
+	[27]使用reg ex_iterators在流上迭代寻找模式;§9.4.3。
+
+___
+###10 输入和输出
+- 介绍
+- 输出
+- 输入
+- I/O状态
+- 自定义类型I/O
+- 格式化
+- 文件流
+- 字符串流
+- C风格 I/O
+- 文件系统
+- 建议
+
+####10.1 介绍
+	I/O流库提供了文本和数值的格式化和非格式化的缓冲I/O。
+		ostream将类型化对象转换为字符流(字节流)；
+		istream将字符流(字节流)转换为类型化对象；
+
+	对stream和ostream的操作在§10.2和§10.3中有描述。这些操作是类型安全的、类型敏感的，并且可扩展以处理用户定义的类型(§10.5)。
+		其他形式的用户交互，例如图形I/O，是通过不属于ISO标准的库来处理的，因此这里不作描述。
+		这些流可以用于二进制I/O，可以用于各种字符类型，特定于地区，并使用高级缓冲策略，但这些主题超出了本书的范围。
+		这些流可以用于输入和输出std::字符串(§10.3)，格式化到字符串缓冲区(§10.8)，以及文件I/O(§10.10)。
+		I/O流类都有析构函数，该析构函数释放所有拥有的资源(如缓冲区和文件句柄)。也就是说，它们是“资源获取即初始化”(RAII;§5.3)。
+
+####10.2 输出
+	在<ostream>中，I/O流库定义了每种内置类型的输出。此外，定义用户定义类型的输出也很容易(§10.5)。操作符 << (" put to ")被用作ostream类型对象的输出操作符;Cout是标准输出流，cerr是报告错误的标准流。默认情况下，写入cout的值被转换为字符序列。例如，要输出十进制数字10，我们可以这样写:
+		void f()
+		{
+			cout << 10;
+		}
+	这将在标准输出流中放置字符1后跟字符0。
+		同样地，我们可以这样写:
+		void g()
+		{
+			int x {10};
+			cout << x;
+		}
+	不同类型的输出可以用明显的方式组合:
+		void h(int i)
+		{
+			cout << "the value of i is ";
+			cout << i;
+			cout << '\n';
+		}
+	对于h(10)，输出为:
+		the value of i is 10
+	当输出几个相关项时，人们很快就会厌倦重复输出流的名称。
+	幸运的是，输出表达式的结果本身可以用于进一步的输出。例如:
+		void h2(int i)
+		{
+			cout << "the value of i is " << i << '\n';
+		}
+	这个h2()产生与h()相同的输出。
+		字符常量是用单引号括起来的字符。注意，字符是作为字符输出的，而不是作为数值输出的。例如:
+		void k()
+		{
+			int b = 'b'; // note: char implicitly converted to int
+			char c = 'c';
+			cout << 'a' << b << c;
+		}
+	字符'b'的整数值是98(在我使用的c++实现中使用的ASCII编码中)，因此将输出a98c。
+
+####10.3 输入
+	在<istream>中，标准库提供了用于输入的流。与ostream类似，istreams处理内置类型的字符串表示，并且可以很容易地进行扩展以处理用户定义的类型。
+		操作符>> (" get from ")被用作输入操作符;Cin是标准的输入流。>>的右操作数的类型决定了接受什么输入以及输入操作的目标是什么。例如:
+		void f()
+		{
+			int i;
+			cin >> i; // read an integer into i
+			double d;
+			cin >> d; // read a double-precision floating-point number into d
+		}
+	它将一个数字(如1234)从标准输入读入整型变量i，并将一个浮点数(如12.34e5)读入双精度浮点变量d。
+		像输出操作一样，输入操作也可以被链接，所以我可以等价地写:
+		void f()
+		{
+			int i;
+			double d;
+			cin >> i >> d; // read into i and d
+		}
+	在这两种情况下，对整数的读取都以任何非数字的字符结束。默认情况下，>>跳过初始空白，因此合适的完整输入序列将
+		1234
+		12.34e5
+	通常，我们想要读取一系列字符。一种方便的方法是读入字符串。例如:
+		void hello()
+		{
+			cout << "Please enter your name\n";
+			string str;
+			cin >> str;
+			cout << "Hello, " << str << "!\n";
+		}
+	如果你输入Eric，响应是:
+		Hello, Eric!
+	默认情况下，一个空白字符，如空格或换行符，终止读取，所以如果你输入Eric Bloodaxe假装是York的不幸之王，响应仍然是:
+		Hello, Eric!
+	你可以使用getline()函数读取整行内容。例如:
+		void hello_line()
+		{
+			cout << "Please enter your name\n";
+			string str;
+			getline(cin,str);
+			cout << "Hello, " << str << "!\n";
+		}
+	在这个程序中，输入Eric Bloodaxe会产生所需的输出:
+		Hello, Eric Bloodaxe!
+	终止该行的换行符被丢弃，因此cin可以开始下一个输入行。
+		使用格式化的I/O操作通常比逐个操作字符更不容易出错、更高效、更少代码。特别地，流负责内存管理和范围检查。我们可以使用stringstreams(§10.8)来格式化与内存之间的数据。
+		标准字符串有一个很好的特性，可以展开容纳你放入的东西;您不需要预先计算最大大小。因此，如果你输入了几兆字节的分号，程序就会回显好几页的分号。
+
+####10.4 I/O状态
+	iostream有一个状态，我们可以通过检查来确定操作是否成功。最常见的用法是读取一个值序列:
+		vector<int> read_ints(istream& is)
+		{
+			vector<int> res;
+			for (int i; is>>i; )
+				res.push_back(i);
+			return res;
+		}
+	这将从is中读取数据，直到遇到非正整数的数据。这个东西通常是输入的终点。这里发生的事情是，操作是>>i返回对is的引用，如果测试iostream流准备好进行另一个操作，则结果为true。
+		通常，I/O状态保存所有读写所需的信息，例如格式化信息(§10.6)，错误状态(例如，是否已到达输入结束?)，以及使用哪种缓冲。特别地，用户可以设置状态来反映发生了错误(§10.5)，如果错误不严重，则清除该状态。例如，我们可以想象一个版本的read_int()，它接受一个终止字符串:
+		vector<int> read_ints(istream& is, const string& terminator)
+		{
+			vector<int> res;
+			for (int i; is >> i; )
+				res.push_back(i);
+			if (is.eof()) // fine: end of file
+				return res;
+			if (is.fail())
+			{ 	// we failed to read an int; was it the terminator?
+				is.clear(); // reset the state to good()
+				is.unget(); // put the non-digit back into the stream
+				string s;
+				if (cin>>s && s==terminator)
+					return res;
+				cin.setstate(ios_base::failbit); // add fail() to cin’s state
+			}
+			return res;
+		}
+		auto v = read_ints(cin,"stop");
+
+####10.5 自定义类型I/O
+	除了内置类型和标准字符串的I/O外，iostream库还允许程序员为自己的类型定义I/O。例如，考虑一个简单类型Entry，我们可以用它来表示电话簿中的条目:
+		struct Entry {
+			string name;
+			int number;
+		};
+	我们可以定义一个简单的输出操作符，使用类似于代码中初始化时使用的{"name"，number}格式来编写一个Entry:
+		ostream& operator<<(ostream& os, const Entry& e)
+		{
+			return os << "{\"" << e.name << "\", " << e.number << "}";
+		}
+	用户定义的输出操作符将其输出流(通过引用)作为其第一个参数，并将其作为结果返回。
+		相应的输入操作符更复杂，因为它必须检查正确的格式并处理错误:
+		istream& operator>>(istream& is, Entry& e)
+		// read { "name" , number } pair. Note: for matted with { " " , and }
+		{
+			char c, c2;
+			if (is>>c && c=='{' && is>>c2 && c2=='"')
+			{ 	// star t with a { "
+				string name; // the default value of a string is the empty string: ""
+				while (is.get(c) && c!='"') // anything before a " is part of the name
+					name+=c;
+				if (is>>c && c==',')
+				{
+					int number = 0;
+					if (is>>number>>c && c=='}')
+					{ 	// read the number and a }
+						e = {name ,number}; // assign to the entry
+						return is;
+					}
+				}
+			}
+			is.setstate(ios_base::failbit); // register the failure in the stream
+			return is;
+		}
+	输入操作返回对其istream的引用，可用于测试操作是否成功。例如，当用作条件时，>>c表示“我们成功地将一个字符从is读入c了吗?””
+		缺省情况下，is>>c跳过空格。get(c)没有，所以这个entry-input操作符忽略(跳过)名称字符串外的空白，而不是名称字符串内的空白。例如:
+		{ "John Marwood Cleese", 123456 }
+		{"Michael Edward Palin", 987654}
+	我们可以这样从输入中读取这对值到输入y中:
+		for (Entry ee; cin>>ee; ) // read from cin into ee
+			cout << ee << '\n'; // write ee to cout
+	输出是:
+		{"John Marwood Cleese", 123456}
+		{"Michael Edward Palin", 987654}
+	关于识别字符流中的模式(正则表达式匹配)的更系统的技术参见§9.4。
+
+####10.6 格式化
+	iostream标准库提供了大量用于控制输入和输出格式的操作。最简单的格式化控件称为操纵符，可在<ios>,<istream>、<ostream>和<iomanip>中找到(用于带参数的操纵符)。例如，我们可以输出十进制(默认)、八进制或十六进制数的整数:
+		cout << 1234 << ',' << hex << 1234 << ',' << oct << 1234 << '\n'; // print 1234,4d2,2322
+	我们可以显式地设置浮点数的输出格式:
+			constexpr double d = 123.456;
+			cout << d << "; " // use the default for mat for d
+				 << scientific << d << "; " // use 1.123e2 style for mat for d
+				 << hexfloat << d << "; " // use hexadecimal notation for d
+				 << fixed << d << "; " // use 123.456 style for mat for d
+				 << defaultfloat << d << '\n'; // use the default for mat for d
+	生成：
+		123.456; 1.234560e+002; 0x1.edd2f2p+6; 123.456000; 123.456
+	Precision是一个确定用于显示浮点数的位数的整数:
+		• 通用格式(defaultfloat)让实现选择一种格式，以最好地保留可用空间中的值的样式来表示一个值。精度指定数字的最大位数。
+		• 科学计数(scientific)表示一个小数点前有一位数字和一个指数的值。精度指定小数点后的最大位数。
+		• 固定格式(fixed)以整数部分后跟小数点和小数部分的形式表示值。精度指定小数点后的最大位数。
+	浮点值被四舍五入，而不仅仅是被截断，而且precision()不会影响整型输出。例如:
+		cout.precision(8);
+		cout << 1234.56789 << ' ' << 1234.56789 << ' ' << 123456 << '\n';
+		cout.precision(4);
+		cout << 1234.56789 << ' ' << 1234.56789 << ' ' << 123456 << '\n';
+		cout << 1234.56789 << '\n';
+	生成：
+		1234.5679 1234.5679 123456
+		1235 1235 123456
+		1235
+	这些浮点操纵符是“粘性的”;也就是说，它们的影响将持续到后续的浮点操作。
+
+####10.7 文件流
+	在<fstream>中，标准库提供了进出文件的流:
+		• ifstreams用于从文件读取数据
+		• ofstreams用于写入数据
+		• fstreams用于读写数据
+	例如:
+		ofstream ofs {"target"}; // ‘‘o’’ for ‘‘output’’
+		if (!ofs)
+			error("couldn't open 'target' for writing");
+	通常通过检查文件流的状态来测试文件流是否被正确打开。
+		ifstream ifs {"source"}; // ‘‘i’’ for ‘‘input’’
+		if (!ifs)
+			error("couldn't open 'source' for reading");
+	假设测试成功，ofs可以用作普通的ostream(就像cout)， if可以用作普通的istream(就像cin)。
+		文件定位和更详细的文件打开方式控制是可能的，但超出了本书的范围。
+		关于文件名和文件系统操作的组成，参见§10.10。
+
+####10.8 字符串流
+	在<sstream>中，标准库提供了与string对象来往的流:
+		• istringstream 用于读取字符串的istringstreams
+		• ostringstream 用于写入字符串的ostringstreams
+		• stringstream 用于读取和写入字符串的stringstreams。
+	例如:
+		void test()
+		{
+			ostringstream oss;
+			oss << "{temperature," << scientific << 123.4567890 << "}";
+			cout << oss.str() << '\n';
+		}
+	ostringstream的结果可以使用str()读取。ostringstream的一个常见用途是在将结果字符串提供给GUI之前进行格式化。同样，从GUI接收到的字符串也可以通过将其放入istringstream中进行格式化输入操作(§10.3)来读取。
+		字符串流既可用于读，也可用于写。例如，我们可以定义一个操作，将任何具有字符串表示的类型转换为另一种也可以表示为字符串的类型:
+		template<typename Target =string, typename Source =string>
+		Targ et to(Source arg) // convert Source to T arget
+		{
+			stringstream interpreter;
+			Targ et result;
+			if (!(interpreter << arg) // wr ite arg into stream
+				|| !(interpreter >> result) // read result from stream
+				|| !(interpreter >> std::ws).eof()) // stuff left in stream?
+				throw runtime_error{"to<>() failed"};
+			return result;
+		}
+	函数模板实参只有在不能推导或没有默认实参的情况下才需要显式提及(§7.2.4)，因此我们可以这样写:
+		auto x1 = to<string,double>(1.2); // very explicit (and verbose)
+		auto x2 = to<string>(1.2); // Source is deduced to double
+		auto x3 = to<>(1.2); // T arget is defaulted to string; Source is deduced to double
+		auto x4 = to(1.2); // the <> is redundant;
+		// T arget is defaulted to string; Source is deduced to double
+	如果所有函数模板参数都是默认值，则可以省略<>。
+		我认为这是一个很好的例子，说明可以通过结合语言特性和标准库设施来实现通用性和易用性。
+
+####10.9 C风格I/O
+	c++标准库也支持C标准库的I/O，包括printf()和scanf()。
+	从类型和安全性的角度来看，这个库的许多使用都是不安全的，所以我不推荐使用它。特别是，它很难用于安全、方便的输入。它不支持用户定义的类型。如果你不使用c风格的I/O并且关心I/O性能，调用
+		ios_base::sync_with_stdio(false); // avoid significant overhead
+	如果没有这个调用，iostream的速度会大大降低，以便与c风格的I/O兼容。
+
+####10.10 文件系统
+	大多数系统都有一个文件系统的概念，即提供对存储为文件的永久信息的访问。不幸的是，文件系统的属性和操作它们的方法差别很大。
+	为了处理这个问题，<filesystem>中的文件系统库为大多数文件系统的大多数工具提供了统一的接口。使用<filesystem>，我们可以移植
+		• 表示文件系统路径并在文件系统中导航
+		• 检查文件类型和与它们相关的权限
+	文件系统库可以处理unicode，但是如何解释超出了本书的范围。我推荐使用cppreference [cppreference]和Boost文件系统文档[Boost]获取详细信息。
+		考虑一个例子:
+		pathf = "dir/hypothetical.cpp"; // naming a file
+		assert(exists(f)); // f must exist
+		if (is_regular_file(f)) // is f an ordinary file?
+			cout << f << " is a file; its size is " << file_siz e(f) << '\n';
+	注意，操作文件系统的程序通常与其他程序一起运行在计算机上。因此，文件系统的内容可以在两个命令之间更改。例如，尽管我们首先谨慎地断言f存在，但在下一行中，当我们询问f是否是一个普通文件时，这可能就不再成立了。
+		路径是一个相当复杂的类，能够处理许多操作系统的本机字符集和约定。特别地，它可以处理main()提供的命令行中的文件名;例如:
+		int main(int argc, char∗ argv[])
+		{
+			if (argc < 2)
+			{
+				cerr << "arguments expected\n";
+				return 1;
+			}
+			path p {argv[1]}; // create a path from the command line
+			cout << p << " " << exists(p) << '\n'; // note: a path can be printed like a str ing
+			// ...
+		}
+	在使用路径之前，不会检查路径的有效性。即使这样，它的有效性取决于程序运行所依赖的系统的惯例。
+	当然，可以使用路径来打开文件
+		void use(path p)
+		{
+			ofstream f {p};
+			if (!f) error("bad file name: ", p);
+			f << "Hello, file!";
+		}
+	除了path，<filesystem>还提供了用于遍历目录和查询所找到文件属性的类型:
+		文件系统类型(部分)
+		path                            目录路径
+		filesystem_error                文件系统异常
+		directory_entry                 目录条目
+		directory_iterator              用于在目录上进行迭代
+		recursive_directory_iterator    用于迭代一个目录及其子目录
+	举一个简单但并非完全不现实的例子:
+		void print_directory(path p)
+			tr y
+			{
+				if (is_directory(p))
+				{
+					cout << p << ":\n";
+					for (const directory_entry& x : director y_iterator{p})
+						cout << " " << x.path() << '\n';
+				}
+			}
+			catch (const filesystem_error& ex) {
+			cerr << ex.what() << '\n';
+		}
+	字符串可以隐式转换为路径，因此可以像这样执行print_directory:
+		void use()
+		{
+			print_directory("."); // current directory
+			print_directory(".."); // parent directory
+			print_directory("/"); // Unix root directory
+			print_directory("c:"); // Windows volume C
+			for (string s; cin>>s; )
+				print_directory(s);
+		}
+	如果我也想列出子目录，我应该使用recursive_directory_iterator{p}。如果我想按字典序打印条目，我应该将路径复制到一个向量中，并在打印前对其进行排序。
+		类路径提供了许多常见和有用的操作:
+___
+	路径操作(部分)
+	P和p2是路径
+	value_type                    文件系统本地编码使用的字符类型:
+								  POSIX上的char, Windows上的wchar_t
+	string_type                   std::basic_string<value_type>
+	const_iterator                const双向迭代器，value_type为path
+	iterator                      const_iterator的别名
+
+	p=p2                          把p2赋值给p
+	p/=p2                         P和p2使用文件名称分隔符连接起来(默认情况下为/)
+	p+=p2                         P和p2串联(无分隔符)
+	p.native()                    p的原生格式
+	p.string()                    p的原生格式的字符串
+	p.g eneric_string()           p的一般格式为字符串
+	p.filename()                  p的文件名部分
+	p.stem()                      p的根部
+	p.extension()                 p的文件扩展名部分
+	p.begin()                     p元素序列的开始部分
+	p.end()                       p的元素序列的末尾
+	p==p2, p!=p2                  p和p的等式和不等式
+	p<p2, p<=p2, p>p2, p>=p2      词法比较
+	is>>p, os<<p                  流I/O 到/从p
+	u8path(s)                     来自UTF-8编码源s的路径
+___
+	例如:
+		void test(path p)
+		{
+			if (is_directory(p))
+			{
+				cout << p << ":\n";
+				for (const directory_entr y& x : director y_iterator(p))
+				{
+					const path& f = x; // refer to the path part of a director y entr y
+					if (f.extension() == ".exe")
+						cout << f.stem() << " is a Windows executable\n";
+					else
+					{
+						string n = f.extension().string();
+						if (n == ".cpp" || n == ".C" || n == ".cxx")
+							cout << f.stem() << " is a C++ source file\n";
+					}
+				}
+			}
+		}
+	我们使用路径作为字符串(如f.extension)，并且可以从路径中提取各种类型的字符串(如f.extension().string())。
+		请注意，命名约定、自然语言和字符串编码都非常复杂。
+	文件系统库抽象提供了可移植性和极大的简化。
+___
+	文件系统操作(部分)
+	P p1 p2是路径;E是一个error_code;B是指示成功或失败的bool值
+	exists(p)                 p是否指向一个现有的文件系统对象?
+	copy(p1,p2)               将文件或目录从p1复制到p2;将错误报告为异常
+	copy(p1,p2,e)             复制文件或目录;报告错误作为错误代码
+	b=copy_file(p1,p2)        将文件内容从p1复制到p2;将错误报告为异常
+	b=create_director y(p)    创建名为p的新目录;p上的所有中间目录必须存在
+	b=create_directories(p)   创建名为p的新目录;在p上创建所有中间目录
+	p=current_path()          p是当前工作目录
+	current_path(p)           将当前工作目录设置为p
+	s=file_siz e(p)           S是p的字节数
+	b=remove(p)               如果是文件或空目录，请删除p
+___
+	许多操作都有需要额外参数的重载，例如操作系统权限。
+	这些内容的处理远远超出了本书的范围，所以如果您需要它们，请查阅它们。
+		和copy()一样，所有操作都有两个版本:
+		• 表中列出的基本版本，例如，exists(p)。如果操作失败，函数将抛出filesystem_error。
+		• 带有额外error_code参数的版本，例如exists(p,e)。操作是否成功。
+		当操作在正常使用中预期频繁失败时，我们使用错误代码，当错误被认为是异常时，我们使用抛出操作。
+		通常，使用查询函数是检查文件属性的最简单、最直接的方法。<filesystem>库知道一些常见的文件类型，并将其余文件分类为“other”:
+___
+	文件类型
+	f路径或file_status
+
+	is_block_file(f)            f是块设备吗?
+	is_character_file(f)        f是一个字符设备吗?
+	is_director y(f)            f是目录吗?
+	is_empty(f)                 f是否为空文件或目录?
+	is_fifo(f)                  f是有名管道吗?
+	is_other(f)                 f是其他类型的文件吗?
+	is_regular_file(f)          f是普通文件吗?
+	is_socket(f)                f是命名的IPC套接字吗?
+	is_symlink(f)               f是符号链接吗?
+	status_known(f)             f的文件状态已知吗?
+___
+
+####10.11 建议
+	[1] iostream是类型安全的、类型敏感的、可扩展的;§10.1。
+	[2] 只有在必要时才使用字符级输入;§10.3;[CG: SL.io.1]。
+	[3] 读取时，总是考虑格式错误的输入;§10.3;[CG: SL.io.2]。
+	[4] 避免endl(如果你不知道endl是什么，你没有错过任何东西);[CG: SL.io.50]。
+	[5] 为具有有意义的文本表示的用户定义类型定义<<和>>;§10.1,§10.2,§10.3。
+	[6] 正常输出使用cout，错误使用cerr;§10.1。
+	[7] 有普通字符和宽字符的iostream，你可以为任何类型的字符定义iostream;§10.1。
+	[8] 支持二进制I/O;§10.1。
+	[9] 对于标准I/O流、文件和字符串，有标准的iostream;§10.2、§10.3、§10.7、§10.8。
+	[10] 链接<<操作用于更简洁的表示法;§10.2。
+	[11] 链接>>操作，用于更简洁的表示法;§10.3。
+	[12] 字符串的输入不溢出;§10.3。
+	[13] 缺省情况下>>跳过初始空白;§10.3。
+	[14] 使用流状态失败来处理可能可恢复的I/O错误;§10.4。
+	[15] 你可以为自己的类型定义<<和>>操作符;§10.5。
+	[16] 你不需要修改istream或ostream来添加新的<<和>操作符;§10.5。
+	[17] 使用操纵符控制格式;§10.6。
+	[18] precision()规范适用于以下所有浮点输出操作;§10.6。
+	[19] 浮点格式规范(例如scientific)适用于以下所有浮点输出操作;§10.6。
+	[20] #include<ios> 当使用标准操作符时;§10.6。
+	[21] #include<iomanip>时使用标准操作符接受参数;§10.6。
+	[22] 不要尝试复制文件流。
+	[23] 在使用文件流之前，请记住检查文件流是否已附加到文件;§10.7。
+	[24] 使用stringstreams在内存中格式化;§10.8。
+	[25] 你可以定义任意两种类型之间的转换，它们都有字符串表示;§10.8。
+	[26] C-style I/O不是类型安全的;§10.9。
+	[27] 除非你使用printf家族函数，否则调用ios_base::sync_with_stdio(false);§10.9;[CG: SL.io.10]。
+	[28] 选择<filesystem>而不是直接使用特定的操作系统接口;§10.10。
 
 
 
@@ -2841,6 +3727,19 @@ ___
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+	
 
 
 
