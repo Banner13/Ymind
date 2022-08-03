@@ -5,7 +5,7 @@
 
 ###1.更新Ubuntu内软件下载源为清华源
 
-    1.1 sudo cp /etc/apt/sources.list /etc/apt/sources.list.copy            // 源文件备份
+    1.1 sudo cp /etc/apt/sources.list /etc/apt/sources.list.default            // 源文件备份
     1.2 sudo gedit /etc/apt/sources.list  // 修改描述文件(https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)
     1.3 sudo apt-get update          // 更新下载源
 
