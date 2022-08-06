@@ -1,5 +1,6 @@
 ###original site
 	https://www.gnu.org/software/make/manual/html_node/index.html#SEC_Contents
+[TOC]
 ___
 
 ##Short Table of Contents
@@ -109,14 +110,39 @@ ___
 	make 默认寻找 Makefile 、 makefile 和 GNUmakefile 这三个文件，如果想使用其他名字的 makefile， 使用 make -f User_Makefile。
 
 ####3.3 Including Other Makefiles
+___
 	使用 -I 或者 -include 可以包含其他的 Makefile (函数或者变量也不影响)。
-
+___
 ####3.4 The Variable MAKEFILES	xxx
+	3.4 变量 MAKEFILES
+	如果定义了环境变量 MAKEFILES，则 make 将其值视为要在其他文件之前读取的其他 makefile 的名称列表（由空格分隔）。这很像 include 指令：在各种目录中搜索这些文件（请参阅包括其他 Makefile）。此外，默认目标永远不会从这些 makefile 之一（或它们包含的任何 makefile）中获取，如果未找到 MAKEFILES 中列出的文件，这不是错误。
+	MAKEFILES 的主要用途是在 make 的递归调用之间进行通信（请参阅 make 的递归使用）。通常不希望在顶级调用 make 之前设置环境变量，因为通常最好不要弄乱外部的 makefile。但是，如果您在没有特定 makefile 的情况下运行 make，则 MAKEFILES 中的 makefile 可以做一些有用的事情来帮助内置的隐式规则更好地工作，例如定义搜索路径（请参阅目录搜索）。
+	一些用户很想在登录时自动在环境中设置 MAKEFILES，并编写 makefile 以期望这样做。这是一个非常糟糕的主意，因为如果由其他人运行，这样的 makefile 将无法工作。在 makefile 中编写显式包含指令要好得多。请参阅包括其他 Makefile。
+___
 	一个环境变量，作用类似于 include 指令，具体用法待后续更新。
-
+___
 ####3.5 How Makefiles Are Remade	xxx
-	...
+	3.5 Makefile 是如何重新制作的
+	有时可以从其他文件（例如 RCS 或 SCCS 文件）重新制作 makefile。如果可以从其他文件重新制作 makefile，您可能希望 make 获取最新版本的 makefile 以读入。
 
+	为此，在读入所有 makefile 后，make 会将每个文件都视为目标并尝试更新它。如果一个 makefile 有一个规则说明如何更新它（在那个 makefile 或另一个 makefile 中找到）或者如果一个隐式规则适用于它（参见使用隐式规则），它将在必要时更新。检查完所有 makefile 后，如果有任何实际更改，make 从一个干净的状态开始，并重新读取所有 makefile。 （它还会尝试再次更新它们中的每一个，但通常这不会再次更改它们，因为它们已经是最新的。）每次重新启动都会导致特殊变量 MAKE_RESTARTS 被更新（参见特殊变量）。
+
+	如果您知道您的一个或多个 makefile 无法重新制作，并且您想阻止 make 对它们执行隐式规则搜索，也许是出于效率原因，您可以使用任何防止隐式规则查找的常规方法来执行此操作。例如，您可以使用 makefile 作为目标和一个空配方编写显式规则（请参阅使用空配方）。
+
+	如果 makefile 指定双冒号规则来重新制作带有配方但没有先决条件的文件，则该文件将始终被重新制作（请参阅双冒号）。在 makefile 的情况下，每次运行 make 时都会重新制作具有双冒号规则和配方但没有先决条件的 makefile，然后在 make 重新开始并再次读取 makefile 后再次重新制作。这将导致无限循环：make 将不断地重新制作 makefile，并且从不做任何其他事情。因此，为避免这种情况，make 不会尝试重新制作被指定为带有配方但没有先决条件的双冒号规则目标的 makefile。
+
+	如果您没有使用“-f”或“--file”选项指定要读取的任何 makefile，make 将尝试使用默认的 makefile 名称；请参阅给您的 Makefile 起什么名称。与使用“-f”或“--file”选项显式请求的 makefile 不同，make 不确定这些 makefile 是否应该存在。但是，如果默认的 makefile 不存在但可以通过运行 make 规则创建，您可能希望运行规则以便可以使用 makefile。
+
+	因此，如果不存在任何默认的 makefile，make 将尝试按照搜索它们的相同顺序生成每个文件（请参阅为 Makefile 提供的名称），直到成功创建一个，或者名称用完尝试。请注意，如果 make 找不到或无法生成任何 makefile，这不是错误； makefile 并不总是必要的。
+
+	当您使用“-t”或“--touch”选项时（请参阅代替执行配方），您不希望使用过时的 makefile 来决定要触摸的目标。所以'-t'选项对更新makefile没有影响；即使指定了“-t”，它们也会真正更新。同样，'-q'（或'--question'）和'-n'（或'--just-print'）不会阻止更新makefile，因为过期的makefile会导致错误的输出对于其他目标。因此，“make -f mfile -n foo”将更新 mfile，将其读入，然后打印更新 foo 及其先决条件的配方，而无需运行它。为 foo 打印的配方将是 mfile 更新内容中指定的配方。
+
+	但是，有时您实际上可能希望阻止更新生成文件。您可以通过在命令行中将 makefile 指定为目标以及将它们指定为 makefile 来执行此操作。当 makefile 名称被明确指定为目标时，选项“-t”等确实适用于它们。
+
+	因此，“make -f mfile -n mfile foo”将读取 makefile mfile，打印更新它所需的配方而不实际运行它，然后打印更新 foo 所需的配方而不运行它。 foo 的配方将是由 mfile 的现有内容指定的配方。
+___
+	...
+___
 ####3.6 Overriding Part of Another Makefile
 
 ####3.7 How make Reads a Makefile

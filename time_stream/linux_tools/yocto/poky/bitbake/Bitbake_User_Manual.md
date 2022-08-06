@@ -1,7 +1,6 @@
 [原文地址](https://docs.yoctoproject.org/bitbake/2.0/index.html)
 
-
-	
+[TOC]
 ###1 概述
 
 	欢迎使用 BitBake 用户手册。本手册提供了 BitBake 工具的相关信息。这些信息会尽量避免与使用了 BitBake 的构建系统相关，例如 OpenEmbedded 和 Yocto 项目。但在某些情况下，手册中使用了系统内容中的场景或示例来帮助理解。对于这些情况，手册中清楚地说明了其上下文。
@@ -32,8 +31,7 @@
         III 支持在给定包中运行任意数量的任务，包括但不限于获取上游源数据、解包、打补丁、配置等。
         IV 无需指定构建和目标系统的 Linux 发行版。
         V 与架构无关。
-        VI 支持多种构建和目标操作系统（例如 Cygwin、BSD 等）。
-        是独立的，而不是紧密集成到构建机器的根文件系统中。
+        VI 支持多种构建和目标操作系统（例如 Cygwin、BSD 等）。是独立的，而不是紧密集成到构建机器的根文件系统中。
         VII 处理目标架构、操作系统、发行版和机器上的条件元数据。
         VIII 为本地元数据和操作包提供易于使用的工具。
         IX 易于使用 BitBake 在多个项目之间进行协作以进行构建。
@@ -230,7 +228,7 @@
 	BitBake 能够使用单个命令构建多个图像或包，其中不同的目标需要不同的配置（多个配置构建）。在这种情况下，每个目标都称为“multiconfig”。
 	要完成多配置构建，您必须使用构建目录中的并行配置文件分别定义每个目标的配置。这些 multiconfig 配置文件的位置是特定的。它们必须驻留在名为 multiconfig 的 conf 子目录中的当前构建目录中。以下是两个单独目标的示例：
 
-[](./1525_1.png)
+![](./1525_1.png)
 
 	之所以需要这种文件层次结构，是因为在解析层之前不会构造 BBPATH 变量。因此，除非它位于当前工作目录中，否则无法将配置文件用作预配置文件。
 	最低限度，每个配置文件必须定义机器和 BitBake 用于构建的临时目录。建议的做法是不要重叠构建期间使用的临时目录。
@@ -412,7 +410,7 @@ ___
 
 	随着每个任务的完成，时间戳将写入由 STAMP 变量指定的目录。在随后的运行中，BitBake 会在 tmp/stamps 中的构建目录中查找，并且不会重新运行已经完成的任务，除非发现时间戳无效。目前，仅在每个配方文件的基础上考虑无效时间戳。因此，例如，如果配置标记的时间戳大于给定目标的编译时间戳，则编译任务将重新运行。但是，再次运行 compile 任务对依赖于该目标的其他提供程序没有影响。
 
-	邮票的确切格式是部分可配置的。在现代版本的 BitBake 中，将哈希附加到标记上，以便如果配置更改，标记将变为无效并且任务会自动重新运行。此散列或使用的签名由配置的签名策略管理（有关信息，请参阅校验和（签名）部分）。也可以使用 [stamp-extra-info] 任务标志将额外的元数据附加到图章。例如，OpenEmbedded 使用此标志来使某些任务特定于机器。
+	时间戳的确切格式是部分可配置的。在现代版本的 BitBake 中，将哈希附加到标记上，以便如果配置更改，标记将变为无效并且任务会自动重新运行。此散列或使用的签名由配置的签名策略管理（有关信息，请参阅校验和（签名）部分）。也可以使用 [stamp-extra-info] 任务标志将额外的元数据附加到图章。例如，OpenEmbedded 使用此标志来使某些任务特定于机器。
 
 		Note
         一些任务被标记为“nostamp”任务。运行这些任务时不会创建时间戳文件。因此，“nostamp”任务总是会重新运行。
@@ -532,7 +530,1155 @@ ___
                 }
             }
         }
-＿＿＿
+
+###3 语法和运算符
+	BitBake 文件有自己的语法。该语法与其他几种语言有相似之处，但也有一些独特的功能。本节介绍可用的语法和运算符，并提供示例。
+
+####3.1 基本语法
+	本节提供了一些基本的语法示例。
+
+#####3.1.1 基本变量设置
+	以下示例将 VARIABLE 设置为“value”。这个赋值在语句被解析时立即发生。这是一项“艰巨”的任务。
+		VARIABLE = "value"
+	正如预期的那样，如果您在分配中包含前导或尾随空格，则保留空格：
+		VARIABLE = " value"
+		VARIABLE = "value "
+	将 VARIABLE 设置为“”会将其设置为空字符串，而将变量设置为“”会将其设置为空格（即它们不是相同的值）。
+		VARIABLE = ""
+		VARIABLE = " "
+	设置变量值时，可以使用单引号代替双引号。这样做允许您使用包含双引号字符的值：
+		VARIABLE = 'I have a " in my value'
+
+		Note:
+		与 Bourne shell 不同，单引号在所有其他方面与双引号的工作方式相同。它们不抑制变量扩展。
+
+#####3.1.2 修改现有变量
+	有时您需要修改现有变量。以下是您可能会发现要修改现有变量的一些情况：
+		- 自定义使用该变量的配方。
+		- 更改 *.bbclass 文件中使用的变量的默认值。
+		- 更改 *.bbappend 文件中的变量以覆盖原始配方中的变量。
+		- 更改配置文件中的变量，以便该值覆盖现有配置。
+	更改变量值有时可能取决于最初分配值的方式以及更改的预期意图。特别是，当您将值附加到具有默认值的变量时，结果值可能不是您所期望的。在这种情况下，您提供的值可能会替换该值，而不是附加到默认值。
+
+	如果在您更改了变量的值之后发生了无法解释的事情，您可以使用 BitBake 检查可疑变量的实际值。您可以对配置和配方级别更改进行这些检查：
+
+		- 对于配置更改，请使用以下命令：
+			$ bitbake -e
+		此命令在配置文件（即 local.conf、bblayers.conf、bitbake.conf 等）被解析后显示变量值。
+
+		Note:
+		导出到环境的变量在命令输出中以字符串“export”开头。
+
+		- 要查找特定配方中给定变量的更改，请使用以下命令：
+			$ bitbake recipename -e | grep VARIABLENAME=\"
+		这个命令检查变量是否真的进入了一个特定的配方。
+
+#####3.1.3 行连接
+	在函数之外，BitBake 在解析语句之前将任何以反斜杠字符（“\”）结尾的行与以下行连接起来。 “\”字符最常见的用途是将变量分配拆分为多行，如下例所示：
+		FOO = "bar \
+			   baz \
+			   qaz"
+	加入行时，“\”字符和其后的换行符都会被删除。因此，FOO 的值中没有换行符。
+
+	考虑这个附加示例，其中两个分配都将“barbaz”分配给 FOO：
+		FOO = "barbaz"
+		FOO = "bar\
+		baz"
+
+		Note:
+		BitBake 不会解释变量值中的“\n”等转义序列。要使这些生效，必须将值传递给一些解释转义序列的实用程序，例如 printf 或 echo -n。
+
+#####3.1.4 变量展开
+	变量可以使用类似于 Bourne shell 中的变量扩展的语法来引用其他变量的内容。以下分配导致 A 包含“aval”，而 B 评估为“preavalpost”。
+		A = "aval"
+		B = "pre${A}post"
+
+		Note:
+		与 Bourne shell 不同，花括号是强制性的：只有 ${FOO} 而不是 $FOO 被识别为 FOO 的扩展。
+
+	“=”运算符不会立即展开右侧的变量引用。相反，扩展被推迟到实际使用分配给的变量。结果取决于引用变量的当前值。以下示例应阐明此行为：
+		A = "${B} baz"
+		B = "${C} bar"
+		C = "foo"
+		*At this point, ${A} equals "foo bar baz"*
+		C = "qux"
+		*At this point, ${A} equals "qux bar baz"*
+		B = "norf"
+		*At this point, ${A} equals "norf baz"*
+	将此行为与立即变量扩展 (:=) 运算符进行对比。
+
+	如果对不存在的变量使用变量扩展语法，则字符串保持原样。例如，给定以下赋值，只要 FOO 不存在，BAR 就会扩展为文字字符串“${FOO}”。
+		BAR = "${FOO}"
+
+#####3.1.5 设置默认值 (?=)
+	您可以使用“?=”运算符来实现对变量的“更软”赋值。如果在解析语句时未定义变量，这种类型的赋值允许您定义变量，但如果变量有值，则不理会该值。这是一个例子：
+		A ?= "aval"
+	如果在解析此语句时设置了 A，则变量保留其值。但是，如果未设置 A，则将变量设置为“aval”。
+
+		Note:
+		这个任务是即时的。因此，如果存在对单个变量的多个“？=”赋值，则其中第一个最终会被使用。
+
+#####3.1.6 设置弱默认值（??=）
+	通过使用“??=”运算符，可以使用比上一节中“更弱”的赋值。这个赋值的行为与“?=”相同，只是赋值是在解析过程结束时而不是立即进行的。因此，当存在多个“??=”分配时，使用最后一个。此外，任何“=”或“?=”赋值都会覆盖用“??=”设置的值。这是一个例子：
+		A ??= "somevalue"
+		A ??= "someothervalue"
+	如果在解析上述语句之前设置了 A，则变量保留其值。如果未设置 A，则将变量设置为“someothervalue”。
+
+	同样，此分配是“惰性”或“弱”分配，因为它直到解析过程结束才会发生。
+
+#####3.1.7 立即变量展开 (:=)
+	“:=”操作符导致变量的内容立即展开，而不是在实际使用变量时：
+		T = "123"
+		A := "test ${T}"
+		T = "456"
+		B := "${T} ${C}"
+		C = "cval"
+		C := "${C}append"
+	在此示例中，A 包含“test 123”，即使 T 的最终值为“456”。变量 B 最终将包含“456 cvalappend”。这是因为对未定义变量的引用在（立即）扩展期间保持原样。这与 GNU Make 形成对比，其中未定义的变量扩展为空。变量 C 包含“cvalappend”，因为 ${C} 立即扩展为“cval”。
+
+#####3.1.8 使用空格附加 (+=) 和前置 (=+)
+	附加和前置值很常见，可以使用“+=”和“=+”运算符来完成。这些运算符在当前值和前置或附加值之间插入一个空格。
+
+	这些运算符在解析过程中立即生效。这里有些例子：
+		B = "bval"
+		B += "additionaldata"
+		C = "cval"
+		C =+ "test"
+	变量 B 包含“bval Additionaldata”，C 包含“test cval”。
+
+#####3.1.9 没有空格的附加 (.=) 和前置 (=.)
+	如果要在没有插入空格的情况下附加或前置值，请使用“.=”和“=”。运营商。
+
+	这些运算符在解析过程中立即生效。这里有些例子：
+		B = "bval"
+		B .= "additionaldata"
+		C = "cval"
+		C =. "test"
+	变量 B 包含“bvaladditionaldata”，C 包含“testcval”。
+
+#####3.1.10 附加和前置（覆盖样式语法）
+	您还可以使用覆盖样式语法附加和前置变量的值。使用此语法时，不会插入空格。
+
+	这些运算符与“:=”、“.=”、“=.”、“+=”和“=+”运算符的不同之处在于它们的效果是在可变扩展时间应用而不是立即应用。这里有些例子：
+		B = "bval"
+		B:append = " additional data"
+		C = "cval"
+		C:prepend = "additional data "
+		D = "dval"
+		D:append = "additional data"
+	变量 B 变为“bval 附加数据”，C 变为“附加数据 cval”。变量 D 变为“dvaladditional data”。
+
+		Note:
+		使用覆盖语法时必须控制所有间距。
+
+	还可以附加和前置到 shell 函数和 BitBake 样式的 Python 函数。有关示例，请参见“Shell 函数”和“BitBake 样式 Python 函数”部分。
+
+#####3.1.11 移除（覆盖样式语法）
+	您可以使用删除覆盖样式语法从列表中删除值。指定要删除的值会导致从变量中删除该值的所有出现。
+
+	当您使用此语法时，BitBake 需要一个或多个字符串。保留了周围的空间和间距。这是一个例子：
+		FOO = "123 456 789 123456 123 456 123 456"
+		FOO:remove = "123"
+		FOO:remove = "456"
+		FOO2 = " abc def ghi abcdef abc def abc def def"
+		FOO2:remove = "\
+			def \
+			abc \
+			ghi \
+			"
+	变量 FOO 变为“789 123456”，FOO2 变为“abcdef”。
+
+	像“:append”和“:prepend”一样，“:remove”在变量扩展时应用。
+
+#####3.1.12 覆盖式操作优势
+	与“+=”和“=+”运算符相比，覆盖样式操作“:append”、“:prepend”和“:remove”的一个优点是覆盖样式运算符提供有保证的操作。例如，考虑一个需要将值“val”添加到变量 FOO 的类 foo.bbclass，以及一个使用 foo.bbclass 的配方，如下所示：
+		inherit foo
+		FOO = "initial"
+	如果 foo.bbclass 使用“+=”运算符，如下所示，那么 FOO 的最终值将是“初始值”，这不是我们想要的：
+		FOO += "val"
+	另一方面，如果 foo.bbclass 使用“:append”运算符，那么 FOO 的最终值将是“initial val”，如预期的那样：
+		FOO:append = " val"
+
+		Note
+		从来没有必要将“+=”与“:append”一起使用。以下分配序列将“barbaz”附加到 FOO：
+			FOO:append = "bar"
+			FOO:append = "baz"
+		将前面示例中的第二个赋值更改为使用“+=”的唯一效果是在附加值中的“baz”之前添加一个空格（由于“+=”运算符的工作原理）。
+
+	覆盖样式操作的另一个优点是您可以将它们与“条件语法（覆盖）”部分中所述的其他覆盖结合起来。
+
+#####3.1.13 变量标志语法
+	变量标志是 BitBake 对变量属性或属性的实现。这是一种将额外信息标记到变量上的方法。您可以在“变量标志”部分找到更多关于一般变量标志的信息。
+
+	您可以为变量标志定义、附加和附加值。前面提到的所有标准语法操作都适用于变量标志，除了覆盖样式语法（即“:prepend”、“:append”和“:remove”）。
+
+	以下是一些显示如何设置变量标志的示例：
+		FOO[a] = "abc"
+		FOO[b] = "123"
+		FOO[a] += "456"
+	变量 FOO 有两个标志：[a] 和 [b]。这些标志立即分别设置为“abc”和“123”。 [a] 标志变为“abc 456”。
+
+	无需预先定义变量标志。您可以简单地开始使用它们。一个非常常见的应用是将一些简短的文档附加到 BitBake 变量中，如下所示：
+		CACHE[doc] = "The directory holding the cache of the metadata."
+
+#####3.1.14 内联 Python 变量扩展
+	您可以使用内联 Python 变量扩展来设置变量。这是一个例子：
+		DATE = "${@time.strftime('%Y%m%d',time.gmtime())}"
+	此示例导致将 DATE 变量设置为当前日期。
+
+	此功能最常见的用途可能是从 BitBake 的内部数据字典 d 中提取变量的值。以下几行分别选择包名称及其版本号的值：
+		PN = "${@bb.parse.vars_from_file(d.getVar('FILE', False),d)[0] or 'defaultpkgname'}"
+		PV = "${@bb.parse.vars_from_file(d.getVar('FILE', False),d)[1] or '1.0'}"
+
+		Note:
+		就“=”和“:=”运算符而言，内联 Python 表达式的工作方式与变量扩展类似。给定以下分配，每次扩展 FOO 时都会调用 foo()：
+			FOO = "${@foo()}"
+		将此与以下立即分配进行对比，其中 foo() 仅调用一次，而分配被解析：
+			FOO := "${@foo()}"
+
+	有关在解析期间使用 Python 代码设置变量的不同方法，请参阅“匿名 Python 函数”部分。
+
+#####3.1.15 取消设置变量
+	可以使用“unset”关键字从 BitBake 的内部数据字典中完全删除变量或变量标志。这是一个例子：
+		unset DATE
+		unset do_fetch[noexec]
+	这两个语句删除了 DATE 和 do_fetch[noexec] 标志。
+
+#####3.1.16 提供路径名
+	指定用于 BitBake 的路径名时，请勿使用波浪号 (“~”) 字符作为主目录的快捷方式。这样做可能会导致 BitBake 无法识别路径，因为 BitBake 不会以与 shell 相同的方式扩展此字符。
+
+	相反，请提供更完整的路径，如下例所示：
+		BBLAYERS ?= " \
+			/home/scott-lenovo/LayerA \
+		"
+
+####3.2 将变量导出到环境
+	您可以使用 export 关键字将变量导出到运行任务的环境中。例如，在以下示例中，do_foo 任务在运行时打印“来自环境的值”：
+		export ENV_VARIABLE
+		ENV_VARIABLE = "value from the environment"
+
+		do_foo() {
+			bbplain "$ENV_VARIABLE"
+		}
+
+		Note:
+		在这种情况下，BitBake 不会扩展 $ENV_VARIABLE ，因为它缺少强制性的 {} 。相反，$ENV_VARIABLE 由 shell 扩展。
+
+	导出 ENV_VARIABLE 出现在分配给 ENV_VARIABLE 之前还是之后都没有关系。
+
+	还可以将导出与设置变量值结合使用。这是一个例子：
+		export ENV_VARIABLE = "variable-value"
+	在 bitbake -e 的输出中，导出到环境的变量前面带有“export”。
+
+	通常导出到环境的变量包括 CC 和 CFLAGS，它们被许多构建系统采用。
+
+####3.3 条件语法（覆盖）
+	BitBake 使用 OVERRIDES 来控制在 BitBake 解析配方和配置文件后覆盖哪些变量。本节介绍如何将 OVERRIDES 用作条件元数据，讨论与 OVERRIDES 相关的键扩展，并提供一些示例以帮助理解。
+
+#####3.3.1 条件元数据
+	您可以使用 OVERRIDES 有条件地选择变量的特定版本，并有条件地附加或前置变量的值。
+
+		Note:
+		覆盖只能使用小写字符、数字和破折号。特别是，在覆盖名称中不允许使用冒号，因为它们用于将覆盖之间以及与变量名称分开。
+
+	- 选择变量： OVERRIDES 变量是一个以冒号字符分隔的列表，其中包含您要满足条件的项目。因此，如果您有一个以“arm”为条件的变量，并且“arm”在 OVERRIDES 中，则使用变量的“arm”特定版本而不是非条件版本。这是一个例子：
+		OVERRIDES = "architecture:os:machine"
+		TEST = "default"
+		TEST:os = "osspecific"
+		TEST:nooverride = "othercondvalue"
+		在此示例中，OVERRIDES 变量列出了三个覆盖：“architecture”、“os”和“machine”。变量 TEST 本身具有默认值“default”。您可以通过将“os”覆盖附加到变量（即 TEST:os）来选择 TEST 变量的特定于操作系统的版本。
+		为了更好地理解这一点，请考虑一个假设基于 OpenEmbedded 元数据的 Linux 内核配方文件的实际示例。配方文件中的以下行首先将内核分支变量 KBRANCH 设置为默认值，然后根据构建的体系结构有条件地覆盖该值：
+			KBRANCH = "standard/base"
+			KBRANCH:qemuarm = "standard/arm-versatile-926ejs"
+			KBRANCH:qemumips = "standard/mti-malta32"
+			KBRANCH:qemuppc = "standard/qemuppc"
+			KBRANCH:qemux86 = "standard/common-pc/base"
+			KBRANCH:qemux86-64 = "standard/common-pc-64/base"
+			KBRANCH:qemumips64 = "standard/mti-malta64"
+
+	- 附加和前置：BitBake 还支持根据特定项目是否在 OVERRIDES 中列出来对变量值进行附加和前置操作。这是一个例子：
+		DEPENDS = "glibc ncurses"
+		OVERRIDES = "machine:local"
+		DEPENDS:append:machine = "libmad"
+		在本例中，DEPENDS 变为“glibc ncurses libmad”。
+		同样，使用基于 OpenEmbedded 元数据的内核配方文件作为示例，以下行将有条件地附加到基于架构的 KERNEL_FEATURES 变量中：
+		KERNEL_FEATURES:append = " ${KERNEL_EXTRA_FEATURES}"
+		KERNEL_FEATURES:append:qemux86=" cfg/sound.scc cfg/paravirt_kvm.scc"
+		KERNEL_FEATURES:append:qemux86-64=" cfg/sound.scc cfg/paravirt_kvm.scc"
+
+	- 为单个任务设置变量：BitBake 支持仅在单个任务期间设置变量。这是一个例子：
+		FOO:task-configure = "val 1"
+		FOO:task-compile = "val 2"
+		在前面的示例中，FOO 在执行 do_configure 任务时具有值“val 1”，而在执行 do_compile 任务时具有值“val 2”。
+		在内部，这是通过将任务（例如“task-compile:”）添加到 do_compile 任务的本地数据存储的 OVERRIDES 值来实现的。
+		您还可以将此语法与其他组合（例如“:prepend”）一起使用，如下例所示：
+			EXTRA_OEMAKE:prepend:task-compile = "${PARALLEL_MAKE} "
+
+			Note:
+			在 BitBake 1.52 (Honister 3.4) 之前，OVERRIDES 的语法使用 _ 而不是 :，因此您仍然会发现很多使用 _append、_prepend 和 _remove 的文档。
+			有关详细信息，请参阅 Yocto Project 手动迁移说明中的 Overrides Syntax Changes 部分。
+
+#####3.3.2 密钥扩展
+	完成 BitBake 数据存储时会发生密钥扩展。为了更好地理解这一点，请考虑以下示例：
+		A${B} = "X"
+		B = "2"
+		A2 = "Y"
+	在这种情况下，在所有解析完成后，BitBake 将 ${B} 扩展为“2”。这种扩展导致在扩展之前设置为“Y”的 A2 变为“X”。
+
+#####3.3.3 示例
+	尽管前面的解释显示了变量定义的不同形式，但是当变量运算符、条件覆盖和无条件覆盖组合在一起时，很难准确计算出会发生什么。本节介绍了一些常见场景以及对通常使用户感到困惑的可变交互的解释。
+
+	关于覆盖和各种“附加”运算符生效的顺序经常会出现混淆。回想一下，使用“:append”和“:prepend”的追加或前置操作不会像“+=”、“.=”、“=+”或“=.”那样导致立即赋值。考虑以下示例：
+		OVERRIDES = "foo"
+		A = "Z"
+		A:foo:append = "X"
+	对于这种情况，A 无条件设置为“Z”，“X”无条件立即附加到变量 A:foo。由于尚未应用覆盖，因此 A:foo 由于追加而设置为“X”，而 A 简单地等于“Z”。
+
+	然而，应用覆盖会改变一些事情。由于“foo”列在 OVERRIDES 中，条件变量 A 被替换为“foo”版本，等于“X”。如此有效地，A:foo 替换了 A。
+
+	下一个示例更改了覆盖和附加的顺序：
+		OVERRIDES = "foo"
+		A = "Z"
+		A:append:foo = "X"
+	对于这种情况，在处理覆盖之前，A 设置为“Z”，A:append:foo 设置为“X”。但是，一旦应用了“foo”的覆盖，A 就会附加“X”。因此，A 变为“ZX”。请注意，未附加空格。
+
+	下一个示例将追加和覆盖的顺序与第一个示例相反：
+		OVERRIDES = "foo"
+		A = "Y"
+		A:foo:append = "Z"
+		A:foo:append = "X"
+	对于这种情况，在解决任何覆盖之前，使用立即分配将 A 设置为“Y”。在这个立即赋值之后，A:foo 设置为“Z”，然后进一步附加“X”，将变量设置为“ZX”。最后，对“foo”应用覆盖会导致条件变量 A 变为“ZX”（即 A 被 A:foo 替换）。
+
+	最后一个示例混合了一些不同的运算符：
+		A = "1"
+		A:append = "2"
+		A:append = "3"
+		A += "4"
+		A .= "5"
+	对于这种情况，附加运算符的类型会影响分配的顺序，因为 BitBake 会多次通过代码。最初，A 设置为“1 45”，因为三个语句使用立即运算符。完成这些分配后，BitBake 应用“:append”操作。这些操作导致 A 变为“1 4523”。
+
+####3.4 共享功能
+	BitBake 允许通过包含文件 (.inc) 和类文件 (.bbclass) 共享元数据。例如，假设您有一个通用功能，例如您希望在多个配方之间共享的任务定义。在这种情况下，创建一个包含通用功能的 .bbclass 文件，然后在您的配方中使用inherit 指令来继承该类将是共享任务的常用方法。
+
+	本节介绍 BitBake 提供的允许您在配方之间共享功能的机制。具体来说，这些机制包括 include、inherit、INHERIT 和 require 指令。
+
+#####3.4.1 定位包含和类文件
+	BitBake 使用 BBPATH 变量来定位所需的包含和类文件。此外，BitBake 在当前目录中搜索 include 和 require 指令。
+
+			Note:
+			BBPATH 变量类似于环境变量 PATH 。
+
+	为了让 BitBake 找到包含和类文件，它们需要位于可以在 BBPATH 中找到的“类”子目录中。
+
+#####3.4.2 继承指令
+	在编写配方或类文件时，您可以使用inherit 指令来继承类（.bbclass）的功能。 BitBake 仅在配方和类文件（即 .bb 和 .bbclass）中使用时才支持此指令。
+
+	继承指令是指定配方所需的类文件中包含的功能的基本方法。例如，您可以轻松地抽象出构建使用 Autoconf 和 A​​utomake 的包所涉及的任务，并将这些任务放入类文件中，然后让您的配方继承该类文件。
+
+	例如，您的食谱可以使用以下指令来继承 autotools.bbclass 文件。类文件将包含使用 Autotools 的通用功能，这些功能可以在配方之间共享：
+		inherit autotools
+	在这种情况下，BitBake 会在 BBPATH 中搜索目录 classes/autotools.bbclass。
+
+			Note:
+			您可以在“inherit”语句之后覆盖配方中继承类的任何值和函数。
+
+	如果要使用该指令继承多个类，请用空格分隔它们。以下示例显示如何继承 buildhistory 和 rm_work 类：
+		inherit buildhistory rm_work
+	与 include 和 require 指令相比，inherit 指令的一个优点是您可以有条件地继承类文件。您可以通过在继承语句后使用变量表达式来完成此操作。这是一个例子：
+		inherit ${VARNAME}
+	如果要设置 VARNAME，则需要在解析继承语句之前设置它。在这种情况下实现条件继承的一种方法是使用覆盖：
+		VARIABLE = ""
+		VARIABLE:someoverride = "myclass"
+	另一种方法是使用匿名 Python。这是一个例子：
+		python () {
+			if condition == value:
+				d.setVar('VARIABLE', 'myclass')
+			else:
+				d.setVar('VARIABLE', '')
+		}
+	或者，您可以使用以下形式的内联 Python 表达式：
+		inherit ${@'classname' if condition else ''}
+		inherit ${@functionname(params)}
+	在所有情况下，如果表达式的计算结果为空字符串，则该语句不会触发语法错误，因为它变成了无操作。
+
+#####3.4.3 include指令
+	BitBake 理解include指令。该指令使 BitBake 解析您指定的任何文件，并将该文件插入该位置。该指令与 Make 中的等效指令非常相似，只是如果在包含行中指定的路径是相对路径，BitBake 会定位它可以在 BBPATH 中找到的第一个文件。
+
+	与仅限于类（即 .bbclass）文件的inherit指令相比，include指令是一种更通用的包含功能的方法。 include 指令适用于不适合 .bbclass 文件的任何其他类型的共享或封装功能或配置。
+
+	例如，假设您需要一个配方来包含一些自测定义：
+		include test_defs.inc
+
+			Note:
+			当找不到文件时，include 指令不会产生错误。因此，如果您要包含的文件预计存在，建议您使用 require 而不是 include 。这样做可确保在找不到文件时产生错误。
+
+#####3.4.4 require指令
+	BitBake 理解 require 指令。该指令的行为与 include 指令类似，但如果找不到要包含的文件，BitBake 会引发解析错误。因此，您需要的任何文件都将插入到该指令所在位置正在解析的文件中。
+
+	与之前描述的 include 指令一样，require 指令是一种更通用的包含功能的方法，与仅限于类（即 .bbclass）文件的继承指令相比。 require 指令适用于不适合 .bbclass 文件的任何其他类型的共享或封装功能或配置。
+
+	与 BitBake 处理 include 的方式类似，如果在 require 行中指定的路径是相对路径，BitBake 会在 BBPATH 中找到它可以找到的第一个文件。
+
+	例如，假设您有两个版本的配方（例如 foo_1.2.2.bb 和 foo_2.0.0.bb），其中每个版本都包含一些可以共享的相同功能。您可以创建一个名为 foo.inc 的包含文件，其中包含构建“foo”所需的通用定义。您需要确保 foo.inc 也与您的两个配方文件位于同一目录中。设置这些条件后，您可以使用每个配方中的 require 指令共享功能：
+		require foo.inc
+
+#####3.4.5 INHERIT 配置指令
+	创建配置文件 (.conf) 时，您可以使用 INHERIT 配置指令来继承类。 BitBake 仅在配置文件中使用时才支持此指令。
+
+	例如，假设您需要从配置文件中继承一个名为 abc.bbclass 的类文件，如下所示：
+		INHERIT += "abc"
+	此配置指令导致在解析期间在指令点继承命名类。与inherit 指令一样，.bbclass 文件必须位于BBPATH 中指定的目录之一的“classes”子目录中。
+
+			Note:
+			因为 .conf 文件在 BitBake 执行期间首先被解析，所以使用 INHERIT 继承一个类有效地继承了全局类（即对于所有配方）。
+
+	如果要使用该指令来继承多个类，可以在 local.conf 文件的同一行中提供它们。使用空格分隔类。以下示例显示如何继承 autotools 和 pkgconfig 类：
+		INHERIT += "autotools pkgconfig"
+
+####3.5 函数
+	与大多数语言一样，函数是用于将操作构建到任务中的构建块。 BitBake 支持以下类型的函数：
+		- Shell 函数：用 shell 脚本编写的函数，可以直接作为函数、任务或两者同时执行。它们也可以被其他 shell 函数调用。
+		- BitBake 风格的 Python 函数：用 Python 编写并由 BitBake 或其他 Python 函数使用 bb.build.exec_func() 执行的函数。
+		- Python 函数：用 Python 编写并由 Python 执行的函数。
+		- 匿名 Python 函数：在解析期间自动执行的 Python 函数。
+	无论函数类型如何，您只能在类（.bbclass）和配方（.bb 或 .inc）文件中定义它们。
+
+#####3.5.1 shell函数
+	用 shell 脚本编写的函数可以直接作为函数、任务或两者同时执行。它们也可以被其他 shell 函数调用。这是一个示例 shell 函数定义：
+		some_function () {
+			echo "Hello World"
+		}
+	当您在配方或类文件中创建这些类型的函数时，您需要遵循 shell 编程规则。脚本由 /bin/sh 执行，它可能不是 bash shell，但可能是 dash 之类的东西。您不应该使用特定于 Bash 的脚本（bashisms）。
+
+	覆盖和覆盖样式的运算符，如 :append 和 :prepend 也可以应用于 shell 函数。最常见的是，此应用程序将在 .bbappend 文件中用于修改主配方中的功能。它还可以用于修改从类继承的函数。
+
+	例如，考虑以下情况：
+			do_foo() {
+				bbplain first
+				fn
+			}
+
+			fn:prepend() {
+				bbplain second
+			}
+
+			fn() {
+				bbplain third
+			}
+
+			do_foo:append() {
+				bbplain fourth
+			}
+	运行 do_foo 会打印以下内容：
+			recipename do_foo: first
+			recipename do_foo: second
+			recipename do_foo: third
+			recipename do_foo: fourth
+
+			Note：
+			覆盖和覆盖样式的运算符可以应用于任何 shell 函数，而不仅仅是任务。
+
+	在应用所有覆盖后，您可以使用 bitbake -e recipename 命令查看最终组装的函数。
+
+#####3.5.2 BitBake 风格的 Python 函数
+	这些函数是用 Python 编写的，并由 BitBake 或其他 Python 函数使用 bb.build.exec_func() 执行。
+
+	一个示例 BitBake 函数是：
+		python some_python_function () {
+			d.setVar("TEXT", "Hello World")
+			print d.getVar("TEXT")
+		}
+	因为 Python “bb” 和 “os” 模块已经导入，所以不需要导入这些模块。同样在这些类型的函数中，数据存储（“d”）是一个全局变量，并且始终自动可用。
+
+			Note:
+			变量表达式（例如 ${X} ）不再在 Python 函数中展开。此行为是有意的，以便您可以自由地将变量值设置为可扩展表达式，而不会过早地扩展它们。如果您确实希望在 Python 函数中扩展变量，请使用 d.getVar("X") 。或者，对于更复杂的表达式，使用 d.expand()。
+
+	与 shell 函数类似，您还可以将覆盖和覆盖样式的运算符应用于 BitBake 样式的 Python 函数。
+
+	例如，考虑以下情况：
+			python do_foo:prepend() {
+				bb.plain("first")
+			}
+
+			python do_foo() {
+				bb.plain("second")
+			}
+
+			python do_foo:append() {
+				bb.plain("third")
+			}
+	运行 do_foo 会打印以下内容：
+			recipename do_foo: first
+			recipename do_foo: second
+			recipename do_foo: third
+	在应用所有覆盖后，您可以使用 bitbake -e recipename 命令查看最终组装的函数。
+
+#####3.5.3 Python 函数
+	这些函数是用 Python 编写的，并由其他 Python 代码执行。 Python 函数的示例是您打算从内联 Python 或其他 Python 函数中调用的实用程序函数。这是一个例子：
+			def get_depends(d):
+				if d.getVar('SOMECONDITION'):
+					return "dependencywithcond"
+				else:
+					return "dependency"
+
+			SOMECONDITION = "1"
+			DEPENDS = "${@get_depends(d)}"
+
+	他会导致 DEPENDS 包含dependencywithcond。
+
+	以下是有关 Python 函数的一些知识：
+			- Python 函数可以接受参数。
+			- BitBake 数据存储不会自动可用。因此，您必须将其作为参数传递给函数。
+			- “bb” 和 “os” Python 模块自动可用。您不需要导入它们。
+
+#####3.5.4 BitBake 风格的 Python 函数与 Python 函数
+	以下是 BitBake 风格的 Python 函数与使用“def”定义的常规 Python 函数之间的一些重要区别：
+			- 只有 BitBake 风格的 Python 函数可以是任务。
+			- 覆盖和覆盖样式的运算符只能应用于 BitBake 样式的 Python 函数。
+			- 只有常规的 Python 函数可以接受参数和返回值。
+			- [dirs]、[cleandirs] 和 [lockfiles] 等变量标志可用于 BitBake 样式的 Python 函数，但不能用于常规 Python 函数。
+			- BitBake 风格的 Python 函数生成一个单独的 ${T}/run.function-name.pid 脚本，该脚本被执行以运行该函数，并且还会在 ${T}/log.function-name.pid 中生成一个日志文件，如果它们作为任务执行。
+			- 常规 Python 函数执行“内联”并且不会在 ${T} 中生成任何文件。
+			- 使用通常的 Python 语法调用常规 Python 函数。 BitBake 风格的 Python 函数通常是任务，由 BitBake 直接调用，但也可以使用 bb.build.exec_func() 函数从 Python 代码中手动调用。这是一个例子：
+				bb.build.exec_func("my_bitbake_style_function", d)
+
+			Note:
+			bb.build.exec_func() 也可用于从 Python 代码运行 shell 函数。如果要在同一任务中在 Python 函数之前运行 shell 函数，则可以使用父辅助 Python 函数，该函数首先使用 bb.build.exec_func() 运行 shell 函数，然后运行 ​​Python 代码。
+
+		要检测使用 bb.build.exec_func() 执行的函数的错误，您可以捕获 bb.build.FuncFailed 异常。
+
+			Note:
+			元数据（配方和类）中的函数本身不应引发 bb.build.FuncFailed。相反，应该将 bb.build.FuncFailed 视为被调用函数因引发异常而失败的一般指标。例如，由 bb.fatal() 引发的异常将在 bb.build.exec_func() 中捕获，并且将引发 bb.build.FuncFailed 作为响应。
+
+	由于它们的简单性，您应该更喜欢常规 Python 函数而不是 BitBake 样式 Python 函数，除非您需要特定于 BitBake 样式 Python 函数的功能。元数据中的常规 Python 函数是比 BitBake 风格的 Python 函数更近的发明，旧代码倾向于更频繁地使用 bb.build.exec_func()。
+
+#####3.5.5 匿名 Python 函数
+	有时在解析期间以编程方式设置变量或执行其他操作很有用。为此，您可以定义在解析结束时运行的特殊 Python 函数，称为匿名 Python 函数。例如，以下根据另一个变量的值有条件地设置一个变量：
+			python () {
+				if d.getVar('SOMEVAR') == 'value':
+					d.setVar('ANOTHERVAR', 'value2')
+			}
+
+	将函数标记为匿名函数的等效方法是将其命名为“__anonymous”，而不是没有名称。
+
+	匿名 Python 函数总是在解析结束时运行，无论它们是在哪里定义的。如果一个配方包含许多匿名函数，它们的运行顺序与它们在配方中定义的顺序相同。例如，考虑以下代码段：
+			python () {
+				d.setVar('FOO', 'foo 2')
+			}
+
+			FOO = "foo 1"
+
+			python () {
+				d.appendVar('BAR',' bar 2')
+			}
+
+			BAR = "bar 1"
+	前面的示例在概念上等同于以下代码段：
+			FOO = "foo 1"
+			BAR = "bar 1"
+			FOO = "foo 2"
+			BAR += "bar 2"
+	FOO 以值“foo 2”结束，BAR 以值“bar 1 bar 2”结束。就像在第二个片段中一样，为匿名函数中的变量设置的值对任务可用，这些任务总是在解析后运行。
+
+	在匿名函数运行之前应用覆盖和覆盖样式的运算符，例如“:append”。在以下示例中，FOO 以“来自匿名的 foo”的值结束：
+			FOO = "foo"
+			FOO:append = " from outside"
+
+			python () {
+				d.setVar("FOO", "foo from anonymous")
+			}
+	有关可以与匿名 Python 函数一起使用的方法，请参阅“可以在 Python 中调用的函数”部分。有关在解析期间运行 Python 代码的不同方法，请参阅“内联 Python 变量扩展”部分。
+
+#####3.5.6 类函数的灵活继承
+	通过编码技术和 EXPORT_FUNCTIONS 的使用，BitBake 支持从一个类中导出一个函数，使得该类函数显示为该函数的默认实现，但如果继承该类的配方需要定义自己的版本功能。
+
+	要了解此功能的好处，请考虑类定义任务函数并且您的配方继承该类的基本场景。在这个基本场景中，您的配方继承了类中定义的任务功能。如果需要，您的配方可以分别使用“:prepend”或“:append”操作添加到函数的开头和结尾，或者它可以完全重新定义函数。但是，如果它重新定义函数，它就没有办法调用函数的类版本。 EXPORT_FUNCTIONS 提供了一种机制，使配方的函数版本能够调用函数的原始版本。
+
+	要使用此技术，您需要准备以下内容：
+		- 该类需要定义函数如下：
+				classname_functionname
+		例如，如果您有一个类文件 bar.bbclass 和一个名为 do_foo 的函数，则该类必须按如下方式定义该函数：
+				bar_do_foo
+		- 该类需要包含 EXPORT_FUNCTIONS 语句，如下所示：
+				EXPORT_FUNCTIONS functionname
+		例如，继续相同的示例，bar.bbclass 中的语句如下：
+				EXPORT_FUNCTIONS do_foo
+		- 您需要从配方中适当地调用该函数。继续同一个例子，如果你的配方需要调用函数的类版本，它应该调用 bar_do_foo。假设 do_foo 是一个 shell 函数并且 EXPORT_FUNCTIONS 如上所述使用，配方的函数可以有条件地调用函数的类版本，如下所示：
+				do_foo() {
+					if [ somecondition ] ; then
+						bar_do_foo
+					else
+						# Do something else
+					fi
+				}
+		要调用配方中定义的函数的修改版本，请将其称为 do_foo。
+	满足这些条件后，您的单个配方可以在类文件中定义的原始函数和配方中修改的函数之间自由选择。如果您不设置这些条件，则您只能使用一种功能或另一种功能。
+
+####3.6 任务
+	任务是 BitBake 执行单元，组成 BitBake 可以为给定配方运行的步骤。任务仅在配方和类中受支持（即在 .bb 文件和包含或从 .bb 文件继承的文件中）。按照惯例，任务的名称以“do_”开头。
+
+#####3.6.1 将函数提升为任务
+	任务是使用 addtask 命令提升为任务的 shell 函数或 BitBake 样式的 Python 函数。 addtask 命令还可以选择性地描述任务与其他任务之间的依赖关系。下面是一个示例，展示了如何定义任务和声明一些依赖项：
+			python do_printdate () {
+				import time
+				print time.strftime('%Y%m%d', time.gmtime())
+			}
+			addtask printdate after do_fetch before do_build
+	addtask 的第一个参数是要提升为任务的函数的名称。如果名称不以“do_”开头，则隐式添加“do_”，这强制执行所有任务名称以“do_”开头的约定。
+	在前面的示例中，do_printdate 任务成为 do_build 任务的依赖项，这是默认任务（即由 bitbake 命令运行的任务，除非明确指定另一个任务）。此外，do_printdate 任务依赖于 do_fetch 任务。运行 do_build 任务会导致 do_printdate 任务首先运行。
+
+			Note:
+			如果您尝试前面的示例，您可能会看到 do_printdate 任务仅在您第一次使用 bitbake 命令构建配方时运行。这是因为 BitBake 在初始运行后认为任务是“最新的”。如果您想强制任务始终重新运行以进行实验，您可以使用 [nostamp] 变量标志使 BitBake 始终认为任务“过期”，如下所示：
+				do_printdate[nostamp] = "1"
+			您还可以显式运行任务并提供 -f 选项，如下所示：
+				$ bitbake recipe -c printdate -f
+			当使用 bitbake recipe -c task 命令手动选择要运行的任务时，您可以省略“do_”前缀作为任务名称的一部分。
+
+	您可能想知道在不指定任何依赖项的情况下使用 addtask 的实际效果，如下例所示：
+			addtask printdate
+	在此示例中，假设未通过其他方式添加依赖项，运行任务的唯一方法是使用 bitbake recipe -c printdate 显式选择它。您可以使用 do_listtasks 任务列出配方中定义的所有任务，如以下示例所示：
+			$ bitbake recipe -c listtasks
+	有关任务依赖关系的更多信息，请参阅“依赖关系”部分。
+	有关可用于任务的变量标志的信息，请参阅“变量标志”部分。
+
+			Note:
+			虽然不常见，但可以在调用 addtask 时将多个任务定义为依赖项。例如，下面是 OpenEmbedded 类文件 package_tar.bbclass 的片段：
+				addtask package_write_tar before do_build after do_packagedata do_package
+			请注意 package_write_tar 任务如何必须等到 do_packagedata 和 do_package 都完成。
+
+#####3.6.2 删除任务
+	除了能够添加任务外，您还可以删除它们。只需使用 deltask 命令即可删除任务。例如，要删除前面部分中使用的示例任务，您可以使用：
+			deltask printdate
+	如果您使用 deltask 命令删除任务并且该任务具有依赖关系，则不会重新连接依赖关系。例如，假设您有三个名为 do_a、do_b 和 do_c 的任务。此外，do_c 依赖于 do_b，而 do_b 又依赖于 do_a。给定这种场景，如果使用deltask删除do_b，do_c和do_a通过do_b的隐式依赖关系不再存在，do_c依赖也不会更新到包含do_a。因此，do_c 可以在 do_a 之前自由运行。
+
+	如果您希望这些依赖项保持不变，请使用 [noexec] varflag 禁用任务，而不是使用 deltask 命令删除它：
+			do_b[noexec] = "1"
+
+#####3.6.3 将信息传递到构建任务环境
+	在运行任务时，BitBake 会严格控制构建任务的 shell 执行环境，以确保来自构建机器的有害污染不会影响构建。
+
+			Note:
+			默认情况下，BitBake 会清理环境以仅包含导出或在其传递列表中列出的内容，以确保构建环境可重现且一致。您可以通过设置 BB_PRESERVE_ENV 变量来防止这种“清理”。
+
+	因此，如果您确实希望将某些内容传递到构建任务环境中，则必须执行以下两个步骤：
+
+	1.告诉 BitBake 将您想要的内容从环境加载到数据存储中。您可以通过 BB_ENV_PASSTHROUGH 和 BB_ENV_PASSTHROUGH_ADDITIONS 变量来执行此操作。例如，假设您想阻止构建系统访问您的 $HOME/.ccache 目录。以下命令将环境变量 CCACHE_DIR 添加到 BitBake 的直通列表中，以允许该变量进入数据存储：
+			export BB_ENV_PASSTHROUGH_ADDITIONS="$BB_ENV_PASSTHROUGH_ADDITIONS CCACHE_DIR"
+
+	2.告诉 BitBake 将您加载到数据存储中的内容导出到每个正在运行的任务的任务环境中。将环境中的某些内容加载到数据存储区（上一步）只会使其在数据存储区中可用。要将其导出到每个正在运行的任务的任务环境，请在本地配置文件 local.conf 或分发配置文件中使用类似于以下的命令：
+			export CCACHE_DIR
+
+			Note:
+			前面步骤的副作用是 BitBake 将变量记录为构建过程的依赖项，例如设置场景校验和。如果这样做会导致不必要的任务重建，您还可以标记该变量，以便 setscene 代码在创建校验和时忽略依赖关系。
+
+	有时，能够从原始执行环境中获取信息很有用。 BitBake 将原始环境的副本保存到名为 BB_ORIGENV 的特殊变量中。
+
+	BB_ORIGENV 变量返回一个数据存储对象，该对象可以使用标准数据存储运算符（例如 getVar(, False)）进行查询。数据存储对象很有用，例如，用于查找原始 DISPLAY 变量。这是一个例子：
+			origenv = d.getVar("BB_ORIGENV", False)
+			bar = origenv.getVar("BAR", False)
+	前面的示例从原始执行环境返回 BAR。
+
+####3.7 变量标志
+	变量标志 (varflags) 有助于控制任务的功能和依赖关系。 BitBake 使用以下命令形式读取和写入 varflags 到数据存储：
+			variable = d.getVarFlags("variable")
+			self.d.setVarFlags("FOO", {"func": True})
+	使用 varflags 时，除了覆盖之外，同样的语法适用。换句话说，您可以像变量一样设置、附加和预先添加 varflags。有关详细信息，请参阅“变量标志语法”部分。
+
+	BitBake 有一组定义的 varflags 可用于配方和类。任务支持许多控制任务的各种功能的标志：
+		- [cleandirs]：应该在任务运行之前创建的空目录。已存在的目录将被删除并重新创建以清空它们。
+		- [depends]：控制任务间的依赖关系。有关详细信息，请参阅 DEPENDS 变量和“任务间依赖关系”部分。
+		- [deptask]：控制任务构建时的依赖关系。有关更多信息，请参阅 DEPENDS 变量和“构建依赖项”部分。
+		- [dirs]：任务运行前应创建的目录。已经存在的目录保持原样。列出的最后一个目录用作任务的当前工作目录。
+		- [lockfiles]：指定在任务执行时要锁定的一个或多个锁定文件。只有一个任务可能持有一个锁文件，任何尝试锁定已锁定文件的任务都将被阻塞，直到锁被释放。您可以使用此变量标志来完成互斥。
+		- [noexec]：设置为“1”时，将任务标记为空，不需要执行。您可以使用 [noexec] 标志将任务设置为依赖占位符，或禁用在其他地方定义的特定配方中不需要的任务。
+		- [nostamp]：当设置为“1”时，告诉 BitBake 不为任务生成戳文件，这意味着应该始终执行该任务。
+
+			Caution:
+			任何依赖于（可能是间接地）[nostamp] 任务的任务也总是会被执行。如果您不小心，这可能会导致不必要的重建。
+
+		- [number_threads]：在执行期间将任务限制为特定数量的并发线程。当您的构建主机具有大量内核但某些任务由于各种资源限制（例如，避免网络节流）需要进行速率限制时，此 varflag 很有用。 number_threads 的工作方式与 BB_NUMBER_THREADS 变量类似，但特定于任务。
+		全局设置值。例如，以下确保 do_fetch 任务使用不超过两个同时执行的线程： do_fetch[number_threads] = “2”
+
+			Warning:
+			在单个配方中而不是全局设置 varflag 会导致不可预知的行为。
+			将 varflag 设置为大于 BB_NUMBER_THREADS 变量中使用的值会导致 number_threads 无效。
+
+		- [postfuncs]：任务完成后要调用的函数列表。
+		- [prefuncs]：任务执行前要调用的函数列表。
+		- [rdepends]：控制任务间运行时依赖关系。有关详细信息，请参阅 RDEPENDS 变量、RRECOMMENDS 变量和“任务间依赖关系”部分。
+		- [rdeptask]：控制任务运行时依赖关系。有关详细信息，请参阅 RDEPENDS 变量、RRECOMMENDS 变量和“运行时依赖项”部分。
+		- [recideptask]：与 recrdeptask 一起设置时，指定应检查其他依赖项的任务。
+		- [recrdeptask]：控制任务递归运行时依赖关系。有关详细信息，请参阅 RDEPENDS 变量、RRECOMMENDS 变量和“递归依赖项”部分。
+		- [stamp-extra-info]：附加到任务标记的额外标记信息。例如，OpenEmbedded 使用此标志来允许特定于机器的任务。
+		- [umask]：运行任务的 umask。
+	有几个 varflags 可用于控制如何计算变量的签名。有关此过程的更多信息，请参阅“校验和（签名）”部分。
+		- [vardeps]：指定以空格分隔的附加变量列表，以添加到变量的依赖项中，以计算其签名。将变量添加到此列表中很有用，例如，当函数以不允许 BitBake 自动确定变量被引用的方式引用变量时。
+		- [vardepsexclude]：指定一个以空格分隔的变量列表，这些变量应该从变量的依赖项中排除，以便计算其签名。
+		- [vardepvalue]：如果设置，则指示 BitBake 忽略变量的实际值，而在计算变量的签名时使用指定的值。
+		- [vardepvalueexclude]：指定在计算变量签名时要从变量值中排除的字符串的管道分隔列表。
+
+####3.8 事件
+	BitBake 允许在配方和类文件中安装事件处理程序。事件在操作期间的某些点触发，例如针对给定配方（即 *.bb）的操作开始、给定任务的开始、任务失败、任务成功等。目的是让构建失败时的电子邮件通知等操作变得容易。
+
+	以下是打印事件名称和 FILE 变量内容的示例事件处理程序：
+			addhandler myclass_eventhandler
+			python myclass_eventhandler() {
+				from bb.event import getName
+				print("The name of the Event is %s" % getName(e))
+				print("The file we run for is %s" % d.getVar('FILE'))
+			}
+			myclass_eventhandler[eventmask] = "bb.event.BuildStarted
+			bb.event.BuildCompleted"
+
+	在前面的示例中，已经设置了一个事件掩码，因此处理程序只能看到“BuildStarted”和“BuildCompleted”事件。每次触发与事件掩码匹配的事件时，都会调用此事件处理程序。定义了一个全局变量“e”，它代表当前事件。使用 getName(e) 方法，您可以获得触发事件的名称。全局数据存储以“d”的形式提供。在遗留代码中，您可能会看到用于获取数据存储的“e.data”。但是，请意识到“e.data”已被弃用，您应该继续使用“d”。
+
+	数据存储的上下文适用于相关事件。例如，“BuildStarted”和“BuildCompleted”事件在任何任务执行之前运行，因此将在全局配置数据存储命名空间中。该命名空间中不存在特定于配方的元数据。 “BuildStarted”和“BuildCompleted”事件也在主炊具/服务器进程而不是任何工作上下文中运行。因此，对数据存储所做的任何更改都将被当前构建中的其他炊具/服务器事件看到，但在该构建之外或任何工作人员上下文中都看不到。任务事件在所讨论的实际任务中运行，因此具有特定于配方和特定于任务的内容。这些事件在工作者上下文中运行，并在任务执行结束时被丢弃。
+
+	在标准构建期间，可能会发生以下常见事件。以下事件是大多数元数据可能有兴趣查看的最常见类型的事件：
+		- bb.event.ConfigParsed()：基本配置时触发；其中包括 bitbake.conf、base.bbclass 和任何全局 INHERIT 语句；已被解析。当每个工作人员解析基本配置或服务器更改配置并重新解析时，您可以看到多个此类事件。然而，任何给定的数据存储只有一个这样的事件对其执行。如果事件处理程序在数据存储中设置了 BB_INVALIDCONF，则会重新解析配置并触发新事件，从而允许元数据更新配置。
+		- bb.event.HeartbeatEvent()：以一秒的固定时间间隔触发。您可以使用 BB_HEARTBEAT_EVENT 变量配置间隔时间。事件的“时间”属性是触发事件时的 time.time() 值。此事件对于系统状态监视等活动很有用。
+		- bb.event.ParseStarted()：当 BitBake 即将开始解析食谱时触发。此事件的“total”属性表示 BitBake 计划解析的食谱数量。
+		- bb.event.ParseProgress()：在解析过程中触发。此事件的“当前”属性是已解析的食谱数量以及“总”属性。
+		- bb.event.ParseCompleted()：解析完成时触发。该事件的“cached”、“parsed”、“skipped”、“virtuals”、“masked”和“errors”属性提供解析结果的统计信息。
+		- bb.event.BuildStarted()：新构建开始时触发。当启用多个配置 (multiconfig) 时，BitBake 会触发多个“BuildStarted”事件（每个配置一个）。
+		- bb.build.TaskStarted()：任务开始时触发。此事件的“taskfile”属性指向任务源自的配方。 “taskname”属性，即任务名称，包含 do_ 前缀，“logfile”属性指向存储任务输出的位置。最后，“时间”属性是任务的执行开始时间。
+		- bb.build.TaskInvalid()：如果 BitBake 尝试执行不存在的任务，则触发。
+		- bb.build.TaskFailedSilent()：为失败的场景任务触发，不应详细地呈现给用户。
+		- bb.build.TaskFailed()：为失败的正常任务触发。
+		- bb.build.TaskSucceeded()：任务成功完成时触发。
+		- bb.event.BuildCompleted()：构建完成时触发。
+		- bb.cooker.CookerExit()：当 BitBake 服务器/炊具关闭时触发。这个事件通常只被 UI 视为他们也应该关闭的标志。
+	下一个示例事件列表基于对服务器的特定请求而发生。这些事件通常用于将更大的信息从 BitBake 服务器传递到 BitBake 的其他部分，例如用户界面：
+		- bb.event.TreeDataPreparationStarted()
+		- bb.event.TreeDataPreparationProgress()
+		- bb.event.TreeDataPreparationCompleted()
+		- bb.event.DepTreeGenerated()
+		- bb.event.CoreBaseFilesFound()
+		- bb.event.ConfigFilePathFound()
+		- bb.event.FilesMatchingFound()
+		- bb.event.ConfigFilesFound()
+		- bb.event.TargetsTreeGenerated()
+
+####3.9 变体——类扩展机制
+	BitBake 通过 BBCLASSEXTEND 变量支持配方文件的多个化身。
+
+	BBCLASSEXTEND 变量是一个空格分隔的类列表，用于“扩展”每个变体的配方。这是一个导致当前配方的第二个化身可用的示例。这第二个化身将继承“本机”类。
+			BBCLASSEXTEND = "native"
+
+			Note:
+			此类扩展的机制非常特定于实现。通常，配方的 PROVIDES 、 PN 和 DEPENDS 变量需要由扩展类修改。有关具体示例，请参阅 OE-Core native 、 nativesdk 和 multilib 类。
+
+
+####3.10 依赖
+	为了实现高效的并行处理，BitBake 在任务级别处理依赖关系。依赖关系既可以存在于单个配方中的任务之间，也可以存在于不同配方中的任务之间。以下是每个示例：
+		- 对于单个配方中的任务，配方的 do_configure 任务可能需要在其 do_compile 任务运行之前完成。
+		- 对于不同配方中的任务，一个配方的 do_configure 任务可能需要另一个配方的 do_populate_sysroot 任务首先完成，以便另一个配方提供的库和头文件可用。
+	本节介绍了几种声明依赖关系的方法。请记住，即使以不同的方式声明依赖关系，它们都只是任务之间的依赖关系。
+
+#####3.10.1 .bb 文件内部的依赖关系
+	BitBake 使用 addtask 指令来管理给定配方文件内部的依赖关系。您可以使用 addtask 指令来指示任务何时依赖于其他任务或其他任务何时依赖于该配方。这是一个例子：
+			addtask printdate after do_fetch before do_build
+	在本例中，do_printdate 任务依赖于 do_fetch 任务的完成，do_build 任务依赖于 do_printdate 任务的完成。
+
+			Note:
+			对于要运行的任务，它必须是计划运行的某个其他任务的直接或间接依赖项。
+			为了说明，这里有一些例子：
+				- 指令 addtask mytask before do_configure 导致 do_mytask 在 do_configure 运行之前运行。请注意，do_mytask 仅在其输入校验和自上次运行后发生更改时才运行。对 do_mytask 的输入校验和的更改也间接导致 do_configure 运行。
+				- do_configure 之后的指令 addtask mytask 本身永远不会导致 do_mytask 运行。 do_mytask 仍然可以手动运行，如下所示：
+					$ bitbake recipe -c mytask
+			将 do_mytask 声明为计划运行的其他一些任务的依赖项也会导致它运行。无论如何，任务在 do_configure 之后运行。
+
+#####3.10.2 构建依赖
+	BitBake 使用 DEPENDS 变量来管理构建时间依赖性。任务的 [deptask] varflag 表示 DEPENDS 中列出的每个项目的任务，必须完成才能执行该任务。这是一个例子：
+			do_configure[deptask] = "do_populate_sysroot"
+	在此示例中，DEPENDS 中每个项目的 do_populate_sysroot 任务必须在 do_configure 执行之前完成。
+
+#####3.10.3 运行时依赖
+	BitBake 使用 PACKAGES、RDEPENDS 和 RRECOMMENDS 变量来管理运行时依赖项。
+
+	PACKAGES 变量列出运行时包。这些包中的每一个都可以具有 RDEPENDS 和 RRECOMMENDS 运行时依赖项。任务的 [rdeptask] 标志用于表示每个项目运行时依赖项的任务，该任务必须在执行该任务之前完成。
+			do_package_qa[rdeptask] = "do_packagedata"
+	在前面的例子中，RDEPENDS 中每一项的 do_packagedata 任务必须已经完成，do_package_qa 才能执行。尽管 RDEPENDS 包含来自运行时依赖命名空间的条目，但 BitBake 知道如何将它们映射回定义任务的构建时依赖命名空间。
+
+#####3.10.4 递归依赖
+	BitBake 使用 [recrdeptask] 标志来管理递归任务依赖关系。 BitBake 查看当前配方的构建时和运行时依赖项，查看任务的任务间依赖项，然后为列出的任务添加依赖项。一旦 BitBake 完成了这项工作，它就会递归地处理这些任务的依赖关系。迭代过程继续进行，直到发现并添加了所有依赖项。
+
+	[recrdeptask] 标志最常用于需要等待某些任务“全局”完成的高级配方中。例如， image.bbclass 有以下内容：
+			do_rootfs[recrdeptask] += "do_packagedata"
+	该语句表示，当前配方的 do_packagedata 任务和从图像配方可到达的所有配方（通过依赖关系）必须在 do_rootfs 任务运行之前运行。
+
+	BitBake 允许任务通过在任务列表中引用自身来递归地依赖自身：
+			do_a[recrdeptask] = "do_a do_b"
+	与以前一样，这意味着当前配方的 do_a 和 do_b 任务以及从配方可到达（通过依赖关系）的所有配方必须在 do_a 任务运行之前运行。在这种情况下，BitBake 将忽略当前配方对自身的 do_a 任务循环依赖。
+
+#####3.10.5 任务间依赖
+	BitBake 以更通用的形式使用 [depends] 标志来管理任务间依赖关系。这种更通用的形式允许对特定任务进行相互依赖检查，而不是检查 DEPENDS 中的数据。这是一个例子：
+			do_patch[depends] = "quilt-native:do_populate_sysroot"
+	在此示例中，目标 quilt-native 的 do_populate_sysroot 任务必须已完成，do_patch 任务才能执行。
+	[rdepends] 标志以类似的方式工作，但在运行时命名空间而不是构建时依赖命名空间中获取目标。
+
+####3.11 可以在 Python 中调用的函数
+	BitBake 提供了许多可以从 Python 函数中调用的函数。本节列出了最常用的函数，并提到了在哪里可以找到其他函数。
+
+#####3.11.1 访问数据存储变量的函数
+	通常需要使用 Python 函数访问 BitBake 数据存储中的变量。 BitBake 数据存储有一个 API，允许您进行此访问。以下是可用操作的列表：
+___
+	Operation						Description
+	d.getVar("X", expand)
+		返回变量“X”的值。使用“expand=True”扩展值。如果变量“X”不存在，则返回“None”。
+	d.setVar("X", "value")
+		将变量“X”设置为“值”
+	d.appendVar("X", "value")
+		将“value”添加到变量“X”的末尾。如果变量“X”不存在，则类似于 d.setVar("X", "value")。
+	d.prependVar("X", "value")
+		将“value”添加到变量“X”的开头。如果变量“X”不存在，则行为类似于 d.setVar("X","value")。
+	d.delVar("X")
+		从数据存储中删除变量“X”。如果变量“X”不存在，则不执行任何操作。
+	d.renameVar("X", "Y")
+		将变量“X”重命名为“Y”。如果变量“X”不存在，则不执行任何操作。
+	d.getVarFlag("X", flag, expand)
+		返回变量“X”的值。使用“expand=True”扩展值。如果变量“X”或命名标志不存在，则返回“None”。
+	d.setVarFlag("X", flag, "value")
+		将变量“X”的命名标志设置为“值”。
+	d.appendVarFlag("X", flag, "value")
+		将“value”附加到变量“X”上的命名标志。如果命名标志不存在，则行为类似于 d.setVarFlag("X", flag, "value")。
+	d.prependVarFlag("X", flag, "value")
+		将“值”添加到变量“X”上的命名标志。如果命名标志不存在，则行为类似于 d.setVarFlag("X", flag, "value")。
+	d.delVarFlag("X", flag)
+		从数据存储中删除变量“X”上的命名标志。
+	d.setVarFlags("X", flagsdict)
+		设置 flagsdict() 参数中指定的标志。 setVarFlags 不会清除以前的标志。将此操作视为 addVarFlags。
+	d.getVarFlags("X")
+		返回变量“X”的标志的标志字典。如果变量“X”不存在，则返回“None”。
+	d.delVarFlags("X")
+		删除变量“X”的所有标志。如果变量“X”不存在，则不执行任何操作。
+	d.expand(expression)
+		展开指定字符串表达式中的变量引用。对不存在的变量的引用保持原样。例如，如果变量“X”不存在，d.expand("foo ${X}") 将扩展为文字字符串“foo ${X}”。
+___
+
+#####3.11.2 其他功能
+	通过查看 bb 模块的源代码，您可以找到许多其他可以从 Python 调用的函数，该模块位于 bitbake/lib/bb 中。例如，bitbake/lib/bb/utils.py 包含常用的函数 bb.utils.contains() 和 bb.utils.mkdirhier()，它们都带有 docstrings。
+
+####3.12 任务校验和和 Setscene
+	BitBake 使用校验和（或签名）以及场景来确定是否需要运行任务。本节介绍该过程。为了帮助理解 BitBake 如何做到这一点，本节假设了一个基于 OpenEmbedded 元数据的示例。
+
+	这些校验和存储在 STAMP 中。您可以使用以下 BitBake 命令检查校验和：
+			$ bitbake-dumpsigs
+	此命令以可读格式返回签名数据，允许您检查 OpenEmbedded 构建系统生成签名时使用的输入。例如，使用 bitbake-dumpsigs 可以检查 C 应用程序（例如 bash）的 do_compile 任务的“sigdata”。运行该命令还显示“CC”变量是散列输入的一部分。对此变量的任何更改都会使标记无效并导致 do_compile 任务运行。
+
+	以下列表描述了相关变量：
+		- BB_HASHCHECK_FUNCTION：指定要在任务执行的“setscene”部分调用的函数的名称，以验证任务哈希列表。
+		- BB_SETSCENE_DEPVALID：指定 BitBake 调用的函数，该函数确定 BitBake 是否需要满足场景依赖关系。
+		- BB_TASKHASH：在执行任务中，此变量保存当前启用的签名生成器返回的任务哈希。
+		- STAMP：创建图章文件的基本路径。
+		- STAMPCLEAN：同样，创建戳文件的基本路径，但可以使用通配符匹配一系列文件以进行干净操作。
+
+####3.13 变量中的通配符支持
+	对变量中通配符使用的支持因使用它的上下文而异。例如，某些变量和文件名允许通过“%”和“*”字符限制使用通配符。其他变量或名称支持 Python 的 glob 语法、fnmatch 语法或正则表达式 (re) 语法。
+	对于支持通配符的变量，文档描述了通配符的形式、用途及其限制。
+
+###4 文件下载支持
+	BitBake 的 fetch 模块是一个独立的库代码，它处理从远程系统下载源代码和文件的复杂性。获取源代码是构建软件的基石之一。因此，该模块构成了 BitBake 的重要组成部分。
+
+	当前的 fetch 模块称为“fetch2”，指的是它是 API 的第二个主要版本。原始版本已过时，已从代码库中删除。因此，在所有情况下，“fetch”在本手册中都是指“fetch2”。
+
+####4.1 下载（Fetch）
+	BitBake 在获取源代码或文件时需要几个步骤。 fetcher 代码库按顺序处理两个不同的过程：从某个地方（缓存或其他方式）获取文件，然后将这些文件解压缩到特定位置，也许以特定方式。获取和解压缩文件通常可以选择在打补丁之后进行。但是，此模块不涉及修补。
+	执行这个过程的第一部分的代码，一个 fetch，看起来像下面这样：
+			src_uri = (d.getVar('SRC_URI') or "").split()
+			fetcher = bb.fetch2.Fetch(src_uri, d)
+			fetcher.download()
+	此代码设置 fetch 类的实例。该实例使用来自 SRC_URI 变量的以空格分隔的 URL 列表，然后调用 download 方法来下载文件。
+	fetch 类的实例化之后通常是：
+			rootdir = l.getVar('WORKDIR')
+			fetcher.unpack(rootdir)
+	此代码将下载的文件解压缩到 WORKDIR 指定的文件。
+
+			Note:
+			为方便起见，这些示例中的命名与 OpenEmbedded 使用的变量相匹配。如果您想查看上面的代码，请检查 OpenEmbedded 类文件 base.bbclass 。
+
+	SRC_URI 和 WORKDIR 变量没有硬编码到 fetcher 中，因为这些 fetcher 方法可以（并且被）用不同的变量名调用。例如，在 OpenEmbedded 中，共享状态 (sstate) 代码使用 fetch 模块来获取 sstate 文件。
+
+	当调用 download() 方法时，BitBake 会尝试通过按特定搜索顺序查找源文件来解析 URL：
+			- 预镜像站点：BitBake 首先使用预镜像来尝试查找源文件。这些位置是使用 PREMIRRORS 变量定义的。
+			- 源 URI：如果预镜像失败，BitBake 使用原始 URL（例如来自 SRC_URI）。
+			- 镜像站点：如果发生获取失败，BitBake 接下来使用由 MIRRORS 变量定义的镜像位置。
+	对于传递给 fetcher 的每个 URL，fetcher 调用处理该特定 URL 类型的子模块。当您为 SRC_URI 变量提供 URL 时，这种行为可能会造成一些混乱。考虑以下两个 URL：
+			https://git.yoctoproject.org/git/poky;protocol=git
+			git://git.yoctoproject.org/git/poky;protocol=http
+	在前一种情况下，URL 被传递给 wget 提取器，它不理解“git”。因此，后一种情况是正确的形式，因为 Git 提取器确实知道如何使用 HTTP 作为传输。
+	以下是一些显示常用镜像定义的示例：
+			PREMIRRORS ?= "\
+			   bzr://.*/.\*  http://somemirror.org/sources/ \
+			   cvs://.*/.\*  http://somemirror.org/sources/ \
+			   git://.*/.\*  http://somemirror.org/sources/ \
+			   hg://.*/.\*   http://somemirror.org/sources/ \
+			   osc://.*/.\*  http://somemirror.org/sources/ \
+			   p4://.*/.\*   http://somemirror.org/sources/ \
+			  svn://.*/.\*   http://somemirror.org/sources/"
+
+			MIRRORS =+ "\
+			   ftp://.*/.\*   http://somemirror.org/sources/ \
+			   http://.*/.\*  http://somemirror.org/sources/ \
+			   https://.*/.\* http://somemirror.org/sources/"
+	请注意，BitBake 支持跨 URL。可以将 HTTP 服务器上的 Git 存储库镜像为 tarball。这就是前面示例中的 git:// 映射所做的。
+	由于网络访问速度很慢，BitBake 会维护从网络下载的文件的缓存。任何非本地的源文件（即从 Internet 下载的）都放在下载目录中，该目录由 DL_DIR 变量指定。
+	文件完整性对于复制构建至关重要。对于非本地存档下载，提取器代码可以验证 SHA-256 和 MD5 校验和，以确保存档已正确下载。您可以通过使用带有适当 varflags 的 SRC_URI 变量来指定这些校验和，如下所示：
+			SRC_URI[md5sum] = "value"
+			SRC_URI[sha256sum] = "value"
+	您还可以将校验和指定为 SRC_URI 上的参数，如下所示：
+			SRC_URI = "http://example.com/foobar.tar.bz2;md5sum=4a8e0f237e961fd7785d19d07fdb994d"
+	如果存在多个 URI，您可以像前面的示例一样直接指定校验和，也可以命名 URL。以下语法显示了如何命名 URI：
+			SRC_URI = "http://example.com/foobar.tar.bz2;name=foo"
+			SRC_URI[foo.md5sum] = 4a8e0f237e961fd7785d19d07fdb994d
+	下载文件并检查其校验和后，将在 DL_DIR 中放置一个“.done”标记。 BitBake 在后续构建期间使用此标记以避免再次下载或比较文件的校验和。
+
+			Note:
+			假定本地存储不受数据损坏的影响。如果不是这种情况，就会有更大的问题需要担心。
+
+	如果设置了 BB_STRICT_CHECKSUM，任何没有校验和的下载都会触发错误消息。 BB_NO_NETWORK 变量可用于使任何尝试的网络访问都成为致命错误，这对于检查镜像是否完整以及其他事情很有用。
+
+	如果 BB_CHECK_SSL_CERTS 设置为 0，则 SSL 证书检查将被禁用。此变量默认为 1，因此通常会检查 SSL 证书。
+
+####4.2 拆包
+	解压过程通常紧随下载之后。对于除 Git URL 之外的所有 URL，BitBake 使用通用的解包方法。
+
+	您可以在 URL 中指定许多参数来控制解包阶段的行为：
+		- unpack：控制是否对 URL 组件进行解包。如果设置为“1”（默认值），则解包组件。如果设置为“0”，解包阶段将单独保留文件。当您希望将存档复制进去而不是解压缩时，此参数很有用。
+		- dos：适用于 .zip 和 .jar 文件，并指定是否对文本文件使用 DOS 行尾转换。
+		- striplevel：在提取时从文件名中去除指定数量的前导组件（级别）
+		- subdir：将特定 URL 解包到根目录中的指定子目录。
+
+	unpack 调用会自动解压缩并解压缩带有“.Z”、“.z”、“.gz”、“.xz”、“.zip”、“.jar”、“.ipk”、“.rpm”的文件。 “.srpm”、“.deb”和“.bz2”扩展名以及tarball扩展名的各种组合。
+
+	如前所述，Git fetcher 有自己的 unpack 方法，该方法已针对 Git 树进行了优化。基本上，此方法通过将树克隆到最终目录来工作。该过程使用引用完成，因此只需要一个 Git 元数据的中央副本。
+
+####4.3 提取器
+	如前所述，URL 前缀决定了 BitBake 使用哪个 fetcher 子模块。每个子模块可以支持不同的 URL 参数，这些参数将在以下部分中描述。
+
+#####4.3.1 本地文件获取器（file://）
+	该子模块处理以 file:// 开头的 URL。您在 URL 中指定的文件名可以是文件的绝对路径或相对路径。如果文件名是相对的，则 FILESPATH 变量的内容的使用方式与使用 PATH 查找可执行文件的方式相同。如果找不到该文件，则假定在调用 download() 方法时它在 DL_DIR 中可用。
+
+	如果指定目录，则解压整个目录。
+
+	以下是几个示例 URL，第一个相对 URL，第二个绝对 URL：
+			SRC_URI = "file://relativefile.patch"
+			SRC_URI = "file:///Users/ich/very_important_software"
+
+#####4.3.2 HTTP/FTP wget 获取 (http://, ftp://, https://)
+	此提取器从 Web 和 FTP 服务器获取文件。在内部，提取器使用 wget 实用程序。
+
+	使用的可执行文件和参数由 FETCHCMD_wget 变量指定，默认为合理值。 fetcher 支持参数“downloadfilename”，允许指定下载文件的名称。在处理多个同名文件时，指定下载文件的名称有助于避免 DL_DIR 中的冲突。
+
+	如果在 SRC_URI 中指定了用户名和密码，则基本授权标头将添加到每个请求，包括跨重定向。要将 Authorization 标头限制为第一个请求，请将“redirectauth=0”添加到参数列表中。
+
+	一些示例 URL 如下所示：
+			SRC_URI = "http://oe.handhelds.org/not_there.aac"
+			SRC_URI = "ftp://oe.handhelds.org/not_there_as_well.aac"
+			SRC_URI = "ftp://you@oe.handhelds.org/home/you/secret.plan"
+
+
+
+			Note
+			由于 URL 参数由分号分隔，因此在解析也包含分号的 URL 时会引入歧义，例如：
+				SRC_URI = "http://abc123.org/git/?p=gcc/gcc.git;a=snapshot;h=a5dd47"
+			应该通过用“&”字符替换分号来修改此类 URL：
+				SRC_URI = "http://abc123.org/git/?p=gcc/gcc.git&a=snapshot&h=a5dd47"
+			在大多数情况下，这应该有效。万维网联盟 (W3C) 建议对查询中的分号和“&”一视同仁。请注意，由于 URL 的性质，您可能还必须指定下载文件的名称：
+				SRC_URI = "http://abc123.org/git/?p=gcc/gcc.git&a=snapshot&h=a5dd47;downloadfilename=myfile.bz2"
+
+#####4.3.3 CVS 提取器 ((cvs://)
+	该子模块处理从 CVS 版本控制系统中检出文件。您可以使用许多不同的变量对其进行配置：
+		- FETCHCMD_cvs：运行 cvs 命令时使用的可执行文件的名称。这个名字通常是“cvs”。
+		- SRCDATE：获取 CVS 源代码时使用的日期。 “now”的特殊值会导致每次构建时都更新结帐。
+		- CVSDIR：指定临时结账的保存位置。该位置通常是 DL_DIR/cvs。
+		- CVS_PROXY_HOST：用作 cvs 命令的“proxy=”参数的名称。
+		- CVS_PROXY_PORT：用作 cvs 命令的“proxyport=”参数的端口号。
+
+	除了标准的用户名和密码 URL 语法，您还可以使用各种 URL 参数配置 fetcher：
+
+	支持的参数如下：
+			- “方法”：与 CVS 服务器通信的协议。默认情况下，此协议是“pserver”。如果“method”设置为“ext”，BitBake 会检查“rsh”参数并设置 CVS_RSH。您可以将“dir”用于本地目录。
+			- “module”：指定要检出的模块。您必须提供此参数。
+			- “tag”：描述应使用哪个 CVS TAG 进行结帐。默认情况下，TAG 为空。
+			- “日期”：指定日期。如果未指定“日期”，则配置的 SRCDATE 用于签出特定日期。 “now”的特殊值导致每次构建时都更新结帐。
+			- “localdir”：用于重命名模块。实际上，您正在重命名模块解压缩到的输出目录。您正在强制模块进入相对于 CVSDIR 的特殊目录。
+			- “rsh”：与“method”参数结合使用。
+			- “scmdata”：当设置为“keep”时，使 CVS 元数据保存在 fetcher 创建的 tarball 中。压缩包被展开到工作目录中。默认情况下，CVS 元数据被删除。
+			- “fullpath”：控制生成的检出是在模块级别（默认）还是在更深的路径。
+			- “norecurse”：使 fetcher 只签出指定的目录，而不递归到任何子目录。
+			- “端口”：CVS 服务器连接的端口。
+
+	一些示例 URL 如下所示：
+			SRC_URI = "cvs://CVSROOT;module=mymodule;tag=some-version;method=ext"
+			SRC_URI = "cvs://CVSROOT;module=mymodule;date=20060126;localdir=usethat"
+
+#####4.3.4 子版本（SVN）提取器（svn://）
+	这个 fetcher 子模块从 Subversion 源代码控制系统中获取代码。使用的可执行文件由 FETCHCMD_svn 指定，默认为“svn”。 fetcher 的临时工作目录由 SVNDIR 设置，通常为 DL_DIR/svn。
+	支持的参数如下：
+			- “module”：要签出的 svn 模块的名称。您必须提供此参数。您可以将此参数视为您想要的存储库数据的顶级目录。
+			- “path_spec”：签出指定 svn 模块的特定目录。
+			- “protocol”：要使用的协议，默认为“svn”。如果“protocol”设置为“svn+ssh”，也使用“ssh”参数。
+			- “rev”：要签出的源代码的修订版本。
+			- “scmdata”：设置为“keep”时，使“.svn”目录在编译时可用。默认情况下，这些目录被删除。
+			- “ssh”：当“protocol”设置为“svn+ssh”时使用的可选参数。你可以使用这个参数来指定svn使用的ssh程序。
+			- “transportuser”：需要时，设置传输的用户名。默认情况下，该参数为空。传输用户名不同于主 URL 中使用的用户名，后者被传递给 subversion 命令。
+
+	以下是使用 svn 的三个示例：
+			SRC_URI = "svn://myrepos/proj1;module=vip;protocol=http;rev=667"
+			SRC_URI = "svn://myrepos/proj1;module=opie;protocol=svn+ssh"
+			SRC_URI = "svn://myrepos/proj1;module=trunk;protocol=http;path_spec=${MY_DIR}/proj1"
+
+#####4.3.5 Git 提取器 (git://)
+	这个 fetcher 子模块从 Git 源代码控制系统中获取代码。提取器通过将远程的裸克隆创建到 GITDIR 中来工作，它通常是 DL_DIR/git2。然后，在检出特定树时，在解包阶段将此裸克隆克隆到工作目录中。这是通过使用替代品和参考来完成的，以最大限度地减少磁盘上的重复数据量并加快解包过程。可以使用 FETCHCMD_git 设置使用的可执行文件。
+	此 fetcher 支持以下参数：
+		- “协议”：用于获取文件的协议。设置主机名时，默认值为“git”。如果未设置主机名，则 Git 协议为“文件”。您还可以使用“http”、“https”、“ssh”和“rsync”。
+
+					Note：
+					当协议为“ssh”时，SRC_URI 中预期的 URL 与通常传递给 git clone 命令并由 Git 服务器提供以从中获取的 URL 不同。例如，通过 SSH 克隆时，GitLab 服务器为 mesa 返回的 URL 是 git@gitlab.freedesktop.org:mesa/mesa.git，但是 SRC_URI 中的预期 URL 如下：
+						SRC_URI = "git://git@gitlab.freedesktop.org/mesa/mesa.git;branch=main;protocol=ssh;..."
+					请注意：在项目路径之前为 / 更改了字符。
+
+		- “nocheckout”：设置为“1”时，告诉 fetcher 在解包时不签出源代码。为有自定义例程检出代码的 URL 设置此选项。默认值为“0”。
+		- “rebaseable”：表示上游 Git 存储库可以rebase。如果修订可以与分支分离，则应将此参数设置为“1”。在这种情况下，源镜像 tarball 是按修订完成的，这会降低效率。重新定位上游 Git 存储库可能会导致当前修订版从上游存储库中消失。此选项提醒 fetcher 小心保留本地缓存以备将来使用。此参数的默认值为“0”。
+		- “nobranch”：告诉 fetcher 在设置为“1”时不检查分支的 SHA 验证。默认值为“0”。为引用对标记而不是分支有效的提交的配方设置此选项。
+		- “bareclone”：告诉 fetcher 将一个裸克隆克隆到目标目录中，而不检查工作树。仅提供原始 Git 元数据。该参数也暗示了“nocheckout”参数。
+		- “分支”：要克隆的 Git 树的分支。除非“nobranch”设置为“1”，否则这是一个强制参数。分支参数的数量必须与名称参数的数量相匹配。
+		- “rev”：用于结帐的修订。默认为“主”。
+		- “tag”：指定用于结帐的标签。要正确解析标签，BitBake 必须访问网络。因此，通常不使用标签。就 Git 而言，“tag”参数的行为实际上与“rev”参数相同。
+		- “子路径”：将结帐限制为树的特定子路径。默认情况下，检出整个树。
+		- “destsuffix”：放置结帐的路径的名称。默认情况下，路径是 git/。
+		- “usehead”：允许本地 git:// URL 使用当前分支 HEAD 作为修订版，以与 AUTOREV 一起使用。 “usehead”参数意味着没有分支，并且仅在传输协议为 file:// 时才有效。
+
+	以下是一些示例 URL：
+			SRC_URI = "git://github.com/fronteed/icheck.git;protocol=https;branch=${PV};tag=${PV}"
+			SRC_URI = "git://github.com/asciidoc/asciidoc-py;protocol=https;branch=main"
+			SRC_URI = "git://git@gitlab.freedesktop.org/mesa/mesa.git;branch=main;protocol=ssh;..."
+
+			Note:
+			使用 git 作为软件主要源代码的 fetcher 时，应相应设置 S：
+				S = "${WORKDIR}/git"
+
+			Note:
+			不支持直接在 git:// urls 中指定密码。有几个原因： SRC_URI 经常写到日志等地方，很容易泄露密码；在不删除密码的情况下共享元数据也很容易。 SSH 密钥、~/.netrc 和 ~/.ssh/config 文件可用作替代方案。
+
+#####4.3.6 Git 子模块提取器（gitsm://）
+	这个 fetcher 子模块继承自 Git fetcher，并通过获取存储库的子模块来扩展该 fetcher 的行为。 SRC_URI 被传递给 Git 提取器，如 Git Fetcher (git://) 部分中所述。
+
+			Note:
+			在“git://”和“gitsm://”URL 之间切换时，您必须清理配方。
+			Git 子模块提取器不是完整的提取器实现。 fetcher 存在无法正确使用正常源镜像基础架构的已知问题。此外，它获取的子模块源对许可和源归档基础架构不可见。
+
+#####4.3.7 ClearCase 提取器 (ccrc://)
+	这个 fetcher 子模块从 ClearCase 存储库中获取代码。
+	要使用此提取器，请确保您的配方具有正确的 SRC_URI、SRCREV 和 PV 设置。这是一个例子：
+			SRC_URI = "ccrc://cc.example.org/ccrc;vob=/example_vob;module=/example_module"
+			SRCREV = "EXAMPLE_CLEARCASE_TAG"
+			PV = "${@d.getVar("SRCREV", False).replace("/", "+")}"
+	提取器使用 rcleartool 或 cleartool 远程客户端，具体取决于哪个可用。
+	以下是 SRC_URI 语句的选项：
+		- vob：ClearCase VOB 的名称，必须包含前置“/”字符。此选项是必需的。
+		- 模块：模块，必须包含前置“/”字符，在选定的 VOB 中。
+
+				Note:
+				module 和 vob 选项结合起来在视图配置规范中创建加载规则。例如，考虑本节开头 SRC_URI 语句中的 vob 和模块值。组合这些值会产生以下结果：
+					load /example_vob/example_module
+
+		- proto：协议，可以是http，也可以是https。
+	默认情况下，提取器会创建一个配置规范。如果您希望将此规范写入默认值以外的区域，请使用配方中的 CCASE_CUSTOM_CONFIG_SPEC 变量来定义写入规范的位置。
+
+			Nore:
+			如果您指定此变量，SRCREV 将失去其功能。但是，SRCREV 仍然用于在获取后标记存档，即使它没有定义获取的内容。
+
+	以下是一些值得一提的其他行为：
+		- 使用 cleartool 时，cleartool 的登录由系统处理。登录不需要特殊步骤。
+		- 为了对经过身份验证的用户使用 rcleartool，在使用 fetcher 之前需要“rcleartool 登录”。
+
+#####4.3.8 Perforce 获取 (p4://)
+	这个 fetcher 子模块从 Perforce 源代码控制系统中获取代码。使用的可执行文件由 FETCHCMD_p4 指定，默认为“p4”。 fetcher 的临时工作目录由 P4DIR 设置，默认为“DL_DIR/p4”。 fetcher 不使用 perforce 客户端，而是依靠 p4 文件来检索文件列表，并通过 p4 打印在本地传输这些文件的内容。
+	要使用此提取器，请确保您的配方具有正确的 SRC_URI、SRCREV 和 PV 值。 p4 可执行文件能够使用系统的 P4CONFIG 环境变量定义的配置文件来定义 Perforce 服务器 URL 和端口、用户名和密码，如果您不希望将这些值保留在配方本身中。如果您选择不使用 P4CONFIG，或者显式设置 P4CONFIG 可以包含的变量，您可以指定 P4PORT 值，即服务器的 URL 和端口号，您可以直接在 SRC_URI 中的配方中指定用户名和密码。
+	这是一个依赖 P4CONFIG 指定服务器 URL 和端口、用户名和密码并获取 Head Revision 的示例：
+			SRC_URI = "p4://example-depot/main/source/..."
+			SRCREV = "${AUTOREV}"
+			PV = "p4-${SRCPV}"
+			S = "${WORKDIR}/p4"
+	这是一个示例，它指定服务器 URL 和端口、用户名和密码，并根据标签获取修订：
+			P4PORT = "tcp:p4server.example.net:1666"
+			SRC_URI = "p4://user:passwd@example-depot/main/source/..."
+			SRCREV = "release-1.0"
+			PV = "p4-${SRCPV}"
+			S = "${WORKDIR}/p4"
+
+			Note：
+			您应该始终在您的配方中将 S 设置为“${WORKDIR}/p4”。
+
+	默认情况下，提取器会从本地文件路径中删除软件仓库位置。在上面的例子中，example-depot/main/source/ 的内容会放在 ${WORKDIR}/p4 中。对于需要在本地保留部分远程仓库路径的情况，提取器支持两个参数：
+		- “模块”：
+			要获取的顶级仓库位置或目录。此参数的值也可以指向软件仓库中的单个文件，在这种情况下，本地文件路径将包括模块路径。
+		- “远程路径”：
+			当与值“keep”一起使用时，提取器将在本地镜像指定位置的完整仓库路径，甚至与模块参数结合使用。
+	下面是使用 module 参数的示例：
+			SRC_URI = "p4://user:passwd@example-depot/main;module=source/..."
+	在这种情况下，顶级目录 source/ 的内容将被提取到 ${P4DIR}，包括目录本身。顶级目录可在 ${P4DIR}/source/ 访问。
+	这是 remotepath 参数的示例用法：
+			SRC_URI = "p4://user:passwd@example-depot/main;module=source/...;remotepath=keep"
+	在这种情况下，顶级目录 source/ 的内容将被提取到 ${P4DIR}，但完整的 depot 路径将在本地镜像。可以在 ${P4DIR}/example-depot/main/source/ 访问顶级目录。
+
+####4.3.9 Repo 获取 (repo://)
+	这个 fetcher 子模块从 google-repo 源代码控制系统中获取代码。提取器通过启动存储库的源并将其同步到 REPODIR 来工作，通常是 ${DL_DIR}/repo。
+
+	此 fetcher 支持以下参数：
+		- “protocol”：获取存储库清单的协议（默认值：git）。
+		- “branch”：要获取的存储库的分支或标记（默认值：master）。
+		- “manifest”：清单文件的名称（默认值：default.xml）。
+	以下是一些示例 URL：
+		SRC_URI = "repo://REPOROOT;protocol=git;branch=some_branch;manifest=my_manifest.xml"
+		SRC_URI = "repo://REPOROOT;protocol=file;branch=some_branch;manifest=my_manifest.xml"
+
+####4.3.10 Az 获取 (at://)
+	此子模块从 Azure 存储帐户获取数据，它从 HTTP wget 获取器继承其功能，但修改其行为以适应对非公共数据使用共享访问签名 (SAS)。
+
+	此类功能由变量设置：
+		- AZ_SAS：Azure 存储共享访问签名提供对资源的安全委托访问，如果设置了此变量，Az Fetcher 将在从云中获取工件时使用它。
+
+	您可以指定 AZ_SAS 变量，如下所示：
+			AZ_SAS = "se=2021-01-01&sp=r&sv=2018-11-09&sr=c&skoid=<skoid>&sig=<signature>"
+	这是一个示例网址：
+			SRC_URI = "az://<azure-storage-account>.blob.core.windows.net/<foo_container>/<bar_file>"
+
+#####4.3.11 箱子提取器 (crate://)
+	这个子模块获取对应于 Rust 库和程序的 Rust 语言“板条箱”的代码以进行编译。这样的 crate 通常在 https://crates.io/ 上共享，但这个 fetcher 也支持其他 crate 注册表。
+	SRC_URI 设置的格式必须是：
+			SRC_URI = "crate://REGISTRY/NAME/VERSION"
+	这是一个示例网址：
+			SRC_URI = "crate://crates.io/glob/0.2.11"
+
+#####4.3.12 其他提取器
+	Fetch 子模块也存在于以下：
+		- Bazaar (bzr://)
+		- Mercurial (hg://)
+		- npm (npm://)
+		- OSC (osc://)
+		- Secure FTP (sftp://)
+		- Secure Shell (ssh://)
+		- Trees using Git Annex (gitannex://)
+
+	目前没有关于这些较少使用的 fetcher 子模块的文档。但是，您可能会发现代码有用且易读。
+
+####4.4 自动修订
+	我们需要在此处记录 AUTOREV 和 SRCREV_FORMAT。
+
+
+
+
+
+
+
+
+
+.
+6.
+7.＿＿＿
 ＿＿＿
 ＿＿＿
 ＿＿＿
