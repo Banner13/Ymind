@@ -12,17 +12,18 @@
 
 	cmd环境下：
 	set LESSCHARSET=utf-8
-	
+
 #####删除新增文件
 	git clean -xdf
 	git clean -xdff
-	
+
 	git reset commit_id
 
 #####子模块
 	git submodule init
 	git submodule update
-	
+	git submodule add <url> <path>
+
 #####删除远程branch
 	git push origin --delete oring_brance
 #####题外话
@@ -31,3 +32,7 @@
 	所有文件的哈希值生成了一个tree哈希值
 	变更时，会改变tree哈希和变更文件的哈希值
 	所以，当你把一个文件从一个目录移到另一个目录时，该文件的哈希值不会变化
+
+
+#####git stash pop 冲突恢复
+	git reset --hard
