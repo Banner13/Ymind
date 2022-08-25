@@ -7,3 +7,6 @@
 [submodule "time_stream/other/english"]
 	path = time_stream/other/english
 	url = git@github.com:Banner13/english.git
+[submodule "time_stream/coding"]
+	path = time_stream/coding
+	url = git@github.com:Banner13/code.git
