@@ -96,3 +96,7 @@ ___
 	重启
 ######千兆网卡
 	ethernet0.virtualDev= "e1000"
+
+
+#####deb包 安装
+	sudo dpkg -i xxx.deb
