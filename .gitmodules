@@ -10,3 +10,6 @@
 [submodule "time_stream/coding"]
 	path = time_stream/coding
 	url = git@github.com:Banner13/code.git
+[submodule "time_stream/protocols"]
+	path = time_stream/protocols
+	url = git@github.com:Banner13/protocol.git
