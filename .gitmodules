@@ -13,3 +13,6 @@
 [submodule "time_stream/protocols"]
 	path = time_stream/protocols
 	url = git@github.com:Banner13/protocol.git
+[submodule "time_stream/web"]
+	path = time_stream/web
+	url = git@github.com:Banner13/Web.git
