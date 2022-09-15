@@ -12,6 +12,8 @@ msys2
 
 #####msys2 跳转到打开的路径，如不设置  每次都会跳转到 msys2的家目录下
 	D:\Tools\MSYS2\usr\bin\mintty.exe /bin/bash -lc 'cd "$(cygpath "%V")"; export CHERE_INVOKING=1; exec bash --login -i'
+	
+	new : msys2_shell.cmd -msys2 -defterm -here  -no-start
 
 
 
