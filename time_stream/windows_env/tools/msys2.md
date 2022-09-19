@@ -24,6 +24,9 @@ msys2
 	add /mingw64/bin/wish.exe to env
 	run gitk
 
+#####windows下 msys2安装mingw64  gcc
+	pacman -S mingw-w64-x86_64-toolchain
+
 #####msys2 使用 windows 环境变量PATH
 	新建变量 MSYS2_PATH_TYPE    值为 inherit
 
