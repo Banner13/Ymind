@@ -27,6 +27,9 @@ msys2
 #####windows下 msys2安装mingw64  gcc
 	pacman -S mingw-w64-x86_64-toolchain
 
+#####windows下 msys2安装arm-gcc
+	pacman -S mingw64/mingw-w64-x86_64-arm-none-eabi-gcc
+
 #####msys2 使用 windows 环境变量PATH
 	新建变量 MSYS2_PATH_TYPE    值为 inherit
 
