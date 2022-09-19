@@ -13,7 +13,9 @@ msys2
 #####msys2 跳转到打开的路径，如不设置  每次都会跳转到 msys2的家目录下
 	D:\Tools\MSYS2\usr\bin\mintty.exe /bin/bash -lc 'cd "$(cygpath "%V")"; export CHERE_INVOKING=1; exec bash --login -i'
 	
-	new : msys2_shell.cmd -msys2 -defterm -here  -no-start
+	后来发现，“msys2_shell.cmd ”  这个脚本很齐全，也很好用， 可以使用使用打开终端输入 msys2_shell.cmd -h 查看详细帮助
+
+	new : msys2_shell.cmd -msys2 -defterm -here  -no-start	// 这个是笔者用于VScode的Shell终端 所以使用了参数 -no-start 和 -defterm
 
 
 
