@@ -66,7 +66,7 @@
     在 windows 环境变量中新建一个变量，命名为 "MSYS2_PATH_TYPE" , 值为 "inherit"
 
 ### 安装常用软件
-#### git make cmake vim
+#### git make cmake vim man
     pacman -S git make cmake vim
 #### gitk
     pacman -S mingw-w64-x86_64-tk
