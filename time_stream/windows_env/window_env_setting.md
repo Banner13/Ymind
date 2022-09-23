@@ -20,3 +20,5 @@
 	taskkill /f /im explorer.exe
 	start explorer.exe
 	
+### 删除文件时，提示文件正在使用
+	tasklist /m xxx文件
