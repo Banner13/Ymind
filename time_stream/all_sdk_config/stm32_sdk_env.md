@@ -78,3 +78,48 @@ ___
 	例如 gcc main.c -o main.exe 通常 gcc.exe 和 main.c 不在同一文件夹，
 	此时需要 D:\Toolchain\STM32_SDK\mingw64\bin\gcc.exe main.c -o main.exe 才能执行，
 	不然会出现错误警告： 'gcc' 不是内部或外部命令，也不是可运行的程序或批处理文件。
+
+爬坑：
+	VScode openocd 下载bin文件到芯片
+    "-f stlink ..."
+    需要配置为
+    "-f",
+    "stlink.."
+    其次，需要采用 openocd share 绝对路径下的文件
+    
+    例如
+    {
+        "label": "download",
+        "type": "shell",
+        "command": "openocd",
+        "args": [
+            "-f",
+            "D:\\Jie_ProgramFiles\\Tools\\Msys2\\mingw64\\share\\openocd\\scripts\\interface\\stlink.cfg",
+            "-f",
+            "D:\\Jie_ProgramFiles\\Tools\\Msys2\\mingw64\\share\\openocd\\scripts\\target\\stm32f1x.cfg",
+            "-c init",
+            "-c halt",
+            "-c flash write_image erase ./build/${workspaceFolderBasename}.bin 0x08000000",
+            "-c reset",
+            "-c shutdown"
+        ]
+    }
+
+	lunch.json
+
+        {
+            "name": "Cortex Debug",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/${workspaceFolderBasename}.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "runToEntryPoint": "main",
+            "servertype": "openocd",
+            "preLaunchTask": "build",
+            "device": "STM32F103C6",
+            "configFiles": [
+                "${workspaceFolder}\\openocd.cfg"
+            ],
+            "svdPath": "D:\\Users\\Administrator\\Downloads\\Firefox_Download\\cmsis-svd-master\\cmsis-svd-master\\data\\STMicro",
+            "svdFile": "STM32F103xx.svd"
+        },
