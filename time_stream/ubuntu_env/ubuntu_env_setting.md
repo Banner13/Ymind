@@ -1,9 +1,9 @@
-#全新Ubuntu配置流程
-##选择清华源Ubuntu20镜像，最简安装。 //（https://mirrors.tuna.tsinghua.edu.cn/#） Desktop
+# 全新Ubuntu配置流程
+## 选择清华源Ubuntu20镜像，最简安装。 //（https://mirrors.tuna.tsinghua.edu.cn/#） Desktop
 
 ***
 
-###1.更新Ubuntu内软件下载源为清华源
+### 1.更新Ubuntu内软件下载源为清华源
 
     1.1 sudo cp /etc/apt/sources.list /etc/apt/sources.list.default            // 源文件备份
     1.2 sudo gedit /etc/apt/sources.list  // 修改描述文件(https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)
@@ -28,7 +28,7 @@
 
 ***
 
-###2.常用软件安装
+### 2.常用软件安装
 
     2.1 sudo apt-get install samba net-tools gitk graphviz -y
     2.2 配置samba
@@ -38,12 +38,12 @@
 
 ***
 
-###3.环境变量声明
+### 3.环境变量声明
     vi ~/.bashrc
     export PATH=xxx/xxx/xxx:$PATH
     alias ll='ls -l -h'
 ___
-###代理设置
+### 代理设置
 
 	参考 https://zhuanlan.zhihu.com/p/102316528
 		sudo apt-get install privoxy
@@ -84,19 +84,24 @@ ___
 			echo -e "已开启代理"
 	}
 ___
-###使用问题
+### 使用问题
 	修改目录下所有文件权限
 	chmod -R 777 xxx/
 ___
-####虚拟机使用
-######VMware Tools 不生效问题
+#### 虚拟机使用
+###### VMware Tools 不生效问题
 	// sudo apt-get autoremove open-vm-tools
 	// sudo apt-get install open-vm-tools
 	sudo apt-get install open-vm-tools-desktop 单步生效
 	重启
-######千兆网卡
+
+###### 千兆网卡
 	ethernet0.virtualDev= "e1000"
 
 
-#####deb包 安装
+##### deb包 安装
 	sudo dpkg -i xxx.deb
+
+##### 提供ssh服务
+	sudo apt-get install openssh-server
+	ssh免密登录, 将本地生成的 ~/.ssh/id_rsa.pub 复制到 服务器端的 ~/.ssh/authorized_keys
