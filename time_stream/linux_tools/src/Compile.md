@@ -18,3 +18,9 @@ make xxx.defconfig
 ```bash
 make dtbs
 ```
+
+	4. 编译Image
+```bash
+LDFLAG="" CC="$CC"
+make -j<N>
+```
