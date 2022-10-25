@@ -36,3 +36,6 @@
 
 #####git stash pop 冲突恢复
 	git reset --hard
+
+##### 希望别再用到
+	git rebase --onto branch commit1 commit2
