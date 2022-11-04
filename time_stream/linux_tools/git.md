@@ -37,5 +37,9 @@
 #####git stash pop 冲突恢复
 	git reset --hard
 
+#####git stash -p 交互
+
 ##### 希望别再用到
 	git rebase --onto branch commit1 commit2
+
+##### 删除.ssh下的 know_host 后，以前的ssh访问会出现错误，请重新建立连接

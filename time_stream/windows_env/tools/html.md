@@ -55,4 +55,11 @@
 ###插入使用相对路径下的图片
 	![avatar](a-simple-makefile.gif)  // 没有空格
 
+### 打印PDF时 切换新页
+	page-break-before
+```HTML
+<p style='page-break-after:always;'>配置SDK
+</p>
+```
+
 
