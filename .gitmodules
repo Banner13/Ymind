@@ -1,6 +1,3 @@
-[submodule "all_borad/borchs/30_Day-MakeOS"]
-	path = all_borad/borchs/30_Day-MakeOS
-	url = git@github.com:Banner13/30_Day-MakeOS.git
 [submodule "time_stream/linux_tools/yocto/poky/bitbake_user_manual"]
 	path = time_stream/linux_tools/yocto/poky/bitbake_user_manual
 	url = git@github.com:Banner13/Bitbake_User_Manual-CH-.git
