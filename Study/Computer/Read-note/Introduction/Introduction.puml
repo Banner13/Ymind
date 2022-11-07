@@ -1,0 +1,53 @@
+@startuml "Computer Introduction"
+
+folder "Component" as C {
+    () "Data"     as C0
+    () "Sofeware" as C1
+    () "Handware" as C2
+}
+folder "Data"  as CD {
+    C0 --> CD
+}
+
+folder "Sofeware" as CS {
+    C1 --> CS
+}
+
+folder "Handware" as CH {
+    C2 --> CH
+}
+
+
+
+'   computer models
+folder "Models" as M {
+    () "Turing"       as M0
+    () "Von.Neumann"  as M1
+    () "Other"        as M2
+}
+
+folder "Turing" as MH {
+    M0 --> MH
+    component "Theoretical"  as MH0 {
+        database "y = f(x)" as MH00
+        note right   of  MH00
+        x ∈ {x1,x2,x3...,xn,{x1,x2},{x1,x3},{xm,...,xn}}
+        y ∈ {y1,y2,y3...,yn,{y1,y2},{y1,y3},{ym,...,yn}}
+        end note 
+    }
+    component "Implement"    as MH1 {
+        database "图灵机" as MH01
+    }
+}
+
+folder "Von.Neumann" as MV {
+    M1 --> MV
+    component "Theoretical"  as MV0
+    component "Implement"    as MV1
+}
+
+folder "Other" as MO {
+    M2 --> MO
+
+}
+@endtuml
