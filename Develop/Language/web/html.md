@@ -39,6 +39,26 @@
 <p style='page-break-after:always;'>配置SDK
 </p>
 ```
+
+<em>斜体</em>
+
+<b>加粗</b>
+
+<ol>有序列表
+<li>第一
+<li>第二
+</ol>
+
+<ul>无序列表
+<li>hello
+<li>world
+</ul>
+
+<menu>菜单
+<li>hello
+<li>world
+</menu>
+
 #### style
 	align
 	title
@@ -46,5 +66,6 @@
 	水平线<hr />
 	换行<br />
 	下划线<ins>
+<li>
 
 
