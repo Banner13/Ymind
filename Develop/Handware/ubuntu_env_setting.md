@@ -30,7 +30,7 @@
 
 ### 2.常用软件安装
 
-    2.1 sudo apt-get install samba net-tools gitk graphviz -y
+    2.1 sudo apt-get install samba net-tools gitk graphviz openssh-server -y
     2.2 配置samba
     2.2.1 sudo smbpasswd -a 'username'  // 添加samba用户(用户需要是ubuntu已存在的用户，密码可以为空)
     2.3 选择需要共享的文件，右键开启共享
@@ -83,6 +83,14 @@ ___
 			export RSYNC_PROXY=$http_proxy
 			echo -e "已开启代理"
 	}
+    new
+    export https_proxy=$http_proxy \
+    > export ftp_proxy=$http_proxy \
+    > export rsync_proxy=$http_proxy \
+    > export HTTP_PROXY=$http_proxy \
+    > export HTTPS_PROXY=$http_proxy \
+    > export FTP_PROXY=$http_proxy \
+    > export RSYNC_PROXY=$http_proxy
 ___
 ### 使用问题
 	修改目录下所有文件权限
@@ -98,7 +106,15 @@ ___
 ###### 千兆网卡
 	ethernet0.virtualDev= "e1000"
 
+###### 网络重启
+```bash
+sudo nmcli networking off
+sudo nmcli networking on
 
+sudo systemctl start NetworkManager
+sudo systemctl stop NetworkManager
+sudo systemctl restart NetworkManager
+```
 ##### deb包 安装
 	sudo dpkg -i xxx.deb
 
