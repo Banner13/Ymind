@@ -1,4 +1,7 @@
 #/bin/bash
-alias ll='ls -lh'
+alias ll='ls -alh'
 alias vi='vim'
 export PATH=$PATH:/mingw64/bin
+
+# ls color set
+export LS_COLORS=auto
