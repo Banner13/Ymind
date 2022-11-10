@@ -118,6 +118,14 @@ sudo systemctl restart NetworkManager
 ##### deb包 安装
 	sudo dpkg -i xxx.deb
 
+##### 查看以安装软件
+	dpkg -l | grep '^ii'
+
 ##### 提供ssh服务
 	sudo apt-get install openssh-server
 	ssh免密登录, 将本地生成的 ~/.ssh/id_rsa.pub 复制到 服务器端的 ~/.ssh/authorized_keys
+
+##### ssh生成已知主机
+```bash
+ssh-keygen -f "/home/sword/.ssh/known_hosts" -R "192.168.1.100"
+```

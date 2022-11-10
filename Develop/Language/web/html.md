@@ -54,10 +54,11 @@
 <li>world
 </ul>
 
-<menu>菜单
-<li>hello
-<li>world
-</menu>
+<img src="">插入图片
+
+<menu>菜单<li>hello<li>world</menu>
+
+<u>下划线</u>
 
 #### style
 	align

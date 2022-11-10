@@ -1,0 +1,3 @@
+#/bin/bash
+git config --global user.name huke
+git config --global user.emain hihuke@163.com
