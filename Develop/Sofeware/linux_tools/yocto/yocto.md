@@ -1,16 +1,14 @@
 ###yocto构建：
 
-	所需安装包(两个都进行安装  有的重复，但没关系)
+	yocto 所需安装包(两个都进行安装  有的重复，但没关系)
     $ sudo apt-get install gawk wget git-core diffstat unzip texinfo gcc-multilib \
-    build-essential  chrpath socat libsdl1.2-dev libsdl1.2-dev xterm sed cvs subversion \
-    coreutils texi2html  docbook-utils python-pysqlite2 help2man make gcc g++ desktop-file-utils \
-    libgl1-mesa-dev libglu1-mesa-dev mercurial autoconf automake groff curl lzop asciidoc \
-    u-boot-tools python3-pip samba gitk -y
+     build-essential  chrpath socat  xterm sed cvs subversion \
+     coreutils texi2html  docbook-utils  help2man make gcc g++ desktop-file-utils \
+     mercurial autoconf automake groff curl lzop asciidoc \
+     u-boot-tools  samba gitk cpio xz-utils debianutils iputils-ping   libegl1-mesa libsdl1.2-dev libgl1-mesa-dev libglu1-mesa-dev zstd \
+     python python3  python3-pexpect  python3-pip python3-git python3-jinja2 pylint3  python-pysqlite2 \
+     -y
 
-    yocto所需安装包
-    $ sudo apt-get install  cpio python python3  python3-pexpect \
-    xz-utils debianutils iputils-ping python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev \
-    pylint3 xterm zstd -y
 
 ###下载repo
     #mkdir ~/bin

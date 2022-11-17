@@ -19,7 +19,22 @@
 ### 家庭版windows10安装 Hyper-V脚本
 	Hyper-V.cmd
 
-###调整虚拟磁盘大小
+### 网址解析错误
+<p>
+1）临时修改（重启后无效）：
+直接在/etc/resolv.conf里添加：
+nameserver 8.8.8.8
+
+2）永久修改
+创建一个文件/etc/resolvconf/resolv.conf.d/tail，添加：
+nameserver 8.8.8.8
+
+3.重启网络
+sudo /etc/init.d/networking restart
+</p>
+
+
+### 调整虚拟磁盘大小
 	若要将最大 VHD 大小扩展到超过 256GB，请执行以下操作：
 
 		使用 wsl --shutdown 命令终止所有 WSL 实例
