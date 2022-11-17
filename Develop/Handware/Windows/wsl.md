@@ -16,6 +16,8 @@
 	wsl.exe --list --all (列出所有的linux系统(可能之前注册了没有取消注册))
 	wsl.exe --unregister (上面所列出的名字)
 
+### 家庭版windows10安装 Hyper-V脚本
+	Hyper-V.cmd
 
 ###调整虚拟磁盘大小
 	若要将最大 VHD 大小扩展到超过 256GB，请执行以下操作：

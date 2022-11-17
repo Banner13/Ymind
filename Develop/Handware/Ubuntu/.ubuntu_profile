@@ -1,0 +1,42 @@
+#bin/bash
+echo "/ *************"
+echo "*"
+echo "*  hello huke  "
+echo "*"
+echo " *************/"
+
+function unset_proxy(){
+		export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
+		unset http_proxy
+		unset https_proxy
+		unset ftp_proxy
+		unset rsync_proxy
+		unset HTTP_PROXY
+		unset HTTPS_PROXY
+		unset FTP_PROXY
+		unset RSYNC_PROXY
+		unset all_proxy
+		unset ALL_PROXY
+		git config --global http.proxy ""
+		git config --global https.proxy ""
+		curl cip.cc
+		echo -e "已关闭代理"
+}
+
+function set_proxy() {
+		echo "Enter Ip:Port. eg: 127.0.0.0:8080"
+		read proxy_id_port
+		
+		export http_proxy=$proxy_id_port
+		export https_proxy=$proxy_id_port
+		export ftp_proxy=$proxy_id_port
+		export rsync_proxy=$proxy_id_port
+		export HTTP_PROXY=$proxy_id_port
+		export HTTPS_PROXY=$proxy_id_port
+		export FTP_PROXY=$proxy_id_port
+		export RSYNC_PROXY=$proxy_id_port
+		git config --global http.proxy "$proxy_id_port"
+		git config --global https.proxy "$proxy_id_port"
+		curl cip.cc
+		echo -e "已开启代理"
+}
