@@ -19,6 +19,15 @@
 ### 家庭版windows10安装 Hyper-V脚本
 	Hyper-V.cmd
 
+### 禁止WSL加载Windows环境变量
+<p>在wsl 的 ubuntu中编辑/etc/wsl.conf，输入：
+[interop]
+enable = false
+appendWindowsPath = false
+
+重启
+</p>
+
 ### 网址解析错误
 <p>
 1）临时修改（重启后无效）：
