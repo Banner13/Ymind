@@ -5,6 +5,8 @@ echo "*  hello huke  "
 echo "*"
 echo " *************/"
 
+#echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null     # wsl
+
 function unset_proxy(){
 		export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
 		unset http_proxy
