@@ -42,3 +42,4 @@ function set_proxy() {
 		curl cip.cc
 		echo -e "已开启代理"
 }
+export LESS="$LESS -R -Q"

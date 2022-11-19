@@ -1,18 +1,8 @@
-#init ypcto env
-#.sh
-sudo cp /etc/cp /etc/apt/sources.list /etc/apt/sources.list.bak \
-cp ~/.bashrc ~/.bashrc.bak 
-
-sudo echo "# 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释 " > /etc/apt/sources.list 
-sudo echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal main restricted universe multiverse " >> /etc/apt/sources.list 
-sudo echo "# deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal main restricted universe multiverse " >> /etc/apt/sources.list 
-sudo echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-updates main restricted universe multiverse " >> /etc/apt/sources.list 
-sudo echo "# deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-updates main restricted universe multiverse " >> /etc/apt/sources.list 
-sudo echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-backports main restricted universe multiverse " >> /etc/apt/sources.list 
-sudo echo "# deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-backports main restricted universe multiverse " >> /etc/apt/sources.list 
-sudo echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-security main restricted universe multiverse " >> /etc/apt/sources.list 
-sudo echo "# deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-security main restricted universe multiverse " >> /etc/apt/sources.list 
-sudo echo "  " >> /etc/apt/sources.list 
-sudo echo "# 预发布软件源，不建议启用 " >> /etc/apt/sources.list 
-sudo echo "# deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-proposed main restricted universe multiverse " >> /etc/apt/sources.list 
-sudo echo "# deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-proposed main restricted universe multiverse hello" >> /etc/apt/sources.list 
+#bin/bash
+sudo apt-get install gawk wget git-core diffstat unzip texinfo gcc-multilib \
+     build-essential  chrpath socat  xterm sed cvs subversion \
+     coreutils texi2html  docbook-utils  help2man make gcc g++ desktop-file-utils \
+     mercurial autoconf automake groff curl lzop asciidoc \
+     u-boot-tools  samba gitk cpio xz-utils debianutils iputils-ping   libegl1-mesa libsdl1.2-dev libgl1-mesa-dev libglu1-mesa-dev zstd \
+     python python3  python3-pexpect  python3-pip python3-git python3-jinja2 pylint3  python-pysqlite2 \
+     -y

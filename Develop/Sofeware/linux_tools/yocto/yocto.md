@@ -71,9 +71,4 @@ ___
 		the root case is the ubuntu 20.04 build server needs to install yaml by cmd :
 	解决
     	sudo apt-get install libyaml-dev libpython2.7-dev
-
-#### Yocto build fail with exit code '134'
-<p>构建目录下 local.conf 文件里添加
-PSEUDO_IGNORE_PATHS_append = ",/run/"
-</p>
 ___
