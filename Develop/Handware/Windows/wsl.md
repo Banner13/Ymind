@@ -68,6 +68,17 @@ git config --global http.sslVerify false
 PSEUDO_IGNORE_PATHS_append = ",/run/"
 </p>
 
+#### gedit error
+<p>
+<li>D-Bus library appears to be incorrectly set up; failed to read machine uuid: UUID file '/etc/machine-id' should contain a hex string of length 32, not length 0, with no other text
+sudo  dbus-uuidgen --ensure
+
+<li>failed to commit changes to dconf: Failed to execute child process "dbus-launch" 
+sudo apt install dbus-x11
+
+<li>Set document metadata failed: Setting attribute metadata::gedit-position not supported
+可以忽略
+</p>
 
 
 ### 调整虚拟磁盘大小

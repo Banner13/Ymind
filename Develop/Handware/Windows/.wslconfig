@@ -1,0 +1,8 @@
+[wsl2]
+memory=6GB
+processors=8
+swap=18GB
+swapFile=W:\\wsl2-kernel\\temp\\wsl-swap.vhdx
+localhostForwarding=true
+pageReporting=true
+vmIdleTimeout=60000
