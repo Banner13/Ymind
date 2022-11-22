@@ -90,6 +90,10 @@ clean:
 	rm -rf .*cmd *.symvers *.mod* *.order *.o
 ```
 
+注：如果在kernel源码目录下直接使用make,需要在 hello目录的上级Makefie添加 obj-m                          += hello/
+例如 hello目录在 kernel-src/drivers/hello，
+则需要在 kernel-src/drivers/Makefile中添加。
+
 执行后，生成一些列的文件，我们可以通过 make clean 删除不需要的文件。
 最后得到了 hello.ko 文件。
 
