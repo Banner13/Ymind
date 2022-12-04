@@ -5,3 +5,7 @@
 python3 -m pip install --upgrade pip		// 出现错误
 python3 -m pip install --upgrade pip -i http://pypi.douban.com/simple --trusted-host pypi.douban.com		// 解决
 ```
+
+```bash
+pip install esptool -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+```
