@@ -1,8 +1,9 @@
+[TOC]
 
 [wsl](https://docs.microsoft.com/zh-cn/windows/wsl/about)
 
 
-###windows下的linux 开发环境
+### windows下的linux 开发环境
 
 	获取 ubuntu发行版安装包
 	解压到安装位置
