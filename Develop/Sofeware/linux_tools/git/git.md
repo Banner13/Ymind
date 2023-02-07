@@ -36,6 +36,9 @@
 ##### 提交tag
 	git push origin tag
 
+##### 空提交
+	git commit --allow-empty -m "xx"
+
 ##### git stash pop 冲突恢复
 	git reset --hard
 
