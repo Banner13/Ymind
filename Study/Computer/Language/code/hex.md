@@ -72,6 +72,9 @@
     :04  0000  05  09000000  EE..    // 程序开始地址为 0x9000-0000
     :00  0000  01            FF..    // hex文件结束
 
+## 扩展
+	bin文件只保留了hex文件中的'DD'部分，所以在烧录时需要指定烧录地址。
+
 ## 参考资料
 https://blog.csdn.net/fengel_cs/article/details/123511474
 https://www.intel.com/content/www/us/en/programmable/quartushelp/17.0/reference/glossary/def_hexfile.htm
