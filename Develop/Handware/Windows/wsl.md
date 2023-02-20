@@ -1,6 +1,7 @@
 [TOC]
 
 [wsl](https://docs.microsoft.com/zh-cn/windows/wsl/about)
+[wsl-wiki](https://wiki.ubuntu.com/WSL#Installing_Ubuntu_on_WSL_via_rootfs)
 
 
 ### windows下的linux 开发环境
@@ -154,3 +155,7 @@ sudo usbip attach -r $HOSTNAME.local -b 设备的busid号 #进行设备连接
 	作者：playAndroid
 	链接：https://www.jianshu.com/p/2348dc7e9aef
 	来源：简书
+
+### WslRegisterDistribution failed with error: 0x800701bc
+	更新内核
+	https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
