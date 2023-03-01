@@ -27,6 +27,13 @@ appendWindowsPath = false
 重启
 </p>
 
+### wsl 使用systemd 和 snap包管理
+<p>在wsl 的 ubuntu中编辑/etc/wsl.conf，输入：
+[boot]
+ststemd = true
+重启 wsl
+</p>
+
 ### 禁止WSL提示音
 编辑 /etc/inputrc 文件
 取消 “set bell-style none”前面的#注释
