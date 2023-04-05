@@ -10,3 +10,6 @@ if (!p)  和  if (NULL == p)
 64bit 机器上，使用 memcpy(p1, p2, size);
 bus error
 p1 没有64bit对齐
+
+### while(i++)
+	while(i++){} != while(i){i++;}
