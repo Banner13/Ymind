@@ -89,3 +89,15 @@ addr_data is b
 */
 }
 ```
+
+### 在头文件中使用static 变量
+```
+// t.h
+#ifndef T_H
+#define T_h
+
+static int test_value;
+
+#endif
+```
+不同的源文件都可以使用该头文件中的 test_value 变量，但不是同一个变量，而是每个源文件各自的变量。可以通过打印变量地址查看。
