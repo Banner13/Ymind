@@ -1,0 +1,29 @@
+@startuml mem_map
+
+comment PhyMemory {
+    0x0 = 0x00000000
+}
+
+map PageList1 {
+    Page1 *-> PhyMemory
+}
+
+map PageList2 {
+
+}
+
+map PageListN {
+
+}
+
+object ...
+map PageLibrary {
+    PageTableN *-> PageListN
+    ...        *-> ...
+    PageTable2 *-> PageList2
+    PageTable1 *-> PageList1
+}
+
+
+
+@enduml
