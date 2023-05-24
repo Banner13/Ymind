@@ -1,0 +1,34 @@
+@startuml  i2c
+frame "Linux" as Linux {
+
+    frame "i2c core" as i2c_core {
+        frame "i2c bus driver" as i2c_bus_driver {
+            frame "i2c_adapter" as i2c_adapter {
+                frame "i2c_algorithm" as .alog {
+                }
+            }
+        }
+    }
+    frame "i2c chip driver" as i2c_chip_driver {
+        frame "i2c_driver" as i2c_driver {
+            "flags" as .flags
+            "attach_adapter"    as .attach_adapter
+        }
+    }
+}
+@enduml
+
+object "Bus driver-low level interface" as Bus_driver_interface
+
+object "LPI2C(low-power) bus" as LPI2C_Bus
+Bus_driver_interface <-- LPI2C_Bus
+
+object "chip driver-interface" as chip_driver_interface
+
+
+LPI2C_Bus <-- i2c_bus_driver
+chip_driver_interface ..> i2c_bus_driver
+
+object "core I2C module" as core_I2C_module
+
+
