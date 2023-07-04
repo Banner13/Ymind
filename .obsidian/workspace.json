@@ -1,0 +1,183 @@
+{
+  "main": {
+    "id": "65a19f3de576c135",
+    "type": "split",
+    "children": [
+      {
+        "id": "bee6b308135d87ea",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9ca046c7fd07f29e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "stagingArea/uboot中的文件操作/uboot中的文件操作.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "4de77bab12cdca06",
+    "type": "split",
+    "children": [
+      {
+        "id": "69d0e6ae9331dfc4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5cba565b9114c3dd",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "f8215efbba2a89cc",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "52bfe85d905567ba",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 657.5
+  },
+  "right": {
+    "id": "7e692bad3b49dd44",
+    "type": "split",
+    "children": [
+      {
+        "id": "eeb83211f4018a55",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3db0d5761299b5e4",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "stagingArea/uboot中的文件操作/uboot中的文件操作.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "2d845230ef7f261b",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "stagingArea/uboot中的文件操作/uboot中的文件操作.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "52f3c10ae8df33d5",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "b50a33a5a829e162",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "stagingArea/uboot中的文件操作/uboot中的文件操作.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false
+    }
+  },
+  "active": "9ca046c7fd07f29e",
+  "lastOpenFiles": [
+    "develop/Language/graphviz.md",
+    "develop/Language/Regular.md",
+    "develop/Language/niuke/history.md",
+    "develop/Algorithm/base64.md",
+    "develop/abbreviations/all/SVN.md",
+    "develop/abbreviations/all/SCCS.md",
+    "develop/abbreviations/all/RVS.md",
+    "develop/abbreviations/all/DPI.md",
+    "develop/abbreviations/abbreviations.md",
+    "develop/abbreviations/all/未命名 2.md",
+    "develop/abbreviations/all/未命名 3.md",
+    "develop/abbreviations/all/VCS.md",
+    "develop/abbreviations/all",
+    "develop/abbreviations",
+    "develop/VCS.md",
+    "study/computer/notebooks/A-Tour-of-C++/A-tour-of-C++.md",
+    "study/computer/notebooks/内存管理.md",
+    "study/computer/notebooks/process.md",
+    "study/language/english/articles/US/The New York Times/A Dad Took Photos of His Naked Toddler for the Doctor.md",
+    "study/language/english/english.md",
+    "study/language/english/vocabulary",
+    "study/language/english/articles",
+    "study/language/english/articles/US/Time/economy/What You Need to Know About the Inflation Reduction Act.md",
+    "study/language/english/articles/US/Time/China Warns the U.S. Against Sailing Warships Through the Taiwan Strait.md",
+    "study/managementTool/six_sigma/six_sigma.md",
+    "LICENSE.md",
+    "study/computer/notebooks/code_rule.md",
+    "develop/hex.md",
+    "study/computer/notebooks/C/C_Point.md",
+    "study/computer/notebooks/C/OOPC.md",
+    "study/computer/notebooks/linux0 1.11/idt_des.png"
+  ]
+}
