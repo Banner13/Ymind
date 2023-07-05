@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "stagingArea/uboot中的文件操作/uboot中的文件操作.md",
+                "file": "develop/abbreviations/abbreviations.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "stagingArea/uboot中的文件操作/uboot中的文件操作.md",
+                "file": "develop/abbreviations/abbreviations.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "stagingArea/uboot中的文件操作/uboot中的文件操作.md",
+                "file": "develop/abbreviations/abbreviations.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "stagingArea/uboot中的文件操作/uboot中的文件操作.md"
+                "file": "develop/abbreviations/abbreviations.md"
               }
             }
           }
@@ -148,6 +148,9 @@
   },
   "active": "9ca046c7fd07f29e",
   "lastOpenFiles": [
+    "develop/abbreviations/all/PIC.md",
+    "develop/abbreviations/abbreviations.md",
+    "stagingArea/uboot中的文件操作/uboot中的文件操作.md",
     "develop/Language/graphviz.md",
     "develop/Language/Regular.md",
     "develop/Language/niuke/history.md",
@@ -156,7 +159,6 @@
     "develop/abbreviations/all/SCCS.md",
     "develop/abbreviations/all/RVS.md",
     "develop/abbreviations/all/DPI.md",
-    "develop/abbreviations/abbreviations.md",
     "develop/abbreviations/all/未命名 2.md",
     "develop/abbreviations/all/未命名 3.md",
     "develop/abbreviations/all/VCS.md",
@@ -176,8 +178,6 @@
     "LICENSE.md",
     "study/computer/notebooks/code_rule.md",
     "develop/hex.md",
-    "study/computer/notebooks/C/C_Point.md",
-    "study/computer/notebooks/C/OOPC.md",
     "study/computer/notebooks/linux0 1.11/idt_des.png"
   ]
 }

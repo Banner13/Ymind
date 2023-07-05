@@ -3,3 +3,4 @@
 	[[SCCS]]
 	[[RVS]]
 	[[SVN]]
+	[[PIC]]
