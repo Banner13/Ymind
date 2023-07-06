@@ -1,0 +1,2 @@
+Cyclic redundancy check
+循环冗余校验
