@@ -1,0 +1,2 @@
+MAC地址，同一网段内设备的MAC地址不能相同。
+可以通过在defconfig文件中配置 CONFIG_NET_RANDOM_ETHADDR=y 随机生成。

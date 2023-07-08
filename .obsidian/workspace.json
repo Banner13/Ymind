@@ -4,19 +4,15 @@
     "type": "split",
     "children": [
       {
-        "id": "bee6b308135d87ea",
+        "id": "5f9675b032a029ec",
         "type": "tabs",
         "children": [
           {
-            "id": "9ca046c7fd07f29e",
+            "id": "06769daf0612ace1",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "develop/abbreviations/abbreviations.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -69,7 +65,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 657.5
+    "width": 439.5
   },
   "right": {
     "id": "7e692bad3b49dd44",
@@ -85,7 +81,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "develop/abbreviations/abbreviations.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +97,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "develop/abbreviations/abbreviations.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -124,9 +118,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "develop/abbreviations/abbreviations.md"
-              }
+              "state": {}
             }
           }
         ]
@@ -146,38 +138,47 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "9ca046c7fd07f29e",
+  "active": "06769daf0612ace1",
   "lastOpenFiles": [
-    "develop/abbreviations/all/PIC.md",
-    "develop/abbreviations/abbreviations.md",
-    "stagingArea/uboot中的文件操作/uboot中的文件操作.md",
-    "develop/Language/graphviz.md",
-    "develop/Language/Regular.md",
-    "develop/Language/niuke/history.md",
-    "develop/Algorithm/base64.md",
-    "develop/abbreviations/all/SVN.md",
-    "develop/abbreviations/all/SCCS.md",
-    "develop/abbreviations/all/RVS.md",
-    "develop/abbreviations/all/DPI.md",
-    "develop/abbreviations/all/未命名 2.md",
-    "develop/abbreviations/all/未命名 3.md",
-    "develop/abbreviations/all/VCS.md",
-    "develop/abbreviations/all",
-    "develop/abbreviations",
-    "develop/VCS.md",
-    "study/computer/notebooks/A-Tour-of-C++/A-tour-of-C++.md",
-    "study/computer/notebooks/内存管理.md",
-    "study/computer/notebooks/process.md",
-    "study/language/english/articles/US/The New York Times/A Dad Took Photos of His Naked Toddler for the Doctor.md",
-    "study/language/english/english.md",
-    "study/language/english/vocabulary",
-    "study/language/english/articles",
-    "study/language/english/articles/US/Time/economy/What You Need to Know About the Inflation Reduction Act.md",
-    "study/language/english/articles/US/Time/China Warns the U.S. Against Sailing Warships Through the Taiwan Strait.md",
-    "study/managementTool/six_sigma/six_sigma.md",
-    "LICENSE.md",
-    "study/computer/notebooks/code_rule.md",
-    "develop/hex.md",
+    "develop/Handware/Boards/NXP/IMX6ULL/100ask/MINI/porting/Ethernet/Etnernet.md",
+    "develop/Handware/Boards/NXP/IMX6ULL/进入烧录模式.md",
+    "develop/OSystem/Uboot/网络验证.md",
+    "develop/OSystem/Uboot/uboot从服务器下载文件.md",
+    "develop/OSystem/Uboot/cmd_list/boot/fastboot.md",
+    "develop/OSystem/Uboot/cmd_list/boot",
+    "develop/Handware/Boards/NXP/IMX6ULL/100ask/MINI/100ask_imx6ull_mini.md",
+    "develop/Handware/Boards/NXP/IMX6ULL/MCIMX6ULL-EVK(NXP)/MCIMX6ULL-EVK(NXP).md",
+    "develop/Handware/Boards/NXP/linux-compile.md",
+    "develop/OSystem/Kernel/OperationSystem.md",
+    "develop/OSystem/Uboot/uboot_env.md",
+    "develop/OSystem/Uboot/cmd_list/file/save.md",
+    "develop/OSystem/Uboot/env/file/filesize.md",
+    "develop/OSystem/Uboot/env/file/fileaddr.md",
+    "develop/OSystem/Uboot/env/ethernet/serverip.md",
+    "develop/OSystem/Uboot/env/ethernet/netmask.md",
+    "develop/OSystem/Uboot/env/ethernet/ipaddr.md",
+    "develop/OSystem/Uboot/env/ethernet/gatewayip.md",
+    "develop/OSystem/Uboot/env/ethernet/ethaddr.md",
+    "develop/OSystem/Uboot/cmd_list/ethernet/ping.md",
+    "develop/OSystem/Uboot/cmd_list/file",
+    "develop/OSystem/Uboot/cmd_list/ethernet/tftp.md",
+    "develop/OSystem/Uboot/cmd_list/ethernet/nfs.md",
+    "develop/OSystem/Uboot/cmd_list/ethernet/dhcp.md",
+    "develop/OSystem/Uboot/env/file",
+    "stagingArea/uboot/env/ethernet/未命名.md",
+    "develop/OSystem/Uboot/env/ethernet",
+    "develop/OSystem/Uboot/env",
+    "develop/OSystem/Uboot/cmd_list/ethernet",
+    "develop/OSystem/Uboot/cmd_list",
+    "develop/Language/web/html.md",
+    "develop/Tools/TFTPSvr/TFTPSvr.md",
+    "develop/Tools/hanewinNFS/hanewinNFS.md",
+    "develop/Tools",
+    "stagingArea/基本概念/通信/并行/并行.png",
+    "develop/Handware/Boards/NXP/IMX6ULL/MCIMX6ULL-EVK(NXP)",
+    "develop/Handware/Boards/NXP/未命名",
+    "develop/Handware/Boards/ESP32C3/VScode.PNG",
+    "develop/Handware/Boards/ESP32C3/ESP32C3-Core.png",
     "study/computer/notebooks/linux0 1.11/idt_des.png"
   ]
 }
