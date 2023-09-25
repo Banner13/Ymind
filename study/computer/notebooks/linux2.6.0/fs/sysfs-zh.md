@@ -22,31 +22,23 @@ Patrick Mochel	<mochel@osdl.org>
 
 文件夹创建
 
-系统会为每个注册的 kobject 在 sysfs 中创建一个目录。该目录被 kobject 的父目录所创建，向用户空间表达内部对象层次结构。
-sysfs 中的顶级目录代表了对象层次结构的共同祖先; 即对象所属的子系统。
+	系统会为每个注册的 kobject 在 sysfs 中创建一个目录。该目录被 kobject 的父目录所创建，向用户空间表达内部对象层次结构。
+	sysfs 中的顶级目录代表了对象层次结构的共同祖先; 即对象所属的子系统。
+	
+	Sysfs 内部会将拥有目录的 kobject 保存在目录的 dentry 的 ->d_fsdata 指针中。 这允许 sysfs 在打开和关闭文件时直接对 kobject 进行引用计数。
 
-Sysfs 内部会将拥有目录的 kobject 保存在目录的 dentry 的 ->d_fsdata 指针中。 这允许 sysfs 在打开和关闭文件时直接对 kobject 进行引用计数。
 
-
-Attributes
+属性
 ~~~~~~~~~~
 
-Attributes can be exported for kobjects in the form of regular files in
-the filesystem. Sysfs forwards file I/O operations to methods defined
-for the attributes, providing a means to read and write kernel
-attributes.
+kobjects 属性可以以文件系统中普通文件的形式导出。通过将文件 I/O 操作传递给为属性定义的方法，Sysfs 提供了一种读写内核属性的方法。
 
-Attributes should be ASCII text files, preferably with only one value
-per file. It is noted that it may not be efficient to contain only
-value per file, so it is socially acceptable to express an array of
-values of the same type. 
+属性应为 ASCII 文本文件，每个文件最好只有一个值。需要注意的是，每个文件只包含一个值可能效率不高，因此社会上可以接受表达同一类型值的数组。
 
-Mixing types, expressing multiple lines of data, and doing fancy
-formatting of data is heavily frowned upon. Doing these things may get
-you publically humiliated and your code rewritten without notice. 
+混合类型、表达多行数据以及对数据进行花哨的格式化都是不允许的。做这些事情可能会让你受到公开羞辱，并在不经通知的情况下重写你的代码。
 
 
-An attribute definition is simply:
+属性定义很简单：
 
 struct attribute {
         char                    * name;

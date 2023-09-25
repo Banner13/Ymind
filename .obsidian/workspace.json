@@ -4,16 +4,34 @@
     "type": "split",
     "children": [
       {
-        "id": "7e888105ab8302c0",
+        "id": "3fce7b0eeedd2786",
         "type": "tabs",
         "children": [
           {
-            "id": "d59315eaaf9d6634",
+            "id": "bfedec45aaca9172",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "develop/Tools/netsh/netsh.md",
+                "file": "study/computer/notebooks/linux2.6.0/kobject.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "60486775c87d15b9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3b16777c33ffcd6d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "study/computer/notebooks/linux2.6.0/kobject-zh.md",
                 "mode": "source",
                 "source": false
               }
@@ -69,7 +87,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 552.4999961853027
+    "width": 200,
+    "collapsed": true
   },
   "right": {
     "id": "7e692bad3b49dd44",
@@ -85,7 +104,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "develop/Tools/netsh/netsh.md",
+                "file": "study/computer/notebooks/linux2.6.0/kobject-zh.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +121,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "develop/Tools/netsh/netsh.md",
+                "file": "study/computer/notebooks/linux2.6.0/kobject-zh.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -115,17 +134,17 @@
               "type": "tag",
               "state": {
                 "sortOrder": "frequency",
-                "useHierarchy": true
+                "useHierarchy": false
               }
             }
           },
           {
-            "id": "b50a33a5a829e162",
+            "id": "3f433ccd3e5ec12c",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "develop/Tools/netsh/netsh.md"
+                "file": "study/computer/notebooks/linux2.6.0/kobject-zh.md"
               }
             }
           }
@@ -133,7 +152,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
+    "width": 200,
     "collapsed": true
   },
   "left-ribbon": {
@@ -146,10 +165,20 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "d59315eaaf9d6634",
+  "active": "3b16777c33ffcd6d",
   "lastOpenFiles": [
-    "develop/OSystem/Expand/git/git.md",
+    "study/computer/notebooks/linux2.6.0/kobject.md",
+    "study/computer/notebooks/linux2.6.0/kobject-zh.md",
+    "study/language/english/english.md",
+    "study/language/english/note",
+    "study/computer/notebooks/linux2.6.0/fs/sysfs-zh.md",
+    "study/computer/notebooks/linux2.6.0/fs/sysfs.md",
+    "study/computer/notebooks/ScipyLectures/Python",
+    "study/computer/notebooks/ScipyLectures",
+    "study/computer/notebooks/linux2.6.0/fs",
     "develop/Tools/netsh/netsh.md",
+    "study/computer/notebooks/linux2.6.0",
+    "develop/OSystem/Expand/git/git.md",
     "develop/Tools/netsh",
     "develop/Handware/Windows/wsl.md",
     "develop/Handware/Ubuntu/ubuntu_env_setting.md",
@@ -168,22 +197,12 @@
     "develop/Tools/hanewinNFS/hanewinNFS.md",
     "develop/Tools/TFTPSvr",
     "develop/Tools/hanewinNFS",
-    "develop/Tools",
     "develop/OSystem/Uboot/网络验证.md",
     "develop/OSystem/Uboot/uboot从服务器下载文件.md",
     "develop/OSystem/Uboot/env/file/filesize.md",
     "develop/OSystem/Uboot/env/ethernet/netmask.md",
     "develop/OSystem/Uboot/env/ethernet/serverip.md",
     "develop/OSystem/Uboot/env/file/fileaddr.md",
-    "develop/OSystem/Uboot/env/ethernet/ipaddr.md",
-    "develop/OSystem/Uboot/env/ethernet/gatewayip.md",
-    "develop/OSystem/Uboot/env/ethernet/ethaddr.md",
-    "develop/OSystem/Uboot/env/file",
-    "develop/OSystem/Uboot/env/ethernet",
-    "develop/OSystem/Uboot/env",
-    "develop/OSystem/Uboot/cmd_list/file/save.md",
-    "develop/OSystem/Uboot/cmd_list/ethernet/tftp.md",
-    "develop/OSystem/Uboot/cmd_list/file",
     "study/computer/notebooks/linux0 1.11/idt_des.png"
   ]
 }
