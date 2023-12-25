@@ -4,34 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "3fce7b0eeedd2786",
+        "id": "579eb150952d2cc0",
         "type": "tabs",
         "children": [
           {
-            "id": "bfedec45aaca9172",
+            "id": "0367e0f39a57baf6",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "study/computer/notebooks/linux2.6.0/kobject.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          }
-        ]
-      },
-      {
-        "id": "60486775c87d15b9",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "3b16777c33ffcd6d",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "study/computer/notebooks/linux2.6.0/kobject-zh.md",
+                "file": "study/computer/notebooks/linux2.6.26/kobject.md",
                 "mode": "source",
                 "source": false
               }
@@ -87,8 +69,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "7e692bad3b49dd44",
@@ -104,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "study/computer/notebooks/linux2.6.0/kobject-zh.md",
+                "file": "study/computer/notebooks/linux2.6.26/kobject.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -121,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "study/computer/notebooks/linux2.6.0/kobject-zh.md",
+                "file": "study/computer/notebooks/linux2.6.26/kobject.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -144,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "study/computer/notebooks/linux2.6.0/kobject-zh.md"
+                "file": "study/computer/notebooks/linux2.6.26/kobject.md"
               }
             }
           }
@@ -165,10 +146,12 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "3b16777c33ffcd6d",
+  "active": "5cba565b9114c3dd",
   "lastOpenFiles": [
-    "study/computer/notebooks/linux2.6.0/kobject.md",
     "study/computer/notebooks/linux2.6.0/kobject-zh.md",
+    "study/computer/notebooks/linux2.6.26/kobject.md",
+    "study/computer/notebooks/linux2.6.26",
+    "study/computer/notebooks/linux2.6.0/kobject.md",
     "study/language/english/english.md",
     "study/language/english/note",
     "study/computer/notebooks/linux2.6.0/fs/sysfs-zh.md",
@@ -196,13 +179,11 @@
     "develop/Tools/TFTPSvr/TFTPSvr.md",
     "develop/Tools/hanewinNFS/hanewinNFS.md",
     "develop/Tools/TFTPSvr",
-    "develop/Tools/hanewinNFS",
     "develop/OSystem/Uboot/网络验证.md",
     "develop/OSystem/Uboot/uboot从服务器下载文件.md",
     "develop/OSystem/Uboot/env/file/filesize.md",
     "develop/OSystem/Uboot/env/ethernet/netmask.md",
     "develop/OSystem/Uboot/env/ethernet/serverip.md",
-    "develop/OSystem/Uboot/env/file/fileaddr.md",
     "study/computer/notebooks/linux0 1.11/idt_des.png"
   ]
 }
