@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "7e888105ab8302c0",
+        "id": "31711f8f0e135320",
         "type": "tabs",
         "children": [
           {
-            "id": "d59315eaaf9d6634",
+            "id": "faf664dcafb7b04c",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "develop/OSystem/Kernel/compiler linux2.6.24.md",
+                "file": "stagingArea/V4L2/enum vb2_buffer_state.md",
                 "mode": "source",
                 "source": false
               }
@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "utf",
+                "query": "",
                 "matchingCase": true,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -69,7 +69,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 552.4999961853027
+    "width": 251.5
   },
   "right": {
     "id": "7e692bad3b49dd44",
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "develop/OSystem/Kernel/compiler linux2.6.24.md",
+                "file": "stagingArea/V4L2/enum vb2_buffer_state.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "develop/OSystem/Kernel/compiler linux2.6.24.md",
+                "file": "stagingArea/V4L2/enum vb2_buffer_state.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -115,17 +115,17 @@
               "type": "tag",
               "state": {
                 "sortOrder": "frequency",
-                "useHierarchy": true
+                "useHierarchy": false
               }
             }
           },
           {
-            "id": "b50a33a5a829e162",
+            "id": "3f433ccd3e5ec12c",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "develop/OSystem/Kernel/compiler linux2.6.24.md"
+                "file": "stagingArea/V4L2/enum vb2_buffer_state.md"
               }
             }
           }
@@ -133,7 +133,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
+    "width": 200,
     "collapsed": true
   },
   "left-ribbon": {
@@ -146,23 +146,31 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "d59315eaaf9d6634",
+  "active": "faf664dcafb7b04c",
   "lastOpenFiles": [
-    "develop/OSystem/Kernel/OperationSystem.md",
-    "develop/OSystem/Kernel/debug_tools.md",
-    "develop/OSystem/Kernel/modules.md",
+    "develop/OSystem/Rootfs/Create rootfs.md",
     "develop/OSystem/Kernel/compiler linux2.6.24.md",
-    "develop/OSystem/RootFS/Create rootfs.md",
+    "stagingArea/V4L2/struct vb2_buffer.md",
+    "stagingArea/V4L2/enum vb2_buffer_state.md",
+    "stagingArea/V4L2/struct vb2_queue q.md",
+    "stagingArea/V4L2/V4L2.md",
+    "stagingArea/V4L2",
+    "study/computer/notebooks/鸟哥私房菜/systemctl.md",
+    "develop/OSystem/Uboot/uboot从服务器下载文件.md",
     "study/computer/notebooks/linux2.6.26/kobject.md",
+    "study/computer/notebooks/鸟哥私房菜",
+    "study/computer/notebooks/linux2.6.0/kobject-zh.md",
     "study/computer/notebooks/linux2.6.26",
     "study/computer/notebooks/linux2.6.0/kobject.md",
-    "study/computer/notebooks/linux2.6.0/kobject-zh.md",
-    "study/computer/notebooks/linux2.6.0/fs/sysfs.md",
+    "study/language/english/english.md",
+    "study/language/english/note",
     "study/computer/notebooks/linux2.6.0/fs/sysfs-zh.md",
+    "study/computer/notebooks/linux2.6.0/fs/sysfs.md",
+    "study/computer/notebooks/ScipyLectures/Python",
+    "study/computer/notebooks/ScipyLectures",
     "study/computer/notebooks/linux2.6.0/fs",
-    "study/computer/notebooks/linux2.6.0",
-    "develop/OSystem/RootFS",
     "develop/Tools/netsh/netsh.md",
+    "study/computer/notebooks/linux2.6.0",
     "develop/OSystem/Expand/git/git.md",
     "develop/Tools/netsh",
     "develop/Handware/Windows/wsl.md",
@@ -170,20 +178,12 @@
     "develop/OSystem/Expand/LD.md",
     "develop/Handware/Windows/window_env_setting.md",
     "develop/Handware/Windows/hv.txt",
+    "develop/OSystem/Kernel/debug_tools.md",
     "stagingArea/ModBus/ModBus.md",
-    "stagingArea/ModBus/FunctionCode",
     "develop/Protocols/ModBus.md",
     "stagingArea/ModBus/RTU模式.md",
     "stagingArea/ModBus/ModBus串行链接.md",
     "stagingArea/ModBus/ASCII模式.md",
-    "stagingArea/PLM/PLM.md",
-    "develop/Tools/TFTPSvr/TFTPSvr.md",
-    "develop/Tools/hanewinNFS/hanewinNFS.md",
-    "develop/Tools/TFTPSvr",
-    "develop/Tools/hanewinNFS",
-    "develop/Tools",
-    "develop/OSystem/Uboot/网络验证.md",
-    "develop/OSystem/Uboot/uboot从服务器下载文件.md",
     "study/computer/notebooks/linux0 1.11/idt_des.png"
   ]
 }
