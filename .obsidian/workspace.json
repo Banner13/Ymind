@@ -13,7 +13,25 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "develop/OSystem/Kernel/compiler linux2.6.24.md",
+                "file": "develop/Tools/OpenOCD/install.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "01e4163b40226af5",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "55afba4d25943971",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "develop/Handware/Boards/ST/F1/stm32_sdk_env.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +103,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "develop/OSystem/Kernel/compiler linux2.6.24.md",
+                "file": "develop/Tools/OpenOCD/install.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +120,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "develop/OSystem/Kernel/compiler linux2.6.24.md",
+                "file": "develop/Tools/OpenOCD/install.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +143,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "develop/OSystem/Kernel/compiler linux2.6.24.md"
+                "file": "develop/Tools/OpenOCD/install.md"
               }
             }
           }
@@ -146,44 +164,46 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "5cba565b9114c3dd",
+  "active": "d59315eaaf9d6634",
   "lastOpenFiles": [
+    "develop/Handware/Boards/ST/F1/stm32_sdk_env.md",
+    "develop/Tools/OpenOCD/install.md",
+    "develop/Tools/MingGw64/install.md",
+    "develop/Tools/MingGw64",
+    "develop/Tools/OpenOCD",
+    "develop/Handware/Boards/NXP/linux-compile.md",
+    "develop/Handware/Boards/ESP32C3/VScode.PNG",
+    "develop/Handware/Boards/ESP32C3/ESP32C3-Core.png",
+    "develop/Handware/Boards/ESP32C3/ESP32C3-Core.md",
+    "develop/Algorithm/base64.md",
+    "develop/abbreviations/abbreviations.md",
+    "develop/abbreviations/all/DPI.md",
+    "develop/abbreviations/all/PIC.md",
+    "develop/abbreviations/all/RVS.md",
+    "develop/abbreviations/all/SCCS.md",
+    "develop/abbreviations/all/SVN.md",
+    "develop/abbreviations/all/VCS.md",
+    "develop/VCS.md",
+    "LICENSE.md",
+    "develop/Protocols/virtio.md",
+    "develop/Protocols/net_program.md",
+    "develop/Protocols/FileType/Hex固件.md",
+    "develop/Protocols/Communication/SPI.md",
+    "develop/Protocols/Communication/CommonKnowledge/Parallel.md",
+    "develop/Protocols/Communication/CommonKnowledge/Serial.md",
+    "develop/Protocols/Communication/CommonKnowledge",
+    "develop/Protocols/Communication",
+    "develop/Protocols/FileType",
+    "develop/Handware/Windows/window_env_setting.md",
+    "develop/Handware/Windows/wsl.md",
+    "develop/Handware/Windows/hv.txt",
+    "develop/OSystem/Kernel/compiler linux2.6.24.md",
     "study/computer/notebooks/鸟哥私房菜/systemctl.md",
     "study/computer/notebooks/鸟哥私房菜",
     "stagingArea/V4L2/struct vb2_queue q.md",
-    "stagingArea/V4L2/struct vb2_buffer.md",
-    "stagingArea/V4L2/enum vb2_buffer_state.md",
-    "stagingArea/V4L2/V4L2.md",
     "stagingArea/V4L2",
-    "develop/Handware/Windows/WSL2/Rust/ESPTool/RISCV/ESP32C3/install.md",
-    "develop/Handware/Windows/WSL2/Rust/ESPTool/RISCV/error.md",
-    "develop/Handware/Windows/WSL2/Rust/ESPTool/RISCV/install.md",
-    "develop/Handware/Windows/WSL2/Rust/ESPTool/RISCV/check.md",
     "develop/Handware/Windows/WSL2/Rust/ESPTool/RISCV/ESP32C3",
-    "develop/Handware/Windows/WSL2/Rust/Tool/install.md",
-    "develop/Handware/Windows/WSL2/Rust/Tool/error.md",
     "develop/Handware/Windows/WSL2/Rust/ESPTool/RISCV",
-    "develop/Handware/Windows/WSL2/Rust/Std/install.md",
-    "develop/Handware/Windows/WSL2/Rust/ESPTool/install.md",
-    "develop/Handware/Windows/WSL2/Tool/nightly.md",
-    "develop/Handware/Windows/WSL2/Tool/build-essential.md",
-    "develop/Handware/Windows/WSL2/Tool/cmake.md",
-    "develop/Handware/Windows/WSL2/Rust/update.md",
-    "develop/Handware/Windows/WSL2/Rust/Std",
-    "develop/Handware/Windows/WSL2/Rust/Tool",
-    "develop/Handware/Windows/WSL2/USB/USB.md",
-    "develop/Handware/Windows/WSL2/Rust/ESPTool",
-    "develop/Handware/Windows/WSL2/Rust/remove.md",
-    "develop/Handware/Windows/WSL2/Rust/install.md",
-    "develop/Handware/Windows/WSL2/Rust/check.md",
-    "develop/Handware/Windows/WSL2/ESP-IDF/install.md",
-    "develop/Handware/Windows/WSL2/ESP-IDF/error.md",
-    "develop/Handware/Windows/WSL2/Python3.9/error.md",
-    "develop/Handware/Windows/WSL2/Python3.9/install.md",
-    "develop/Handware/Windows/WSL2/Tool",
-    "develop/Handware/Windows/WSL2/USB",
-    "develop/Handware/Windows/WSL2/Rust",
-    "develop/OSystem/Kernel/OperationSystem.md",
     "study/computer/notebooks/linux0 1.11/idt_des.png"
   ]
 }

@@ -1,4 +1,4 @@
-﻿
+
 ####STM32F103开发环境(SDK)^(1)^搭建
 开发工具（VS Code / SI^(2)^ + STM32CubeMx + ARM编译器^(3)^ + Openocd + MingG-w64）
 ___
@@ -17,8 +17,6 @@ ___
  - VS Code　　　　　　[官网下载链接](https://code.visualstudio.com/Download# "Title")
  -  SI  　　　　　　　　 [官网下载链接](https://www.sourceinsight.com/download/ "Title")
  -  ARM编译器  　　　　 [官网下载链接](https://launchpad.net/gcc-arm-embedded/+download "Title")
- -  Openocd  　　　　 　 [官网下载链接](https://gnutoolchains.com/arm-eabi/openocd/ "Title")
- -  MingG-w64　　　　　[官网下载链接](https://sourceforge.net/projects/mingw-w64/files/mingw-w64/ "Title")
 
 注：以上下载后有的是安装包，有的是可执行文件的压缩包
 ___
@@ -123,3 +121,7 @@ ___
             "svdPath": "D:\\Users\\Administrator\\Downloads\\Firefox_Download\\cmsis-svd-master\\cmsis-svd-master\\data\\STMicro",
             "svdFile": "STM32F103xx.svd"
         },
+
+#### Ref
+[[develop/Tools/OpenOCD/install|OpenOCD安装]]
+[[develop/Tools/MingGw64/install|MingGw64安装]]

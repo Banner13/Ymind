@@ -1,9 +1,15 @@
 {
   "alwaysUpdateLinks": true,
-  "promptDelete": true,
+  "promptDelete": false,
   "trashOption": "local",
   "newFileLocation": "current",
   "newLinkFormat": "absolute",
   "showUnsupportedFiles": true,
-  "attachmentFolderPath": "./"
+  "attachmentFolderPath": "./",
+  "showLineNumber": true,
+  "strictLineBreaks": true,
+  "spellcheckLanguages": [
+    "zh-CN",
+    "en"
+  ]
 }
