@@ -1,0 +1,5 @@
+```bash
+$ rustup self uninstall
+```
+
+

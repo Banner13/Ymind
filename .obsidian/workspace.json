@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "31711f8f0e135320",
+        "id": "7e888105ab8302c0",
         "type": "tabs",
         "children": [
           {
-            "id": "faf664dcafb7b04c",
+            "id": "d59315eaaf9d6634",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "stagingArea/V4L2/enum vb2_buffer_state.md",
+                "file": "develop/OSystem/Kernel/compiler linux2.6.24.md",
                 "mode": "source",
                 "source": false
               }
@@ -48,8 +48,8 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
-                "matchingCase": true,
+                "query": "wsl",
+                "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
                 "extraContext": false,
@@ -69,7 +69,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 251.5
+    "width": 552.4999961853027
   },
   "right": {
     "id": "7e692bad3b49dd44",
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "stagingArea/V4L2/enum vb2_buffer_state.md",
+                "file": "develop/OSystem/Kernel/compiler linux2.6.24.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "stagingArea/V4L2/enum vb2_buffer_state.md",
+                "file": "develop/OSystem/Kernel/compiler linux2.6.24.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -115,17 +115,17 @@
               "type": "tag",
               "state": {
                 "sortOrder": "frequency",
-                "useHierarchy": false
+                "useHierarchy": true
               }
             }
           },
           {
-            "id": "3f433ccd3e5ec12c",
+            "id": "b50a33a5a829e162",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "stagingArea/V4L2/enum vb2_buffer_state.md"
+                "file": "develop/OSystem/Kernel/compiler linux2.6.24.md"
               }
             }
           }
@@ -133,7 +133,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
+    "width": 300,
     "collapsed": true
   },
   "left-ribbon": {
@@ -146,44 +146,44 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "faf664dcafb7b04c",
+  "active": "5cba565b9114c3dd",
   "lastOpenFiles": [
-    "develop/OSystem/Rootfs/Create rootfs.md",
-    "develop/OSystem/Kernel/compiler linux2.6.24.md",
+    "study/computer/notebooks/鸟哥私房菜/systemctl.md",
+    "study/computer/notebooks/鸟哥私房菜",
+    "stagingArea/V4L2/struct vb2_queue q.md",
     "stagingArea/V4L2/struct vb2_buffer.md",
     "stagingArea/V4L2/enum vb2_buffer_state.md",
-    "stagingArea/V4L2/struct vb2_queue q.md",
     "stagingArea/V4L2/V4L2.md",
     "stagingArea/V4L2",
-    "study/computer/notebooks/鸟哥私房菜/systemctl.md",
-    "develop/OSystem/Uboot/uboot从服务器下载文件.md",
-    "study/computer/notebooks/linux2.6.26/kobject.md",
-    "study/computer/notebooks/鸟哥私房菜",
-    "study/computer/notebooks/linux2.6.0/kobject-zh.md",
-    "study/computer/notebooks/linux2.6.26",
-    "study/computer/notebooks/linux2.6.0/kobject.md",
-    "study/language/english/english.md",
-    "study/language/english/note",
-    "study/computer/notebooks/linux2.6.0/fs/sysfs-zh.md",
-    "study/computer/notebooks/linux2.6.0/fs/sysfs.md",
-    "study/computer/notebooks/ScipyLectures/Python",
-    "study/computer/notebooks/ScipyLectures",
-    "study/computer/notebooks/linux2.6.0/fs",
-    "develop/Tools/netsh/netsh.md",
-    "study/computer/notebooks/linux2.6.0",
-    "develop/OSystem/Expand/git/git.md",
-    "develop/Tools/netsh",
-    "develop/Handware/Windows/wsl.md",
-    "develop/Handware/Ubuntu/ubuntu_env_setting.md",
-    "develop/OSystem/Expand/LD.md",
-    "develop/Handware/Windows/window_env_setting.md",
-    "develop/Handware/Windows/hv.txt",
-    "develop/OSystem/Kernel/debug_tools.md",
-    "stagingArea/ModBus/ModBus.md",
-    "develop/Protocols/ModBus.md",
-    "stagingArea/ModBus/RTU模式.md",
-    "stagingArea/ModBus/ModBus串行链接.md",
-    "stagingArea/ModBus/ASCII模式.md",
+    "develop/Handware/Windows/WSL2/Rust/ESPTool/RISCV/ESP32C3/install.md",
+    "develop/Handware/Windows/WSL2/Rust/ESPTool/RISCV/error.md",
+    "develop/Handware/Windows/WSL2/Rust/ESPTool/RISCV/install.md",
+    "develop/Handware/Windows/WSL2/Rust/ESPTool/RISCV/check.md",
+    "develop/Handware/Windows/WSL2/Rust/ESPTool/RISCV/ESP32C3",
+    "develop/Handware/Windows/WSL2/Rust/Tool/install.md",
+    "develop/Handware/Windows/WSL2/Rust/Tool/error.md",
+    "develop/Handware/Windows/WSL2/Rust/ESPTool/RISCV",
+    "develop/Handware/Windows/WSL2/Rust/Std/install.md",
+    "develop/Handware/Windows/WSL2/Rust/ESPTool/install.md",
+    "develop/Handware/Windows/WSL2/Tool/nightly.md",
+    "develop/Handware/Windows/WSL2/Tool/build-essential.md",
+    "develop/Handware/Windows/WSL2/Tool/cmake.md",
+    "develop/Handware/Windows/WSL2/Rust/update.md",
+    "develop/Handware/Windows/WSL2/Rust/Std",
+    "develop/Handware/Windows/WSL2/Rust/Tool",
+    "develop/Handware/Windows/WSL2/USB/USB.md",
+    "develop/Handware/Windows/WSL2/Rust/ESPTool",
+    "develop/Handware/Windows/WSL2/Rust/remove.md",
+    "develop/Handware/Windows/WSL2/Rust/install.md",
+    "develop/Handware/Windows/WSL2/Rust/check.md",
+    "develop/Handware/Windows/WSL2/ESP-IDF/install.md",
+    "develop/Handware/Windows/WSL2/ESP-IDF/error.md",
+    "develop/Handware/Windows/WSL2/Python3.9/error.md",
+    "develop/Handware/Windows/WSL2/Python3.9/install.md",
+    "develop/Handware/Windows/WSL2/Tool",
+    "develop/Handware/Windows/WSL2/USB",
+    "develop/Handware/Windows/WSL2/Rust",
+    "develop/OSystem/Kernel/OperationSystem.md",
     "study/computer/notebooks/linux0 1.11/idt_des.png"
   ]
 }
