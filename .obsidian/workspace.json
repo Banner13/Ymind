@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "develop/Tools/OpenOCD/install.md",
+                "file": "develop/ToolsChain/TFTPSvr/install.md",
                 "mode": "source",
                 "source": false
               }
@@ -103,7 +103,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "develop/Tools/OpenOCD/install.md",
+                "file": "develop/ToolsChain/TFTPSvr/install.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -120,7 +120,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "develop/Tools/OpenOCD/install.md",
+                "file": "develop/ToolsChain/TFTPSvr/install.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -143,7 +143,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "develop/Tools/OpenOCD/install.md"
+                "file": "develop/ToolsChain/TFTPSvr/install.md"
               }
             }
           }
@@ -164,46 +164,45 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "d59315eaaf9d6634",
+  "active": "5cba565b9114c3dd",
   "lastOpenFiles": [
-    "develop/Handware/Boards/ST/F1/stm32_sdk_env.md",
+    "develop/ToolsChain/build-essential/build-essential.md",
+    "develop/ToolsChain/CMake/cmake.md",
+    "develop/ToolsChain/build-essential",
+    "develop/ToolsChain/Nightly",
+    "develop/ToolsChain/CMake",
+    "develop/未命名",
+    "develop/Handware/Windows/wsl.md",
+    "develop/Handware/Windows/window_env_setting.md",
+    "develop/Handware/Windows/hv.txt",
+    "develop/Handware/Windows/WSL2/USB/USB.md",
+    "develop/ToolsChain/Nightly/nightly.md",
+    "develop/Handware/Ubuntu/ubuntu_env_setting.md",
+    "develop/Handware/Design/Design.md",
+    "develop/Handware/Boards/ESP32C3/ESP32C3-Core.md",
+    "develop/Handware/Boards/ST/F1/stm32_demo/stm32-demo/Src/cppcheck-addon-ctu-file-list",
+    "develop/Handware/Boards/ST/F1/stm32_demo/stm32-demo/Src/main.c.ctu-info",
+    "develop/Handware/Boards/ST/F1/stm32_demo/stm32-demo/Src/main.c.dump",
+    "develop/Protocols/Communication/I2C.md",
+    "project",
+    "develop/Protocols/Communication/SPI.md",
+    "develop/ToolsChain/ESP-IDF/install.md",
+    "develop/ToolsChain/TFTPSvr/install.md",
+    "develop/ToolsChain/OpenOCD/install.md",
+    "develop/ToolsChain/netsh/netsh.md",
+    "develop/ToolsChain/MingGw64/install.md",
+    "develop/ToolsChain/hanewinNFS/hanewinNFS.md",
+    "develop/ToolsChain/TFTPSvr",
+    "develop/ToolsChains/TFTPSvr/TFTPSvr.md",
+    "develop/ToolsChains/hanewinNFS/hanewinNFS.md",
+    "develop/ToolsChains/MingGw64/install.md",
+    "develop/ToolsChains/OpenOCD/install.md",
+    "develop/ToolsChains/netsh/netsh.md",
+    "develop/ToolsChain/ESP-IDF/error.md",
     "develop/Tools/OpenOCD/install.md",
-    "develop/Tools/MingGw64/install.md",
-    "develop/Tools/MingGw64",
-    "develop/Tools/OpenOCD",
-    "develop/Handware/Boards/NXP/linux-compile.md",
+    "develop/Language/Rust/ESPTool/RISCV/ESP32C3/install.md",
     "develop/Handware/Boards/ESP32C3/VScode.PNG",
     "develop/Handware/Boards/ESP32C3/ESP32C3-Core.png",
-    "develop/Handware/Boards/ESP32C3/ESP32C3-Core.md",
-    "develop/Algorithm/base64.md",
-    "develop/abbreviations/abbreviations.md",
-    "develop/abbreviations/all/DPI.md",
-    "develop/abbreviations/all/PIC.md",
-    "develop/abbreviations/all/RVS.md",
-    "develop/abbreviations/all/SCCS.md",
-    "develop/abbreviations/all/SVN.md",
-    "develop/abbreviations/all/VCS.md",
-    "develop/VCS.md",
-    "LICENSE.md",
-    "develop/Protocols/virtio.md",
-    "develop/Protocols/net_program.md",
-    "develop/Protocols/FileType/Hex固件.md",
-    "develop/Protocols/Communication/SPI.md",
-    "develop/Protocols/Communication/CommonKnowledge/Parallel.md",
-    "develop/Protocols/Communication/CommonKnowledge/Serial.md",
-    "develop/Protocols/Communication/CommonKnowledge",
-    "develop/Protocols/Communication",
-    "develop/Protocols/FileType",
-    "develop/Handware/Windows/window_env_setting.md",
-    "develop/Handware/Windows/wsl.md",
-    "develop/Handware/Windows/hv.txt",
-    "develop/OSystem/Kernel/compiler linux2.6.24.md",
-    "study/computer/notebooks/鸟哥私房菜/systemctl.md",
-    "study/computer/notebooks/鸟哥私房菜",
-    "stagingArea/V4L2/struct vb2_queue q.md",
-    "stagingArea/V4L2",
-    "develop/Handware/Windows/WSL2/Rust/ESPTool/RISCV/ESP32C3",
-    "develop/Handware/Windows/WSL2/Rust/ESPTool/RISCV",
     "study/computer/notebooks/linux0 1.11/idt_des.png"
   ]
 }

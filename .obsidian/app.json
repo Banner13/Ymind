@@ -8,8 +8,5 @@
   "attachmentFolderPath": "./",
   "showLineNumber": true,
   "strictLineBreaks": true,
-  "spellcheckLanguages": [
-    "zh-CN",
-    "en"
-  ]
+  "spellcheckLanguages": null
 }
