@@ -6,4 +6,4 @@
 
 
 #### Related
-[[develop/Protocols/Communication/CommonKnowledge/Parallel|并行]]
+[[develop/Protocols/Communication/CommonKnowledge/Parallel/Parallel|并行]]

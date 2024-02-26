@@ -35,4 +35,4 @@ SDA		 |             |
 主机: 开始信号 -> 发:首字节(读) -> 收:ACK -> 收:数据字节1 -> 发:ACK -> 收:数据字节n。
 
 #### Related
-[[develop/Protocols/Communication/CommonKnowledge/Serial|串行]]
+[[develop/Protocols/Communication/CommonKnowledge/Serial/Serial|串行]]

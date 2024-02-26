@@ -28,4 +28,4 @@
                         (lock)
 
 #### Related
-[[develop/Protocols/Communication/CommonKnowledge/Serial|串行]]
+[[develop/Protocols/Communication/CommonKnowledge/Serial/Serial|串行]]

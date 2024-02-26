@@ -25,9 +25,8 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "develop/ToolsChain/WizTree.md",
+                "file": "develop/Protocols/Communication/CommonKnowledge/Parallel/Parallel.md",
                 "mode": "source",
-                "backlinks": true,
                 "source": false
               }
             }
@@ -83,7 +82,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 344.5
+    "width": 827.5
   },
   "right": {
     "id": "7e692bad3b49dd44",
@@ -99,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "develop/ToolsChain/WizTree.md",
+                "file": "develop/Protocols/Communication/CommonKnowledge/Parallel/Parallel.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -116,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "develop/ToolsChain/WizTree.md",
+                "file": "develop/Protocols/Communication/CommonKnowledge/Parallel/Parallel.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -139,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "develop/ToolsChain/WizTree.md"
+                "file": "develop/Protocols/Communication/CommonKnowledge/Parallel/Parallel.md"
               }
             }
           }
@@ -162,42 +161,43 @@
   },
   "active": "dccfbf6074859ee3",
   "lastOpenFiles": [
+    "develop/Protocols/Communication/CommonKnowledge/Serial/Serial.md",
+    "develop/Protocols/Communication/CommonKnowledge/Parallel/Parallel.md",
+    "develop/Protocols/Communication/CommonKnowledge/Serial/Serial.png",
+    "develop/Protocols/Communication/CommonKnowledge/Parallel/Parallel.png",
+    "develop/Protocols/FileType/Hex固件.md",
+    "develop/Protocols/Communication/SPI.md",
+    "develop/Abbreviations/abbreviations.md",
+    "develop/Abbreviations/all/PLM.md",
+    "develop/Abbreviations/all/VSPD.md",
+    "develop/Abbreviations/all/CRC.md",
+    "stagingArea/project/class/直流电机.md",
+    "stagingArea/project/driver/PWN.md",
+    "stagingArea/project/ref/电机手册.pdf",
+    "stagingArea/project/user/API.md",
+    "develop/Language/Rust/install.md",
+    "develop/Language/Rust/update.md",
+    "develop/Language/Rust/remove.md",
+    "develop/Language/Rust/check.md",
+    "develop/Hardware/Boards/NXP/linux-compile.md",
+    "develop/ToolsChain/Git/Gitk/install.md",
+    "develop/ToolsChain/SSH/install.md",
+    "develop/ToolsChain/WizTree.md",
     "develop/ToolsChain/TFTPSvr/install.md",
     "develop/ToolsChain/QT/Qt.md",
     "develop/ToolsChain/OpenOCD/install.md",
     "develop/ToolsChain/Nightly/nightly.md",
     "develop/ToolsChain/netsh/manual.md",
     "develop/ToolsChain/ESP-IDF/install.md",
-    "develop/ToolsChain/ESP-IDF/error.md",
-    "develop/ToolsChain/CMake/issue.md",
-    "develop/ToolsChain/hanewinNFS/install.md",
-    "develop/Environment/Windows/Msys2/tip.md",
-    "develop/ToolsChain/Git/Gitk/install.md",
-    "develop/ToolsChain/MingGw64/install.md",
-    "develop/ToolsChain/ARM-Gcc/install.md",
-    "develop/ToolsChain/Pacman/tip.md",
-    "develop/Environment/Ubuntu/tip.md",
     "develop/ToolsChain/ARM-Gcc",
-    "develop/ToolsChain/Build-essential/install.md",
-    "develop/Environment/Windows/Windows11/manual.md",
-    "develop/Environment/Windows/issue.md",
-    "develop/Environment/Windows/manual.md",
-    "develop/ToolsChain/Git/tip.md",
-    "develop/ToolsChain/Git/issue.md",
     "develop/ToolsChain/Git/Gitk",
-    "develop/Environment/Ubuntu/manual.md",
-    "develop/Environment/Ubuntu/issue.md",
-    "develop/Environment/Ubuntu/install.md",
-    "develop/Environment/Windows/Msys2/manual.md",
     "develop/ToolsChain/Pacman",
-    "develop/Environment/Windows/Msys2/install.md",
     "develop/ToolsChain/SSH",
     "develop/ToolsChain/Python",
     "develop/ToolsChain/Samba",
     "develop/Environment/Windows/Windows11",
     "develop/ToolsChain/Git",
     "develop/ToolsChain/Yocto",
-    "develop/ToolsChain/Vim",
     "develop/ToolsChain/QT/Qt.gif",
     "develop/Hardware/Boards/ESP/ESP32C3/VScode.PNG",
     "develop/Hardware/Boards/ESP/ESP32C3/ESP32C3-Core.png",
