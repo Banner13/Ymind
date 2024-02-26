@@ -5,4 +5,4 @@ CMake Error at CMakeLists.txt:3 (cmake_minimum_required):
 ```
 
 #### Ref
-[[develop/ToolsChain/CMake/cmake|cmake upgrade]]
+[[develop/ToolsChain/CMake/issue|cmake upgrade]]

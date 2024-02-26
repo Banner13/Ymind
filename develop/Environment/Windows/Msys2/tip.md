@@ -27,32 +27,8 @@
 #### msys2使用 windows 的环境变量
     在 windows 环境变量中新建一个变量，命名为 "MSYS2_PATH_TYPE" , 值为 "inherit"
 
-### 安装常用软件
-#### git make cmake vim tree
-    pacman -S git make cmake vim tree
-
-#### gitk
-    pacman -S mingw-w64-x86_64-tk
-    添加 "D:/msys2/mingw64/bin" 到环境变量 PATH , 可以通过在 ~/.bashrc 最后添加 "PATH=$PATH:D:/msys2/mingw64/bin" 实现。
-    添加环境变量后重新打开 msys2 或，"source ~/.bashrc" 即可。
-#### mingw64
-    国内用户下载这个贼慢，在这里你只需要 "pacman -S mingw-w64-x86_64-toolchain" ,
-    在 msys2 中输入 "gcc -v " 验证。
-#### arm-gcc
-    pacman -S mingw64/mingw-w64-x86_64-arm-none-eabi-gcc
-
 ### 其他
     // 这个是笔者用于VScode的Shell终端 使用 "-msys2 -defterm -here -no-start"
 
-#### ssh 方式提示 no matching host key type found
-    etc > ssh 文件夹下找到 ssh_config 文件
-    添加
-    # 注意这里的 xxx.com 是没有 https:// 的
-    # 如 https://github.com/， 填写 github.com 即可（最后的斜杆也不能要）。
-    Host xxx.com
-    HostkeyAlgorithms +ssh-rsa
-    PubkeyAcceptedAlgorithms +ssh-rsa
-
-#### 下载应用命令
-    pacman --help 获取帮助
-
+### Msys2下常用软件
+[[develop/ToolsChain/Pacman/tip#下载应用命令|Pacman下载]] git make cmake vim tree

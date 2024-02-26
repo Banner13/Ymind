@@ -4,78 +4,36 @@
     "type": "split",
     "children": [
       {
-        "id": "01e4163b40226af5",
+        "id": "df897a7e12545c7c",
         "type": "tabs",
         "children": [
           {
-            "id": "0848ef96865b1546",
+            "id": "6498ba08b8709f84",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "develop/Environment/Windows/WSL/WSL.md",
+                "file": "develop/ToolsChain/Git/Gitk/install.md",
                 "mode": "source",
                 "source": false
               }
             }
           },
           {
-            "id": "5391730992a2e2d2",
+            "id": "dccfbf6074859ee3",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "develop/Language/niuke/history.md",
+                "file": "develop/ToolsChain/WizTree.md",
                 "mode": "source",
+                "backlinks": true,
                 "source": false
               }
             }
           }
         ],
         "currentTab": 1
-      },
-      {
-        "id": "57b46feba12f1a80",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "795fce425237b205",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "develop/Environment/Windows/Msys2/tip.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "1fd7277ae835bc4f",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "develop/Environment/Windows/Msys2/tip.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "7679f14184bb4e78",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "develop/Environment/Windows/manual.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          }
-        ],
-        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -141,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "develop/Language/niuke/history.md",
+                "file": "develop/ToolsChain/WizTree.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -158,7 +116,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "develop/Language/niuke/history.md",
+                "file": "develop/ToolsChain/WizTree.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -181,7 +139,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "develop/Language/niuke/history.md"
+                "file": "develop/ToolsChain/WizTree.md"
               }
             }
           }
@@ -202,45 +160,45 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "5391730992a2e2d2",
+  "active": "dccfbf6074859ee3",
   "lastOpenFiles": [
-    "develop/Language/regular-expressions/regular-expressions.md",
-    "develop/Language/python/python.md",
-    "develop/ToolsChain/Python/issue.md",
-    "develop/ToolsChain/Python/Python3.9/install.md",
-    "develop/ToolsChain/Python/Python3.9/error.md",
-    "develop/ToolsChain/Python",
-    "develop/ToolsChain/build-essential/build-essential.md",
+    "develop/ToolsChain/TFTPSvr/install.md",
+    "develop/ToolsChain/QT/Qt.md",
+    "develop/ToolsChain/OpenOCD/install.md",
+    "develop/ToolsChain/Nightly/nightly.md",
+    "develop/ToolsChain/netsh/manual.md",
+    "develop/ToolsChain/ESP-IDF/install.md",
+    "develop/ToolsChain/ESP-IDF/error.md",
+    "develop/ToolsChain/CMake/issue.md",
+    "develop/ToolsChain/hanewinNFS/install.md",
     "develop/Environment/Windows/Msys2/tip.md",
-    "develop/Environment/Windows/Msys2/manual.md",
-    "develop/Environment/Windows/Msys2/install.md",
-    "develop/ToolsChain/Git/tip.md",
-    "develop/Environment/Windows/manual.md",
+    "develop/ToolsChain/Git/Gitk/install.md",
+    "develop/ToolsChain/MingGw64/install.md",
+    "develop/ToolsChain/ARM-Gcc/install.md",
+    "develop/ToolsChain/Pacman/tip.md",
     "develop/Environment/Ubuntu/tip.md",
+    "develop/ToolsChain/ARM-Gcc",
+    "develop/ToolsChain/Build-essential/install.md",
+    "develop/Environment/Windows/Windows11/manual.md",
+    "develop/Environment/Windows/issue.md",
+    "develop/Environment/Windows/manual.md",
+    "develop/ToolsChain/Git/tip.md",
+    "develop/ToolsChain/Git/issue.md",
+    "develop/ToolsChain/Git/Gitk",
     "develop/Environment/Ubuntu/manual.md",
     "develop/Environment/Ubuntu/issue.md",
     "develop/Environment/Ubuntu/install.md",
-    "develop/ToolsChain/Samba/manual.md",
+    "develop/Environment/Windows/Msys2/manual.md",
+    "develop/ToolsChain/Pacman",
+    "develop/Environment/Windows/Msys2/install.md",
+    "develop/ToolsChain/SSH",
+    "develop/ToolsChain/Python",
     "develop/ToolsChain/Samba",
-    "develop/Environment/Windows/window_env_setting.md",
-    "develop/Environment/Windows/Windows11/manual.md",
     "develop/Environment/Windows/Windows11",
-    "develop/Environment/Windows/issue.md",
-    "develop/ToolsChain/Git/issue.md",
-    "develop/Environment/Windows/WSL/WSL.md",
-    "develop/Environment/Windows/WSL/install.md",
     "develop/ToolsChain/Git",
-    "develop/Environment/Windows/WSL/manual.md",
-    "develop/Environment/Windows/WSL/issue.md",
-    "develop/ToolsChain/Yocto/issue.md",
     "develop/ToolsChain/Yocto",
-    "develop/Hardware/Boards/ST/F1/stm32_sdk_env.md",
     "develop/ToolsChain/Vim",
-    "develop/ToolsChain/VMware",
-    "develop/Environment/Windows/Msys2",
     "develop/ToolsChain/QT/Qt.gif",
-    "develop/Abbreviations/all",
-    "develop/Abbreviations",
     "develop/Hardware/Boards/ESP/ESP32C3/VScode.PNG",
     "develop/Hardware/Boards/ESP/ESP32C3/ESP32C3-Core.png",
     "study/computer/notebooks/linux0 1.11/idt_des.png"
