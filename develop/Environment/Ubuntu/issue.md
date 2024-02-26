@@ -18,3 +18,8 @@ nameserver 8.8.8.8
 ```
 然后进行[[develop/Environment/Ubuntu/issue#网络重启|网络重启]]。
 
+### ssh主机重复
+```bash
+#  强制重新生成
+$  ssh-keygen -f "/home/sword/.ssh/known_hosts" -R "192.168.1.100"
+```

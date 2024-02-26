@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "develop/Environment/Windows/Msys2/msys2.md",
+                "file": "develop/Language/niuke/history.md",
                 "mode": "source",
                 "source": false
               }
@@ -35,22 +35,47 @@
         "currentTab": 1
       },
       {
-        "id": "44cf17857533604c",
+        "id": "57b46feba12f1a80",
         "type": "tabs",
         "children": [
           {
-            "id": "210dbaed1470bcc7",
+            "id": "795fce425237b205",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "develop/Environment/Ubuntu/ubuntu_env_setting.md",
+                "file": "develop/Environment/Windows/Msys2/tip.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "1fd7277ae835bc4f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "develop/Environment/Windows/Msys2/tip.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "7679f14184bb4e78",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "develop/Environment/Windows/manual.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -79,7 +104,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "yocto",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -116,7 +141,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "develop/Environment/Windows/Msys2/msys2.md",
+                "file": "develop/Language/niuke/history.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -133,7 +158,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "develop/Environment/Windows/Msys2/msys2.md",
+                "file": "develop/Language/niuke/history.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -156,7 +181,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "develop/Environment/Windows/Msys2/msys2.md"
+                "file": "develop/Language/niuke/history.md"
               }
             }
           }
@@ -179,43 +204,43 @@
   },
   "active": "5391730992a2e2d2",
   "lastOpenFiles": [
+    "develop/Language/regular-expressions/regular-expressions.md",
+    "develop/Language/python/python.md",
+    "develop/ToolsChain/Python/issue.md",
+    "develop/ToolsChain/Python/Python3.9/install.md",
+    "develop/ToolsChain/Python/Python3.9/error.md",
+    "develop/ToolsChain/Python",
+    "develop/ToolsChain/build-essential/build-essential.md",
+    "develop/Environment/Windows/Msys2/tip.md",
+    "develop/Environment/Windows/Msys2/manual.md",
+    "develop/Environment/Windows/Msys2/install.md",
+    "develop/ToolsChain/Git/tip.md",
+    "develop/Environment/Windows/manual.md",
+    "develop/Environment/Ubuntu/tip.md",
     "develop/Environment/Ubuntu/manual.md",
-    "develop/Environment/Ubuntu/ubuntu_env_setting.md",
     "develop/Environment/Ubuntu/issue.md",
     "develop/Environment/Ubuntu/install.md",
-    "develop/Environment/Windows/WSL/manual.md",
+    "develop/ToolsChain/Samba/manual.md",
+    "develop/ToolsChain/Samba",
     "develop/Environment/Windows/window_env_setting.md",
-    "develop/Environment/Windows/WSL/issue.md",
+    "develop/Environment/Windows/Windows11/manual.md",
+    "develop/Environment/Windows/Windows11",
+    "develop/Environment/Windows/issue.md",
+    "develop/ToolsChain/Git/issue.md",
     "develop/Environment/Windows/WSL/WSL.md",
+    "develop/Environment/Windows/WSL/install.md",
+    "develop/ToolsChain/Git",
+    "develop/Environment/Windows/WSL/manual.md",
+    "develop/Environment/Windows/WSL/issue.md",
     "develop/ToolsChain/Yocto/issue.md",
     "develop/ToolsChain/Yocto",
     "develop/Hardware/Boards/ST/F1/stm32_sdk_env.md",
-    "develop/ToolsChain/VMware/issue.md",
-    "develop/ToolsChain/Vim/issue.md",
-    "develop/Environment/Windows/WSL/install.md",
     "develop/ToolsChain/Vim",
     "develop/ToolsChain/VMware",
-    "develop/ToolsChain/QT/Qt.md",
-    "develop/Environment/Windows/Msys2/msys2.md",
     "develop/Environment/Windows/Msys2",
-    "develop/OSystem/Harmony/Harmony.md",
-    "develop/ToolsChain/WizTree.md",
-    "develop/Environment/msys2/msys2.md",
-    "develop/ToolsChain/VScode/html.md",
-    "develop/Abbreviations/all/UWP.md",
     "develop/ToolsChain/QT/Qt.gif",
-    "develop/Abbreviations/all/DPI.md",
-    "develop/Abbreviations/all/PIC.md",
-    "develop/Abbreviations/all/RVS.md",
-    "develop/Abbreviations/all/SCCS.md",
-    "develop/Abbreviations/all/SVN.md",
-    "develop/Abbreviations/all/UAF.md",
     "develop/Abbreviations/all",
     "develop/Abbreviations",
-    "project/Hardware/Lab0/STM32F030x6/STM32F030x6.json",
-    "project/Hardware/Lab0/STM32F030x6/PCB_STM32F030x6_bak.json",
-    "project/Hardware/Lab0/STM32F030x6/info",
-    "project/Hardware/Lab0/STM32F030x6",
     "develop/Hardware/Boards/ESP/ESP32C3/VScode.PNG",
     "develop/Hardware/Boards/ESP/ESP32C3/ESP32C3-Core.png",
     "study/computer/notebooks/linux0 1.11/idt_des.png"

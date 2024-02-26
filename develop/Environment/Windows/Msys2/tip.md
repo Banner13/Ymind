@@ -11,47 +11,9 @@
     类 linux 的开发环境，使用 pacman 包管理器，你可以简单轻松的获取许多工具(还解决的翻墙的苦恼)。
     常用工具如 linux下的 grep 、 find 等命令，还有 mingw64 、cmake 、 git 等。 部署简单易使用。
 
-### 获取msys2
-    方式一: 官网链接[点击](https://www.msys2.org/)
-    方式二: 国内镜像源[点击](https://mirrors.tuna.tsinghua.edu.cn/msys2/distrib/)
-    注: 该软件即使不翻墙也能获取，如官网获取失败可从镜像源下载。
-
-### 安装msys2
-    双击安装包，一路点击 Next 即可。
-    注：请注意安装的路径，后续配置需要引用改路径，本文采用 D:/msys2/ 为例。
-
-### msys2的配置
-#### msys2更新下载源
-    国内用户在使用 pacman 时，若使用默认下载源，可能下载速度会十分感人，可跟随以下步骤切换到国内下载源。
-    以下 "etc/" 路径均在 "D:/msys2/etc" 下。
-    引用 清华大学开源软件镜像站->相关链接->使用帮助->msys2->MSYS2 镜像使用帮助[](https://mirrors.tuna.tsinghua.edu.cn/help/msys2/)
-    {
-        pacman 的配置
-        编辑 /etc/pacman.d/mirrorlist.mingw32 ，在文件开头添加：
-        Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/mingw/i686
-        编辑 /etc/pacman.d/mirrorlist.mingw64 ，在文件开头添加：
-        Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/mingw/x86_64
-        编辑 /etc/pacman.d/mirrorlist.ucrt64 ，在文件开头添加：
-        Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/mingw/ucrt64
-        编辑 /etc/pacman.d/mirrorlist.clang64 ，在文件开头添加：
-        Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/mingw/clang64
-        编辑 /etc/pacman.d/mirrorlist.msys ，在文件开头添加：
-        Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/msys/$arch
-        然后执行 pacman -Sy 刷新软件包数据即可。
-    }
 
 #### msys2配置到windows右键快捷方式
-    1.  在 "运行"(Ctrl+R) 中输入 regedit 打开注册表编辑器
-        在路径 "计算机\HKEY_CLASSES_ROOT\Directory\Background\shell\" 下，
-        右击 "shell" 新建项, 命名 "msys2" ，添加该项后会显示在右键快捷菜单栏，但点击后无反应。
-
-    2.  在路径 "计算机\HKEY_CLASSES_ROOT\Directory\Background\shell\msys2\" 下，
-         右击 "msys2" 新建项,命名 "command" ，选中 "command" 后，修改默认值为 msys2 的路径。
-         例如 "D:/msys2/msys2.exe"，此时右键便可打开 msys2 。
-
-    3.  在路径 "计算机\HKEY_CLASSES_ROOT\Directory\Background\shell\msys2\" 下，
-         右击 "msys2" 新建字符串值,命名 "Icon" ，修改 "Icon" 默认值为 msys2 的路径下的 "msys2.ico"。
-         为 msys2 添加图标。
+参考[[develop/Environment/Windows/manual#添加应用到右键快捷栏|添加应用到右键快捷栏]]
     
 #### msys2在指定路径打开
     经过上述配置后，会发现每次打开 msys2 后，路径总是在主目录下即 "~/",

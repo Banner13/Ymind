@@ -9,16 +9,6 @@
 	7. 右键菜单就可以看到“Git Bash Here”了
 
 
-###windows11恢复windows右键菜单栏格式
-	切换到旧版右键菜单：
-	reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
+
 	
-	恢复回Win11右键菜单：
-	reg delete "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}" /f
-	
-	重启Windows资源管理器生效：
-	taskkill /f /im explorer.exe
-	start explorer.exe
-	
-### 删除文件时，提示文件正在使用
-	tasklist /m xxx文件
+
