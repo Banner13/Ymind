@@ -11,12 +11,8 @@
             "id": "6498ba08b8709f84",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "develop/ToolsChain/ESP/ESP-Rust/install.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "graph",
+              "state": {}
             }
           }
         ]
@@ -85,7 +81,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "develop/ToolsChain/ESP/ESP-Rust/install.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +97,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "develop/ToolsChain/ESP/ESP-Rust/install.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -124,9 +118,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "develop/ToolsChain/ESP/ESP-Rust/install.md"
-              }
+              "state": {}
             }
           }
         ]
@@ -146,8 +138,19 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "5cba565b9114c3dd",
+  "active": "6498ba08b8709f84",
   "lastOpenFiles": [
+    "stagingArea/MotorCtrl/issue/直流有刷电机噪音.md",
+    "stagingArea/MotorCtrl/issue/直流有刷电机噪音.bmp",
+    "stagingArea/MotorCtrl/issue",
+    "stagingArea/MotorCtrl/ref/电机与拖动.pdf",
+    "stagingArea/MotorCtrl/driver/C88308_电机驱动芯片_TC118S_规格书_FM(富满)电机驱动芯片规格书.PDF",
+    "stagingArea/MotorCtrl/ref/电机手册.pdf",
+    "stagingArea/MotorCtrl/电机控制.md",
+    "develop/ToolsChain/ESP/ESP-Rust/install.md",
+    "develop/ToolsChain/ESP/ESP-IDF/install.md",
+    "develop/ToolsChain/ESP/ESP-IDF/error.md",
+    "develop/ToolsChain/ESP/ESP-Rust/未命名.md",
     "develop/ToolsChain/ESP",
     "develop/Language/Rust/Std/install.md",
     "develop/Language/Rust/Tool/install.md",
@@ -169,24 +172,13 @@
     "stagingArea/ModBus/ModBus.md",
     "stagingArea/ModBus/ASCII模式.md",
     "develop/Protocols/Communication/CommonKnowledge/Serial/Serial.md",
-    "develop/Protocols/Communication/CommonKnowledge/Parallel/Parallel.md",
     "develop/Protocols/Communication/CommonKnowledge/Serial/Serial.png",
     "develop/Protocols/Communication/CommonKnowledge/Parallel/Parallel.png",
-    "develop/Protocols/FileType/Hex固件.md",
-    "develop/Abbreviations/abbreviations.md",
-    "develop/Abbreviations/all/PLM.md",
-    "develop/Abbreviations/all/VSPD.md",
-    "develop/Abbreviations/all/CRC.md",
-    "stagingArea/project/ref/电机手册.pdf",
     "develop/ToolsChain/ARM-Gcc",
     "develop/ToolsChain/Git/Gitk",
     "develop/ToolsChain/Pacman",
     "develop/ToolsChain/SSH",
     "develop/ToolsChain/Python",
-    "develop/ToolsChain/Samba",
-    "develop/Environment/Windows/Windows11",
-    "develop/ToolsChain/Git",
-    "develop/ToolsChain/Yocto",
     "develop/ToolsChain/QT/Qt.gif",
     "develop/Hardware/Boards/ESP/ESP32C3/VScode.PNG",
     "develop/Hardware/Boards/ESP/ESP32C3/ESP32C3-Core.png",
