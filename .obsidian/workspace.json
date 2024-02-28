@@ -4,15 +4,32 @@
     "type": "split",
     "children": [
       {
-        "id": "df897a7e12545c7c",
+        "id": "ca783fb72ec7a2c5",
         "type": "tabs",
         "children": [
           {
-            "id": "6498ba08b8709f84",
+            "id": "0e097712cc340740",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "develop/Hardware/Boards/NXP/IMX6ULL/100ask/MINI/porting/Ethernet/Etnernet.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "168f54aefc3a140e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "study/computer/notebooks/A-Tour-of-C++/A-tour-of-C++.md",
+                "mode": "source",
+                "backlinks": true,
+                "source": false
+              }
             }
           }
         ]
@@ -81,6 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "develop/Hardware/Boards/NXP/IMX6ULL/100ask/MINI/porting/Ethernet/Etnernet.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -97,6 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "develop/Hardware/Boards/NXP/IMX6ULL/100ask/MINI/porting/Ethernet/Etnernet.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -118,7 +137,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "develop/Hardware/Boards/NXP/IMX6ULL/100ask/MINI/porting/Ethernet/Etnernet.md"
+              }
             }
           }
         ]
@@ -138,8 +159,12 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "6498ba08b8709f84",
+  "active": "0e097712cc340740",
   "lastOpenFiles": [
+    "study/computer/notebooks/A-Tour-of-C++/4.md",
+    "int.md",
+    "study/computer/notebooks/A-Tour-of-C++/A-tour-of-C++.md",
+    "LICENSE.md",
     "stagingArea/MotorCtrl/issue/直流有刷电机噪音.md",
     "stagingArea/MotorCtrl/issue/直流有刷电机噪音.bmp",
     "stagingArea/MotorCtrl/issue",
@@ -169,9 +194,6 @@
     "develop/ToolsChain/Git/Gitk/install.md",
     "stagingArea/ModBus/RTU模式.md",
     "stagingArea/ModBus/ModBus串行链接.md",
-    "stagingArea/ModBus/ModBus.md",
-    "stagingArea/ModBus/ASCII模式.md",
-    "develop/Protocols/Communication/CommonKnowledge/Serial/Serial.md",
     "develop/Protocols/Communication/CommonKnowledge/Serial/Serial.png",
     "develop/Protocols/Communication/CommonKnowledge/Parallel/Parallel.png",
     "develop/ToolsChain/ARM-Gcc",
