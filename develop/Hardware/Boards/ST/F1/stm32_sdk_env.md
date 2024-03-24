@@ -16,7 +16,7 @@ ___
  - STM32CubeMx　　　 [官网下载链接](https://www.st.com/zh/development-tools/stm32cubemx.html#get-software "Title")
  - VS Code　　　　　　[官网下载链接](https://code.visualstudio.com/Download# "Title")
  -  SI  　　　　　　　　 [官网下载链接](https://www.sourceinsight.com/download/ "Title")
- -  ARM编译器  　　　　 [官网下载链接](https://launchpad.net/gcc-arm-embedded/+download "Title")
+ -  [[develop/ToolsChain/ARM-Gcc/install|ARM编译器安装]]
 
 注：以上下载后有的是安装包，有的是可执行文件的压缩包
 ___
