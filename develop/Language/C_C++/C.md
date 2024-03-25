@@ -103,6 +103,43 @@ API
 	赋值运算
 	条件运算
 
+### 结构体对齐
+```c
+#pragma pack(n)
+```
+demo
+```c
+#include <stdio.h>
+
+#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+
+#pragma pack(4)
+
+struct Test {
+    int a;
+    char b;
+    int c;
+};
+#pragma pack()
+
+int main(void)
+{
+    struct Test t;
+
+    printf("Test.a offset is %d\n", offsetof(struct Test, a));
+    printf("Test.b offset is %d\n", offsetof(struct Test, b));
+    printf("Test.c offset is %d\n", offsetof(struct Test, c));
+
+    return 0;
+}
+
+```
+
+```out
+Test.a offset is 0
+Test.b offset is 4
+Test.c offset is 8
+```
 
 ### 附录A总结：
 	C语言中的记号：关键字、运算符、其他分隔符、字符串字面值、常量、标识符。(空格、制表符、换行符，换页符和注释(统称空白符))用于分隔记号。

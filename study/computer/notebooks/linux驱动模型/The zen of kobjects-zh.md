@@ -8,7 +8,7 @@ kobject "结构首次出现在 2.5.45 开发内核中。它最初是作为统一
     
 - 一个**ktype**是与 kobject 相关联的类型。ktype 控制着 kobject 不再被引用时的情况，以及 kobject 在 sysfs 中的默认表示。
     
-- 一个 **kset** 是一组 kobjects，所有这些 kobjects 都嵌入了相同类型的结构。Kset 是 Kobjects 集合的基本容器类型。Kset 包含自己的 kobjects。这意味着一个 kobject 的父对象通常就是包含它的 kset，但通常情况下也不一定非得如此。
+- 一个 **kset** 是一组 kobjects，所有这些 kobjects 都嵌入了相同类型的结构。Kset 是 Kobjects 集合的基本容器类型。值得一提的是，Kset 包含自己的 kobjects。这意味着一个 kobject 的kset 通常在他的父kobject中，但通常情况下也不一定非得如此。
     
     当你看到 sysfs 目录里有很多条目时，通常每个条目都对应着同一个 kset 中的一个 kobject。
     
@@ -22,10 +22,10 @@ kobject "结构首次出现在 2.5.45 开发内核中。它最初是作为统一
 例如，描述 char 设备的结构 struct cdev 的 2.6.0-test6 版本就是这样：
 
     struct cdev {
-    	struct kobject kobj;
-	struct module *owner;
-	struct file_operations *ops;
-	struct list_head list;
+	    struct kobject kobj;
+		struct module *owner;
+		struct file_operations *ops;
+		struct list_head list;
     };
 
 如果有一个 struct cdev 结构，那么只需使用 kobj 指针就可以找到其嵌入的 kobject。然而，使用 kobjects 的代码通常会遇到相反的问题：给定一个 struct kobject 指针，那么指向包含结构的指针是什么呢？你应该避免使用技巧（比如假设 kobject 位于结构的开头），而是使用 <linux/kernel.h> 中的 container_of() 宏：

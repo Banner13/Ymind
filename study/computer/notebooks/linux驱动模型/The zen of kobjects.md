@@ -23,10 +23,10 @@ It is rare (even unknown) for kernel code to create a standalone kobject; instea
 So, for example, the 2.6.0-test6 version of struct cdev, the structure describing a char device, is:
 
     struct cdev {
-    	struct kobject kobj;
-	struct module *owner;
-	struct file_operations *ops;
-	struct list_head list;
+	    struct kobject kobj;
+		struct module *owner;
+		struct file_operations *ops;
+		struct list_head list;
     };
 
 If you have a struct cdev structure, finding its embedded kobject is just a matter of using the kobj pointer. Code that works with kobjects will often have the opposite problem, however: given a struct kobject pointer, what is the pointer to the containing structure? You should avoid tricks (such as assuming that the kobject is at the beginning of the structure) and, instead, use the container_of() macro, found in <linux/kernel.h>:
