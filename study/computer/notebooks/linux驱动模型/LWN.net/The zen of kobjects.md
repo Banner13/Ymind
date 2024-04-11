@@ -139,7 +139,7 @@ A kset serves these functions:
 
 In object-oriented terms, "kset" is the top-level container class; ksets inherit their own kobject, and can be treated as a kobject as well.
 
-![](./kobject.png)
+![](study/computer/notebooks/linux驱动模型/LWN.net/kobject.png)
 A kset keeps its children in a standard kernel linked list. Kobjects point back to their containing kset via their kset field. In almost all cases, the contained kobjects also have a pointer to the kset (or, strictly, its embedded kobject) in their parent field. So, typically, a kset and its kobjects look something like what you see in the diagram to the right. Do bear in mind that (1) all of the contained kobjects in the diagram are actually embedded within some other type, possibly even other ksets, and (2) it is not required that a kobject's parent be the containing kset.
 
 For initialization and setup, ksets have an interface very similar to that of kobjects. The following functions exist:  

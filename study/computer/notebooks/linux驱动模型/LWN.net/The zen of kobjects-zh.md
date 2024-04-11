@@ -137,7 +137,7 @@ kset 就具有这些功能：
 
 在面向对象的术语中，"kset "是顶级容器类；ksets 继承了自己的 kobject，也可以被视为一个 kobject。
 
-![](./kobject.png)
+![](study/computer/notebooks/linux驱动模型/LWN.net/kobject.png)
 kset 将其子节点保存在标准内核链表中。Kobjects 通过它们的 kset 字段指向包含它们的 kset。几乎在所有情况下，包含的 kobjects 在其父字段中也有一个指向 kset（或者严格来说，指向其嵌入的 kobject）的指针。因此，通常情况下，一个 kset 及其 kobjects 看上去就像右图所示。请注意：(1) 图中所有包含的 kobject 其实都嵌入了其他类型，甚至可能是其他 ksets；(2) 并不要求 kobject 的父对象就是包含的 kset。
 
 在初始化和设置方面，ksets 的界面与 kobjects 的界面非常相似。有以下函数:
