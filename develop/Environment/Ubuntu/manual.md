@@ -22,6 +22,16 @@ $ sudo dpkg -i xxx.deb
 $ dpkg -l | grep "xxx"
 ```
 
+### 新增架构支持
+```bash
+# deb包 安装
+$ sudo dpkg --add-architecture i386
+$ sudo apt-get update
+
+# 使用方式
+$ apt-get install libc6:i386
+```
+
 ### 更新Ubuntu内软件下载源
 ```bash
 # 源文件备份
