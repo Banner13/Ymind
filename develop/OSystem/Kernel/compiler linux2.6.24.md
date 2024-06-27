@@ -7,30 +7,9 @@ sudo apt-get install -y libncurses5-dev build-essential lib32readline-gplv2-dev
 ```
 
 ## 2. 安装gcc-4.4
-因为linux2.6.24与gcc的版本需要适配，内核推荐使用gcc-2.9.35，不过想要在Ubuntu14以上安装太麻烦了，所以使用gcc-4.4。
-(1). 镜像源更新
-```bash
-sudo echo "deb http://dk.archive.ubuntu.com/ubuntu/ trusty main universe" >> /etc/apt/source.list
-sudo apt-get update
-```
-(2). 安装gcc/g++-4.4
-```bash
-sudo apt-get install -y gcc-4.4 g++-4.4 g++-4.4-multilib
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.4 4
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 7
-sudo update-alternatives --config gcc
-# 选择gcc-4.4对应的数字
-sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.4 4
-sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 7
-sudo update-alternatives --config g++
-# 选择g++-4.4对应的数字
+[[develop/ToolsChain/ARM-Gcc/install#安装gcc-4.4|安装gcc-4.4]]
 
-# 查看版本
-gcc -v
-g++ -v
-```
-
-## 获取linux2.6.24源代码并修改
+## 3. 获取linux2.6.24源代码并修改
 ```bash
 wget --no-check-certificate https://mirror.bjtu.edu.cn/kernel/linux/kernel/v2.6/linux-2.6.24.tar.xz
 tar -xvJf linux-2.6.24.tar.xz

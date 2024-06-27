@@ -40,6 +40,9 @@ $  sudo cp /etc/apt/sources.list /etc/apt/sources.list.default
 # 替换原有list文件
 $  sudo cp new_sources.list /etc/apt/sources.list
 
+# 新增软件下载源
+$  sudo echo "deb http://dk.archive.ubuntu.com/ubuntu/ trusty main universe" >> /etc/apt/source.list
+
 # 更新
 $  sudo apt-get update
 ```

@@ -5,6 +5,6 @@ python3 -m pip install --upgrade pip -i http://pypi.douban.com/simple --trusted-
 ```
 
 ```bash
-pip install esptool -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+pip3 install wxPython -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn
 ```
 
