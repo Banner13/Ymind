@@ -112,3 +112,54 @@ array:          .space	40
 array——ptr:     .world	0
 ```
 	sizeof 不关心你是不是数组，只关心该数据类型的大小。数组类型是由元素类型和数组长度决定的。对其struct 和 union 的计算，在对齐后，依次计算每个元素所占用的长度进行叠加。
+
+### 当前存储最小访问单元是char 1Byte,那么C语言的位域是如何访问的?
+
+``` c
+struct T {
+    int x:1;
+    int y:3;
+    int z:2;
+    int t:5;
+    int a:5;
+};
+
+int main(void)
+{
+    struct T tt;
+
+    int t1 = tt.x;
+    /*
+	movzx   eax, BYTE PTR [rbp-20]
+	sal     eax, 7
+	sar     al, 7
+	movsx   eax, al
+	mov     DWORD PTR [rbp-4], 
+	*/
+	
+    int t2 = tt.y;
+    /*
+	movzx   eax, BYTE PTR [rbp-20]
+	sal     eax, 4
+	sar     al, 5
+	movsx   eax, al
+	mov     DWORD PTR [rbp-8], eax
+    */
+    
+    int t3 = tt.z;
+    /*
+	movzx   eax, BYTE PTR [rbp-20]
+	sal     eax, 2
+	sar     al, 6
+	movsx   eax, al
+	mov     DWORD PTR [rbp-12], eax
+    */
+    
+    int t4 = tt.t;
+    // ...
+
+    return 0;
+}
+```
+位域是无法直接通过取址&获取到地址的，因为它们不是最小操作单元。
+从汇编中不难看出，位域通过先左移，然后右移的方式来模拟小于8bit的操作。

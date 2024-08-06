@@ -103,6 +103,7 @@ API
 	赋值运算
 	条件运算
 
+<<<<<<< Updated upstream
 ### 结构体对齐
 ```c
 #pragma pack(n)
@@ -140,6 +141,8 @@ Test.a offset is 0
 Test.b offset is 4
 Test.c offset is 8
 ```
+=======
+>>>>>>> Stashed changes
 
 ### 附录A总结：
 	C语言中的记号：关键字、运算符、其他分隔符、字符串字面值、常量、标识符。(空格、制表符、换行符，换页符和注释(统称空白符))用于分隔记号。
@@ -209,7 +212,11 @@ struct A A1;
 struct B B1;
 
 sprintf(A1.p, 2, "s");
+<<<<<<< Updated upstream
 sprintf(A2.p, 2, "s");
+=======
+sprintf(B1.p, 2, "s");
+>>>>>>> Stashed changes
 
 // 结论：数组就是数组，是大小相同、空间连续的存储空间。
 // 指针是变量，变量，变量！
