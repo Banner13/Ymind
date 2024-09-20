@@ -88,3 +88,8 @@
 ``` bash
 #!/bin/bash -v or -x
 ```
+#### 发送ssh-id到远程
+``` bash
+ssh-copy-id -f user@ip
+```
+
