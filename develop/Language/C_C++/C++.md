@@ -70,3 +70,19 @@
 	（4）引用的大小是所指向的变量的大小，因为引用只是一个别名而已；指针是指针本身的大小，4个字节。
 
 	（5）引用比指针更安全。由于不存在空引用，并且引用一旦被初始化为指向一个对象，它就不能被改变为另一个对象的引用，因此引用很安全。对于指针来说，它可以随时指向别的对象，并且可以不被初始化，或为NULL，所以不安全。const 指针虽然不能改变指向，但仍然存在空指针，并且有可能产生野指针（即多个指针指向一块内存，free掉一个指针之后，别的指针就成了野指针）。
+
+### void*的buf 转换为vector<char>类型
+
+``` c
+void* buf = ...; // 指向数据的指针 
+size_t len = ...; // 数据的长度 
+
+// 使用reinterpret_cast将void*转换为char*，然后构造vector std::vector<char> vec(static_cast<char*>(buf), static_cast<char*>(buf) + len);
+
+std::vector<char> vec = {'a', 'b', 'c', 'd'}; 
+// 将 vec 转换为 void* 指针 
+void* buf = static_cast<void*>(vec.data());
+```
+
+
+

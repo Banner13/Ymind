@@ -1,4 +1,5 @@
 ### 添加 git-bash 到鼠标右键菜单栏
+
 参考[[develop/Environment/Windows/manual#添加应用到右键快捷栏|添加应用到右键快捷栏]]
 1. 通过Windows+R快捷键可以打开“运行窗口”，在“窗口”中输入“regedit”，点击“确定”打开注册表
 2. 在搜索栏“计算机”后输入"\HKEY_CLASSES_ROOT\Directory\Background"回车确定或者点击计算机图标逐级查找

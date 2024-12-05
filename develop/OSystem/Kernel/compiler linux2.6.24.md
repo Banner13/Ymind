@@ -7,7 +7,7 @@ sudo apt-get install -y libncurses5-dev build-essential lib32readline-gplv2-dev
 ```
 
 ## 2. 安装gcc-4.4
-[[develop/ToolsChain/ARM-Gcc/install#安装gcc-4.4|安装gcc-4.4]]
+[[develop/ToolsChain/GNU/ARM-Gcc/install#安装gcc-4.4|安装gcc-4.4]]
 
 ## 3. 获取linux2.6.24源代码并修改
 ```bash

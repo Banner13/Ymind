@@ -47,3 +47,19 @@ $  sudo echo "deb http://dk.archive.ubuntu.com/ubuntu/ trusty main universe" >> 
 $  sudo apt-get update
 ```
 [清华开源链接](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)
+
+### Ubuntu切换服务器IP
+**1. 手动获取IP地址**
+	通过多台服务器获取到的DNS解析情况来选择最优解，可以使用[Dns查询 - 站长工具 (chinaz.com)](https://link.juejin.cn/?target=https%3A%2F%2Ftool.chinaz.com%2Fdns%2F "https://tool.chinaz.com/dns/")查找TTL值最小的响应IP
+
+**2. 编辑 `/etc/hosts` 文件**
+
+	- 使用文本编辑器打开 `/etc/hosts` 文件，您需要 root 权限：
+	- 在文件末尾添加以下内容，将 `20.205.243.166` 替换为您获取的 GitHub 的可用 IP 地址：
+		20.205.243.166 github.com 
+		20.205.243.166 assets-cdn.github.com 
+		20.205.243.166 github.global.ssl.fastly.net
+
+**3. 刷新 DNS 缓存**
+- 修改 `/etc/hosts` 文件后，刷新 DNS 缓存。Linux 通常不需要手动刷新 DNS 缓存，但如果您的系统有 DNS 缓存服务，例如 `systemd-resolved`，可以通过以下命令刷新：
+	sudo systemctl restart systemd-resolved
